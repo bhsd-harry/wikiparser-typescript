@@ -803,7 +803,10 @@
 			}
 		},
 		{
-			"files": "dist/**/*.js",
+			"files": [
+				"dist/**/*.js",
+				"dist/**/*.ts"
+			],
 			"rules": {
 				"camelcase": 0,
 				"no-multi-assign": 0,
