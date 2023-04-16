@@ -33,7 +33,7 @@
 		"url": "git+https://github.com/bhsd-harry/wikiparser-node.git"
 	},
 	"scripts": {
-		"build": "tsc && eslint --fix dist/",
+		"build": "tsc; eslint --fix dist/",
 		"diff": "./diff.sh",
 		"doc": "node ./bin/doc.js",
 		"toc": "node ./bin/toc.js",
