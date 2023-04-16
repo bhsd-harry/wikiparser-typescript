@@ -1,8 +1,8 @@
-interface printOpt {
+interface PrintOpt {
 	pre?: string;
 	post?: string;
 	sep?: string;
 	class?: string;
 }
 
-export = printOpt;
+export = PrintOpt;
