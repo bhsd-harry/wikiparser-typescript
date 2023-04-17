@@ -34,7 +34,7 @@
 	},
 	"scripts": {
 		"build": "tsc; eslint --fix dist/",
-		"diff": "./diff.sh",
+		"diff": "./bin/diff.sh",
 		"doc": "node ./bin/doc.js",
 		"toc": "node ./bin/toc.js",
 		"test": "eslint . && ajv -s config/.schema.json -d 'config/*.json' --strict=true --strict-required=false",
