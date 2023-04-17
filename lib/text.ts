@@ -105,7 +105,7 @@ class AstText extends AstNode {
 			{ext, html} = this.getRootNode().getAttribute('config');
 		if (errors.length > 0) {
 			const root = this.getRootNode(),
-				{top, left} = root.posFromIndex(start) as {top: number, left: number},
+				{top, left} = root.posFromIndex(start)!,
 				tags = new Set([ext, html, disallowedTags].flat(2));
 			return (errors as unknown as {0: string, 1: string, 2: string|undefined, index: number}[])
 				.map(({0: error, 1: prefix, 2: tag, index}) => {
@@ -118,7 +118,7 @@ class AstText extends AstNode {
 					const startIndex = start + index,
 						lines = data.slice(0, index).split('\n'),
 						startLine = lines.length + top - 1,
-						line = lines.at(-1) as string,
+						line = lines.at(-1)!,
 						startCol = lines.length > 1 ? line.length : left + line.length,
 						{0: char, length} = error,
 						endIndex = startIndex + length,
@@ -139,7 +139,7 @@ class AstText extends AstNode {
 							)
 							? 'error'
 							: 'warning';
-					return (char !== 'h' || index > 0) && (char !== '<' || tags.has((tag as string).toLowerCase())) && {
+					return (char !== 'h' || index > 0) && (char !== '<' || tags.has(tag!.toLowerCase())) && {
 						message: Parser.msg('lonely "$1"', char === 'h' ? error : char),
 						severity,
 						startIndex,

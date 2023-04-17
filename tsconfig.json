@@ -1,4 +1,13 @@
 {
+	"include": [
+		"lib",
+		"mixin",
+		"parser",
+		"src",
+		"typings",
+		"util",
+		"index.ts"
+	],
 	"compilerOptions": {
 		"target": "esnext",
 		"module": "CommonJS",

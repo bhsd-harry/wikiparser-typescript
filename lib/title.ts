@@ -20,7 +20,7 @@ class Title {
 	 */
 	constructor(str: string, defaultNs = 0, config = Parser.getConfig(), decode = false, selfLink = false) {
 		const {namespaces, nsid} = config;
-		let namespace = namespaces[defaultNs] as string,
+		let namespace = namespaces[defaultNs]!,
 			title = decodeHtml(str);
 		if (decode && title.includes('%')) {
 			try {
@@ -41,13 +41,13 @@ class Title {
 		}
 		const m = title.split(':');
 		if (m.length > 1) {
-			const id = namespaces[String(nsid[(m[0] as string).trim().toLowerCase()])];
+			const id = namespaces[String(nsid[m[0]!.trim().toLowerCase()])];
 			if (id !== undefined) {
 				namespace = id;
 				title = m.slice(1).join(':').trim();
 			}
 		}
-		this.ns = nsid[namespace.toLowerCase()] as number;
+		this.ns = nsid[namespace.toLowerCase()]!;
 		const i = title.indexOf('#');
 		let fragment;
 		if (i !== -1) {
@@ -66,7 +66,7 @@ class Title {
 		this.valid = Boolean(title || selfLink && fragment !== undefined || this.interwiki)
 			&& !/\0\d+[eh!+-]\x7F|[<>[\]{}|]|%[\da-f]{2}/iu.test(title);
 		this.fragment = fragment;
-		this.main = title && `${(title[0] as string).toUpperCase()}${title.slice(1)}`;
+		this.main = title && `${title[0]!.toUpperCase()}${title.slice(1)}`;
 		this.prefix = `${namespace}${namespace && ':'}`;
 		this.title = `${iw ? `${this.interwiki}:` : ''}${this.prefix}${this.main.replaceAll(' ', '_')}`;
 	}

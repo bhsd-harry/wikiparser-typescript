@@ -70,7 +70,7 @@ const desanitize = <T extends string|undefined>(selector: T) => {
 	if (selector === undefined) {
 		return undefined as T;
 	}
-	let str = selector as string;
+	let str: string = selector;
 	for (const [c, escaped] of specialChars) {
 		str = str.replaceAll(escaped, c);
 	}
@@ -122,7 +122,7 @@ const parseSelector = (selector: string) => {
 		let {0: syntax, index} = mt as unknown as {0: string, index: number};
 		if (syntax.trim() === '') {
 			index += syntax.length;
-			const char = sanitized[index] as string;
+			const char = sanitized[index]!;
 			syntax = grouping.has(char) ? char : '';
 		}
 		if (syntax === ',') { // 情形1：并列
@@ -151,7 +151,7 @@ const parseSelector = (selector: string) => {
 				throw new SyntaxError(`非法的选择器！\n${desanitize(sanitized)}\n请检查伪选择器是否存在。`);
 			}
 			pushSimple(step, sanitized.slice(0, pseudoExec.index));
-			step.push(pseudoExec[1] as string); // 临时存放复杂伪选择器
+			step.push(pseudoExec[1]!); // 临时存放复杂伪选择器
 			regex = functionRegex;
 		} else if (syntax === ')') { // 情形6：伪选择器闭合
 			const pseudo = step.pop() as string;

@@ -62,7 +62,7 @@ class AstNode {
 	get nextElementSibling() {
 		const childNodes = this.#parentNode?.childNodes,
 			i = childNodes?.indexOf(this as unknown as AstNodeTypes);
-		return childNodes?.slice((i as number) + 1)?.find(({type}) => type !== 'text') as import('../src')|undefined;
+		return childNodes?.slice(i! + 1)?.find(({type}) => type !== 'text') as import('../src')|undefined;
 	}
 
 	/** 前一个非文本兄弟节点 */
@@ -177,7 +177,7 @@ class AstNode {
 		if (key === 'parentNode') {
 			this.#parentNode = value as TokenAttributeSetter<'parentNode'>;
 		} else if (Object.hasOwn(this, key)) {
-			const descriptor = Object.getOwnPropertyDescriptor(this, key) as PropertyDescriptor;
+			const descriptor = Object.getOwnPropertyDescriptor(this, key)!;
 			if (this.#optional.has(key)) {
 				descriptor.enumerable = Boolean(value);
 			}
@@ -208,7 +208,7 @@ class AstNode {
 		}
 		const i = parentNode.childNodes.indexOf(this as unknown as AstNodeTypes) + offset;
 		for (let j = 0; j < nodes.length; j++) {
-			parentNode.insertAt(nodes[j] as Inserted, i + j);
+			parentNode.insertAt(nodes[j]!, i + j);
 		}
 	}
 
@@ -373,20 +373,20 @@ class AstNode {
 		} else if (this.getRootNode() !== other.getRootNode()) {
 			throw new Error('不在同一个语法树！');
 		}
-		const aAncestors = [...this.getAncestors().reverse(), this as AstNodeTypes],
+		const aAncestors = [...this.getAncestors().reverse(), this],
 			bAncestors = [...other.getAncestors().reverse(), other],
 			depth = aAncestors.findIndex((ancestor, i) => bAncestors[i] !== ancestor),
-			commonAncestor = aAncestors[depth - 1] as AstNodeTypes,
+			commonAncestor = aAncestors[depth - 1]!,
 			{childNodes} = commonAncestor;
-		return childNodes.indexOf(aAncestors[depth] as AstNodeTypes)
-			- childNodes.indexOf(bAncestors[depth] as AstNodeTypes);
+		return childNodes.indexOf(aAncestors[depth]!)
+			- childNodes.indexOf(bAncestors[depth]!);
 	}
 
 	/** 合并相邻的文本子节点 */
 	normalize() {
 		const childNodes = [...this.childNodes];
 		for (let i = childNodes.length - 1; i >= 0; i--) {
-			const cur = childNodes[i] as AstNodeTypes,
+			const cur = childNodes[i]!,
 				prev = childNodes[i - 1];
 			if (cur.type !== 'text' || this.getGaps(i - 1)) {
 				//
@@ -420,7 +420,7 @@ class AstNode {
 		const str = String(this);
 		if (index >= -str.length && index <= str.length) {
 			const lines = str.slice(0, index).split('\n');
-			return {top: lines.length - 1, left: (lines.at(-1) as string).length};
+			return {top: lines.length - 1, left: lines.at(-1)!.length};
 		}
 		return undefined;
 	}
@@ -435,7 +435,7 @@ class AstNode {
 			this.typeError('indexFromPos', 'Number');
 		}
 		const lines = String(this).split('\n');
-		return top >= 0 && left >= 0 && lines.length >= top + 1 && (lines[top] as string).length >= left
+		return top >= 0 && left >= 0 && lines.length >= top + 1 && lines[top]!.length >= left
 			? lines.slice(0, top).reduce((acc, curLine) => acc + curLine.length + 1, 0) + left
 			: undefined;
 	}
@@ -443,7 +443,7 @@ class AstNode {
 	/** 获取行数和最后一行的列数 */
 	#getDimension() {
 		const lines = String(this).split('\n');
-		return {height: lines.length, width: (lines.at(-1) as string).length};
+		return {height: lines.length, width: lines.at(-1)!.length};
 	}
 
 	/** 第一个子节点前的间距 */
