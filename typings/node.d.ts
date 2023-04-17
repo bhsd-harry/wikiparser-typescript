@@ -1,6 +1,6 @@
 import AstText = require('../lib/text');
 import Token = require('../src');
 
-type AstNodeTypes = AstText|Token;
+type AstNodeTypes = AstText | Token;
 
 export = AstNodeTypes;

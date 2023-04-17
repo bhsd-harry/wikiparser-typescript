@@ -11,7 +11,7 @@ import AstNodeTypes = require('../typings/node');
 class AstNode {
 	type: string;
 	readonly childNodes: AstNodeTypes[] = [];
-	#parentNode: import('../src')|undefined;
+	#parentNode: import('../src') | undefined;
 	#optional: Set<string> = new Set();
 	#events = new EventEmitter();
 
@@ -62,14 +62,14 @@ class AstNode {
 	get nextElementSibling() {
 		const childNodes = this.#parentNode?.childNodes,
 			i = childNodes?.indexOf(this as unknown as AstNodeTypes);
-		return childNodes?.slice(i! + 1)?.find(({type}) => type !== 'text') as import('../src')|undefined;
+		return childNodes?.slice(i! + 1)?.find(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
 	/** 前一个非文本兄弟节点 */
 	get previousElementSibling() {
 		const childNodes = this.#parentNode?.childNodes,
 			i = childNodes?.indexOf(this as unknown as AstNodeTypes);
-		return childNodes?.slice(0, i)?.findLast(({type}) => type !== 'text') as import('../src')|undefined;
+		return childNodes?.slice(0, i)?.findLast(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
 	/** 是否具有根节点 */
@@ -78,7 +78,7 @@ class AstNode {
 	}
 
 	/** 不是自身的根节点 */
-	get ownerDocument(): import('../src')|undefined {
+	get ownerDocument(): import('../src') | undefined {
 		const root = this.getRootNode();
 		return root.type === 'root' && root !== this ? root as import('../src') : undefined;
 	}
@@ -114,7 +114,7 @@ class AstNode {
 	 * @param props 属性键
 	 * @param permanent 是否永久
 	 */
-	seal(props: string|string[], permanent = false) {
+	seal(props: string | string[], permanent = false) {
 		const keys = Array.isArray(props) ? props : [props];
 		if (!permanent) {
 			for (const key of keys) {
@@ -266,7 +266,7 @@ class AstNode {
 	 * @param options 选项
 	 * @param options.once 仅执行一次
 	 */
-	addEventListener(types: string|string[], listener: AstListener, options: {once?: boolean}|undefined = undefined) {
+	addEventListener(types: string | string[], listener: AstListener, options: {once?: boolean} | undefined = undefined) {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.addEventListener(type, listener, options);
@@ -283,7 +283,7 @@ class AstNode {
 	 * @param types 事件类型
 	 * @param listener 监听函数
 	 */
-	removeEventListener(types: string|string[], listener: AstListener) {
+	removeEventListener(types: string | string[], listener: AstListener) {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.removeEventListener(type, listener);
@@ -299,7 +299,7 @@ class AstNode {
 	 * 移除事件的所有监听
 	 * @param types 事件类型
 	 */
-	removeAllEventListeners(types: string|string[]) {
+	removeAllEventListeners(types: string | string[]) {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.removeAllEventListeners(type);
@@ -401,7 +401,7 @@ class AstNode {
 	}
 
 	/** 获取根节点 */
-	getRootNode(): import('../src')|this {
+	getRootNode(): import('../src') | this {
 		let {parentNode} = this;
 		while (parentNode?.parentNode) {
 			({parentNode} = parentNode);
@@ -463,7 +463,7 @@ class AstNode {
 	 * 获取当前节点的相对字符位置，或其第`j`个子节点的相对字符位置
 	 * @param j 子节点序号
 	 */
-	getRelativeIndex(j: number|undefined = undefined): number {
+	getRelativeIndex(j: number | undefined = undefined): number {
 		let childNodes: AstNodeTypes[];
 
 		/**
@@ -498,7 +498,7 @@ class AstNode {
 	 * 获取当前节点的相对位置，或其第`j`个子节点的相对位置
 	 * @param j 子节点序号
 	 */
-	#getPosition(j: number|undefined = undefined) {
+	#getPosition(j: number | undefined = undefined) {
 		return j === undefined
 			? this.parentNode?.posFromIndex(this.getRelativeIndex()) ?? {top: 0, left: 0}
 			: this.posFromIndex(this.getRelativeIndex(j));

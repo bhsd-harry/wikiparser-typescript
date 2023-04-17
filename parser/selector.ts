@@ -66,7 +66,7 @@ const sanitize = (selector: string) => {
  * 还原转义符号
  * @param selector
  */
-const desanitize = <T extends string|undefined>(selector: T) => {
+const desanitize = <T extends string | undefined>(selector: T) => {
 	if (selector === undefined) {
 		return undefined as T;
 	}
@@ -81,7 +81,7 @@ const desanitize = <T extends string|undefined>(selector: T) => {
  * 去除首尾的引号
  * @param val 属性值或伪选择器函数的参数
  */
-const deQuote = <T extends string|undefined>(val: T) => {
+const deQuote = <T extends string | undefined>(val: T) => {
 	if (val === undefined) {
 		return undefined as T;
 	}
@@ -143,7 +143,7 @@ const parseSelector = (selector: string) => {
 			regex = attributeRegex;
 		} else if (syntax.endsWith(']')) { // 情形4：属性闭合
 			mt[3] &&= desanitize(deQuote(mt[3]));
-			step.push(mt.slice(1) as [string, string|undefined, string|undefined, string|undefined]);
+			step.push(mt.slice(1) as [string, string | undefined, string | undefined, string | undefined]);
 			regex = regularRegex;
 		} else if (syntax === '(') { // 情形5：伪选择器开启
 			const pseudoExec = pseudoRegex.exec(sanitized.slice(0, index));

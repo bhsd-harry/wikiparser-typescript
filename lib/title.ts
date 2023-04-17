@@ -5,7 +5,7 @@ import Parser = require('..');
 class Title {
 	valid = true;
 	ns = 0;
-	fragment: string|undefined;
+	fragment: string | undefined;
 	encoded = false;
 	title = '';
 	main = '';

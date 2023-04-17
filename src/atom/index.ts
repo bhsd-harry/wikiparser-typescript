@@ -3,22 +3,22 @@ import Token = require('..');
 import {Acceptable} from '../../typings/tokenAttribute';
 
 declare type AtomTypes = 'plain'
-	|'hidden'
-	|'arg-name'
-	|'attr-key'
-	|'attr-value'
-	|'ext-attr-dirty'
-	|'html-attr-dirty'
-	|'table-attr-dirty'
-	|'converter-flag'
-	|'converter-rule-variant'
-	|'converter-rule-to'
-	|'converter-rule-from'
-	|'converter-rule-noconvert'
-	|'invoke-function'
-	|'invoke-module'
-	|'template-name'
-	|'link-target';
+	| 'hidden'
+	| 'arg-name'
+	| 'attr-key'
+	| 'attr-value'
+	| 'ext-attr-dirty'
+	| 'html-attr-dirty'
+	| 'table-attr-dirty'
+	| 'converter-flag'
+	| 'converter-rule-variant'
+	| 'converter-rule-to'
+	| 'converter-rule-from'
+	| 'converter-rule-noconvert'
+	| 'invoke-function'
+	| 'invoke-module'
+	| 'template-name'
+	| 'link-target';
 
 /**
  * 不会被继续解析的plain Token
@@ -34,11 +34,11 @@ class AtomToken extends Token {
 	 * @param acceptable 可接受的子节点设置
 	 */
 	constructor(
-		wikitext: string|undefined,
+		wikitext: string | undefined,
 		type: AtomTypes,
 		config = Parser.getConfig(),
 		accum: Token[] = [],
-		acceptable: Acceptable|undefined = undefined,
+		acceptable: Acceptable | undefined = undefined,
 	) {
 		super(wikitext, config, true, accum, acceptable);
 		if (type) {

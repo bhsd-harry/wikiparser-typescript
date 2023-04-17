@@ -12,7 +12,7 @@ class Range {
 	 * @throws `RangeError` n的系数不能为0
 	 * @throws `RangeError` 应使用CSS选择器或Python切片的格式
 	 */
-	constructor(s: string|Range) {
+	constructor(s: string | Range) {
 		if (s instanceof Range) {
 			Object.assign(this, s);
 			return;
@@ -62,7 +62,7 @@ class Range {
 	 * 将Range转换为针对特定数组的下标集
 	 * @param arr 参考数组
 	 */
-	applyTo(arr: number|unknown[]) {
+	applyTo(arr: number | unknown[]) {
 		return new Array(typeof arr === 'number' ? arr : arr.length).fill(undefined).map((_, i) => i)
 			.slice(this.start, this.end)
 			.filter((_, j) => j % this.step === 0);
@@ -70,9 +70,9 @@ class Range {
 }
 
 /** @extends {Array<number|Range>} */
-class Ranges extends Array<number|Range> {
+class Ranges extends Array<number | Range> {
 	/** @param a 表达式数组 */
-	constructor(a: number|string|Range|(number|string|Range)[]|undefined = undefined) {
+	constructor(a: number | string | Range | (number | string | Range)[] | undefined = undefined) {
 		super();
 		if (a === undefined) {
 			return;
@@ -99,7 +99,7 @@ class Ranges extends Array<number|Range> {
 	 * 将Ranges转换为针对特定Array的下标集
 	 * @param arr 参考数组
 	 */
-	applyTo(arr: number|unknown[]) {
+	applyTo(arr: number | unknown[]) {
 		const length = typeof arr === 'number' ? arr : arr.length;
 		return [
 			...new Set(

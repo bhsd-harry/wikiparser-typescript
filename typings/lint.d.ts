@@ -1,6 +1,6 @@
 interface LintError {
 	message: string;
-	severity: 'error'|'warning';
+	severity: 'error' | 'warning';
 	startIndex: number;
 	endIndex: number;
 	startLine: number;
