@@ -963,7 +963,13 @@
 			},
 			"overrideReplacesDocs": [
 				"require-description"
-			]
+			],
+			"structuredTags": {
+				"browser": {
+					"name": false,
+					"type": false
+				}
+			}
 		}
 	}
 }

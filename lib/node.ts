@@ -9,53 +9,71 @@ import AstNodeTypes = require('../typings/node');
 
 /** 类似Node */
 class AstNode {
+	/** @browser */
 	type: string;
+	/** @browser */
 	readonly childNodes: AstNodeTypes[] = [];
+	/** @browser */
 	#parentNode: import('../src') | undefined;
 	#optional: Set<string> = new Set();
 	#events = new EventEmitter();
 
 	/**
-	 * 检查在某个位置增删子节点是否合法
-	 * @param i 增删位置
-	 * @param addition 将会插入的子节点个数
-	 * @throws `RangeError` 指定位置不存在子节点
+	 * 首位子节点
+	 * @browser
 	 */
-	verifyChild(i: number, addition = 0) {
-		if (!Number.isInteger(i)) {
-			this.typeError('verifyChild', 'Number');
-		}
-		const {childNodes: {length}} = this;
-		if (i < -length || i >= length + addition) {
-			throw new RangeError(`不存在第 ${i} 个子节点！`);
-		}
-	}
-
-	/** 首位子节点 */
 	get firstChild() {
 		return this.childNodes[0];
 	}
 
-	/** 末位子节点 */
+	/**
+	 * 末位子节点
+	 * @browser
+	 */
 	get lastChild() {
 		return this.childNodes.at(-1);
 	}
 
-	/** 父节点 */
+	/**
+	 * 父节点
+	 * @browser
+	 */
 	get parentNode() {
 		return this.#parentNode;
 	}
 
-	/** 后一个兄弟节点 */
+	/**
+	 * 后一个兄弟节点
+	 * @browser
+	 */
 	get nextSibling() {
 		const childNodes = this.#parentNode?.childNodes;
 		return childNodes && childNodes[childNodes.indexOf(this as unknown as AstNodeTypes) + 1];
 	}
 
-	/** 前一个兄弟节点 */
+	/**
+	 * 前一个兄弟节点
+	 * @browser
+	 */
 	get previousSibling() {
 		const childNodes = this.#parentNode?.childNodes;
 		return childNodes && childNodes[childNodes.indexOf(this as unknown as AstNodeTypes) - 1];
+	}
+
+	/**
+	 * 行数
+	 * @browser
+	 */
+	get offsetHeight() {
+		return this.#getDimension().height;
+	}
+
+	/**
+	 * 最后一行的列数
+	 * @browser
+	 */
+	get offsetWidth() {
+		return this.#getDimension().width;
 	}
 
 	/** 后一个非文本兄弟节点 */
@@ -95,9 +113,170 @@ class AstNode {
 		return nextSibling === undefined && Boolean(this.parentNode?.eof);
 	}
 
+	/** 相对于父容器的行号 */
+	get offsetTop() {
+		return this.#getPosition()?.top;
+	}
+
+	/** 相对于父容器的列号 */
+	get offsetLeft() {
+		return this.#getPosition()?.left;
+	}
+
+	/** 位置、大小和padding */
+	get style() {
+		return {...this.#getPosition(), ...this.#getDimension(), padding: this.getPadding()};
+	}
+
 	constructor() {
 		Object.defineProperty(this, 'childNodes', {writable: false});
 		Object.freeze(this.childNodes);
+	}
+
+	/**
+	 * 是否具有某属性
+	 * @browser
+	 * @param key 属性键
+	 */
+	hasAttribute(key: string) {
+		return typeof key === 'string' ? key in this : this.typeError('hasAttribute', 'String');
+	}
+
+	/**
+	 * 获取属性值。除非用于私有属性，否则总是返回字符串。
+	 * @browser
+	 * @param key 属性键
+	 */
+	getAttribute<T extends string>(key: T) {
+		if (key === 'optional') {
+			return new Set(this.#optional) as TokenAttributeGetter<T>;
+		}
+		return this.hasAttribute(key)
+			// @ts-expect-error noImplicitAny
+			? String(this[key as string]) as TokenAttributeGetter<T>
+			: undefined as TokenAttributeGetter<T>;
+	}
+
+	/**
+	 * 设置属性
+	 * @browser
+	 * @param key 属性键
+	 * @param value 属性值
+	 */
+	setAttribute<T extends string>(key: T, value: TokenAttributeSetter<T>) {
+		if (key === 'parentNode') {
+			this.#parentNode = value as TokenAttributeSetter<'parentNode'>;
+		} else if (Object.hasOwn(this, key)) {
+			const descriptor = Object.getOwnPropertyDescriptor(this, key)!;
+			if (this.#optional.has(key)) {
+				descriptor.enumerable = Boolean(value);
+			}
+			// @ts-expect-error noImplicitAny
+			const oldValue = this[key as string],
+				frozen = oldValue !== null && typeof oldValue === 'object' && Object.isFrozen(oldValue);
+			Object.defineProperty(this, key, {...descriptor, value});
+			if (frozen && value !== null && typeof value === 'object') {
+				Object.freeze(value);
+			}
+		} else {
+			// @ts-expect-error noImplicitAny
+			this[key as string] = value;
+		}
+		return this;
+	}
+
+	/**
+	 * 获取根节点
+	 * @browser
+	 */
+	getRootNode(): import('../src') | this {
+		let {parentNode} = this;
+		while (parentNode?.parentNode) {
+			({parentNode} = parentNode);
+		}
+		return parentNode ?? this;
+	}
+
+	/**
+	 * 将字符位置转换为行列号
+	 * @browser
+	 * @param index 字符位置
+	 */
+	posFromIndex(index: number) {
+		if (!Number.isInteger(index)) {
+			this.typeError('posFromIndex', 'Number');
+		}
+		const str = String(this);
+		if (index >= -str.length && index <= str.length) {
+			const lines = str.slice(0, index).split('\n');
+			return {top: lines.length - 1, left: lines.at(-1)!.length};
+		}
+		return undefined;
+	}
+
+	/**
+	 * 获取行数和最后一行的列数
+	 * @browser
+	 */
+	#getDimension() {
+		const lines = String(this).split('\n');
+		return {height: lines.length, width: lines.at(-1)!.length};
+	}
+
+	/**
+	 * 第一个子节点前的间距
+	 * @browser
+	 */
+	getPadding() {
+		return 0;
+	}
+
+	/**
+	 * 子节点间距
+	 * @browser
+	 * @param i 子节点序号
+	 */
+	getGaps(i = 0) { // eslint-disable-line @typescript-eslint/no-unused-vars
+		return 0;
+	}
+
+	/**
+	 * 获取当前节点的相对字符位置，或其第`j`个子节点的相对字符位置
+	 * @browser
+	 * @param j 子节点序号
+	 */
+	getRelativeIndex(j: number | undefined = undefined): number {
+		let childNodes: AstNodeTypes[];
+
+		/**
+		 * 获取子节点相对于父节点的字符位置，使用前需要先给`childNodes`赋值
+		 * @param end 子节点序号
+		 * @param parent 父节点
+		 */
+		const getIndex = (end: number, parent: AstNode) => childNodes.slice(0, end).reduce(
+			(acc, cur, i) => acc + String(cur).length + parent.getGaps(i),
+			0,
+		) + parent.getPadding();
+		if (j === undefined) {
+			const {parentNode} = this;
+			if (parentNode) {
+				({childNodes} = parentNode);
+				return getIndex(childNodes.indexOf(this as unknown as AstNodeTypes), parentNode);
+			}
+			return 0;
+		}
+		this.verifyChild(j, 1);
+		({childNodes} = this);
+		return getIndex(j, this);
+	}
+
+	/**
+	 * 获取当前节点的绝对位置
+	 * @browser
+	 */
+	getAbsoluteIndex(): number {
+		const {parentNode} = this;
+		return parentNode ? parentNode.getAbsoluteIndex() + this.getRelativeIndex() : 0;
 	}
 
 	/**
@@ -144,55 +323,6 @@ class AstNode {
 			throw e;
 		}
 		return true;
-	}
-
-	/**
-	 * 是否具有某属性
-	 * @param key 属性键
-	 */
-	hasAttribute(key: string) {
-		return typeof key === 'string' ? key in this : this.typeError('hasAttribute', 'String');
-	}
-
-	/**
-	 * 获取属性值。除非用于私有属性，否则总是返回字符串。
-	 * @param key 属性键
-	 */
-	getAttribute<T extends string>(key: T) {
-		if (key === 'optional') {
-			return new Set(this.#optional) as TokenAttributeGetter<T>;
-		}
-		return this.hasAttribute(key)
-			// @ts-expect-error noImplicitAny
-			? String(this[key as string]) as TokenAttributeGetter<T>
-			: undefined as TokenAttributeGetter<T>;
-	}
-
-	/**
-	 * 设置属性
-	 * @param key 属性键
-	 * @param value 属性值
-	 */
-	setAttribute<T extends string>(key: T, value: TokenAttributeSetter<T>) {
-		if (key === 'parentNode') {
-			this.#parentNode = value as TokenAttributeSetter<'parentNode'>;
-		} else if (Object.hasOwn(this, key)) {
-			const descriptor = Object.getOwnPropertyDescriptor(this, key)!;
-			if (this.#optional.has(key)) {
-				descriptor.enumerable = Boolean(value);
-			}
-			// @ts-expect-error noImplicitAny
-			const oldValue = this[key as string],
-				frozen = oldValue !== null && typeof oldValue === 'object' && Object.isFrozen(oldValue);
-			Object.defineProperty(this, key, {...descriptor, value});
-			if (frozen && value !== null && typeof value === 'object') {
-				Object.freeze(value);
-			}
-		} else {
-			// @ts-expect-error noImplicitAny
-			this[key as string] = value;
-		}
-		return this;
 	}
 
 	/**
@@ -257,6 +387,22 @@ class AstNode {
 		return node instanceof AstNode
 			? node === this || this.childNodes.some(child => child.contains(node))
 			: this.typeError('contains', 'AstNode');
+	}
+
+	/**
+	 * 检查在某个位置增删子节点是否合法
+	 * @param i 增删位置
+	 * @param addition 将会插入的子节点个数
+	 * @throws `RangeError` 指定位置不存在子节点
+	 */
+	verifyChild(i: number, addition = 0) {
+		if (!Number.isInteger(i)) {
+			this.typeError('verifyChild', 'Number');
+		}
+		const {childNodes: {length}} = this;
+		if (i < -length || i >= length + addition) {
+			throw new RangeError(`不存在第 ${i} 个子节点！`);
+		}
 	}
 
 	/**
@@ -382,49 +528,6 @@ class AstNode {
 			- childNodes.indexOf(bAncestors[depth]!);
 	}
 
-	/** 合并相邻的文本子节点 */
-	normalize() {
-		const childNodes = [...this.childNodes];
-		for (let i = childNodes.length - 1; i >= 0; i--) {
-			const cur = childNodes[i]!,
-				prev = childNodes[i - 1];
-			if (cur.type !== 'text' || this.getGaps(i - 1)) {
-				//
-			} else if (cur.data === '') {
-				childNodes.splice(i, 1);
-			} else if (prev?.type === 'text') {
-				prev.setAttribute('data', prev.data + cur.data);
-				childNodes.splice(i, 1);
-			}
-		}
-		this.setAttribute('childNodes', childNodes);
-	}
-
-	/** 获取根节点 */
-	getRootNode(): import('../src') | this {
-		let {parentNode} = this;
-		while (parentNode?.parentNode) {
-			({parentNode} = parentNode);
-		}
-		return parentNode ?? this;
-	}
-
-	/**
-	 * 将字符位置转换为行列号
-	 * @param index 字符位置
-	 */
-	posFromIndex(index: number) {
-		if (!Number.isInteger(index)) {
-			this.typeError('posFromIndex', 'Number');
-		}
-		const str = String(this);
-		if (index >= -str.length && index <= str.length) {
-			const lines = str.slice(0, index).split('\n');
-			return {top: lines.length - 1, left: lines.at(-1)!.length};
-		}
-		return undefined;
-	}
-
 	/**
 	 * 将行列号转换为字符位置
 	 * @param top 行号
@@ -440,60 +543,6 @@ class AstNode {
 			: undefined;
 	}
 
-	/** 获取行数和最后一行的列数 */
-	#getDimension() {
-		const lines = String(this).split('\n');
-		return {height: lines.length, width: lines.at(-1)!.length};
-	}
-
-	/** 第一个子节点前的间距 */
-	getPadding() {
-		return 0;
-	}
-
-	/**
-	 * 子节点间距
-	 * @param i 子节点序号
-	 */
-	getGaps(i = 0) { // eslint-disable-line @typescript-eslint/no-unused-vars
-		return 0;
-	}
-
-	/**
-	 * 获取当前节点的相对字符位置，或其第`j`个子节点的相对字符位置
-	 * @param j 子节点序号
-	 */
-	getRelativeIndex(j: number | undefined = undefined): number {
-		let childNodes: AstNodeTypes[];
-
-		/**
-		 * 获取子节点相对于父节点的字符位置，使用前需要先给`childNodes`赋值
-		 * @param end 子节点序号
-		 * @param parent 父节点
-		 */
-		const getIndex = (end: number, parent: AstNode) => childNodes.slice(0, end).reduce(
-			(acc, cur, i) => acc + String(cur).length + parent.getGaps(i),
-			0,
-		) + parent.getPadding();
-		if (j === undefined) {
-			const {parentNode} = this;
-			if (parentNode) {
-				({childNodes} = parentNode);
-				return getIndex(childNodes.indexOf(this as unknown as AstNodeTypes), parentNode);
-			}
-			return 0;
-		}
-		this.verifyChild(j, 1);
-		({childNodes} = this);
-		return getIndex(j, this);
-	}
-
-	/** 获取当前节点的绝对位置 */
-	getAbsoluteIndex(): number {
-		const {parentNode} = this;
-		return parentNode ? parentNode.getAbsoluteIndex() + this.getRelativeIndex() : 0;
-	}
-
 	/**
 	 * 获取当前节点的相对位置，或其第`j`个子节点的相对位置
 	 * @param j 子节点序号
@@ -507,31 +556,6 @@ class AstNode {
 	/** 获取当前节点的行列位置和大小 */
 	getBoundingClientRect() {
 		return {...this.#getDimension(), ...this.getRootNode().posFromIndex(this.getAbsoluteIndex())};
-	}
-
-	/** 行数 */
-	get offsetHeight() {
-		return this.#getDimension().height;
-	}
-
-	/** 最后一行的列数 */
-	get offsetWidth() {
-		return this.#getDimension().width;
-	}
-
-	/** 相对于父容器的行号 */
-	get offsetTop() {
-		return this.#getPosition()?.top;
-	}
-
-	/** 相对于父容器的列号 */
-	get offsetLeft() {
-		return this.#getPosition()?.left;
-	}
-
-	/** 位置、大小和padding */
-	get style() {
-		return {...this.#getPosition(), ...this.#getDimension(), padding: this.getPadding()};
 	}
 }
 

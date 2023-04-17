@@ -25,9 +25,11 @@ declare type AtomTypes = 'plain'
  * @classdesc `{childNodes: ...AstText|Token}`
  */
 class AtomToken extends Token {
+	/** @browser */
 	override type: AtomTypes = 'plain';
 
 	/**
+	 * @browser
 	 * @param wikitext wikitext
 	 * @param type Token.type
 	 * @param accum

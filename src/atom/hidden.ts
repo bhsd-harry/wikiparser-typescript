@@ -4,6 +4,7 @@ import AtomToken = require('.');
 
 /** 不可见的节点 */
 class HiddenToken extends hidden(AtomToken) {
+	/** @browser */
 	override readonly type = 'hidden';
 }
 
