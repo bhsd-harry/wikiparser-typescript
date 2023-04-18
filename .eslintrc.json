@@ -531,7 +531,12 @@
 				"name": "e"
 			}
 		],
-		"unicorn/consistent-function-scoping": 2,
+		"unicorn/consistent-function-scoping": [
+			2,
+			{
+				"checkArrowFunctions": false
+			}
+		],
 		"unicorn/empty-brace-spaces": 2,
 		"unicorn/error-message": 2,
 		"unicorn/explicit-length-check": 2,
