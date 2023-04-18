@@ -27,10 +27,7 @@ class AtomToken extends Token {
 	/** @browser */
 	override type: AtomTypes = 'plain';
 
-	/**
-	 * @browser
-	 * @param acceptable 可接受的子节点设置
-	 */
+	/** @browser */
 	constructor(
 		wikitext: string | undefined,
 		type: AtomTypes,
