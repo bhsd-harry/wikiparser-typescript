@@ -1,5 +1,5 @@
 import {generateForSelf} from '../../util/lint';
-import fixedToken = require('../../mixin/fixedToken');
+import fixed = require('../../mixin/fixed');
 import Parser = require('../..');
 import Token = require('..');
 
@@ -16,7 +16,7 @@ declare type NowikiTypes = 'ext-inner'
  * 纯文字Token，不会被解析
  * @classdesc `{childNodes: [AstText]}`
  */
-class NowikiToken extends fixedToken(Token) {
+class NowikiToken extends fixed(Token) {
 	/** @browser */
 	override type: NowikiTypes = 'ext-inner';
 	declare childNodes: [import('../../lib/text')] | [];

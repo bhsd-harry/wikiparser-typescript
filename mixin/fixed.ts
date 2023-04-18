@@ -6,7 +6,7 @@ import {Inserted, InsertionReturn} from '../lib/node';
  * @param constructor 基类
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fixedToken = <S extends new (...args: any[]) => {length: number}>(constructor: S) => class extends constructor {
+const fixed = <S extends new (...args: any[]) => {length: number}>(constructor: S) => class extends constructor {
 	static readonly fixed = true;
 
 	/**
@@ -33,5 +33,5 @@ const fixedToken = <S extends new (...args: any[]) => {length: number}>(construc
 	}
 };
 
-Parser.mixins['fixedToken'] = __filename;
-export = fixedToken;
+Parser.mixins['fixed'] = __filename;
+export = fixed;
