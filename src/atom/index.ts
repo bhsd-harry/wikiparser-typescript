@@ -1,6 +1,5 @@
 import Parser = require('../..');
 import Token = require('..');
-import {Acceptable} from '../../typings/tokenAttribute';
 
 declare type AtomTypes = 'plain'
 	| 'hidden'
@@ -30,9 +29,6 @@ class AtomToken extends Token {
 
 	/**
 	 * @browser
-	 * @param wikitext wikitext
-	 * @param type Token.type
-	 * @param accum
 	 * @param acceptable 可接受的子节点设置
 	 */
 	constructor(

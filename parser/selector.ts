@@ -1,5 +1,4 @@
 import Parser = require('..');
-import SelectorArray = require('../typings/selector');
 
 const simplePseudos: Set<string> = new Set([
 	'root',
@@ -51,10 +50,7 @@ const pseudoRegex = new RegExp(`:(${complexPseudos.join('|')})$`, 'u'),
 	grouping = new Set([',', '>', '+', '~']),
 	combinator = new Set(['>', '+', '~', '']);
 
-/**
- * 清理转义符号
- * @param selector
- */
+/** 清理转义符号 */
 const sanitize = (selector: string) => {
 	for (const [c, escaped] of specialChars) {
 		selector = selector.replaceAll(`\\${c}`, escaped); // eslint-disable-line no-param-reassign
@@ -62,10 +58,7 @@ const sanitize = (selector: string) => {
 	return selector;
 };
 
-/**
- * 还原转义符号
- * @param selector
- */
+/** 还原转义符号 */
 const desanitize = <T extends string | undefined>(selector: T) => {
 	if (selector === undefined) {
 		return undefined as T;
@@ -107,7 +100,6 @@ const pushSimple = (step: SelectorArray, str: string) => {
 
 /**
  * 解析选择器
- * @param selector
  * @throws `SyntaxError` 非法的选择器
  */
 const parseSelector = (selector: string) => {

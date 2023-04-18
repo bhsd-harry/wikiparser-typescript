@@ -1,6 +1,5 @@
 import Parser = require('..');
 import AstNode = require('./node');
-import LintError = require('../typings/lint');
 
 const errorSyntax = /https?:\/\/|\{+|\}+|\[{2,}|\[(?![^[]*\])|(?<=^|\])([^[]*?)\]+|\]{2,}|<\s*\/?([a-z]\w*)/giu,
 	errorSyntaxUrl = /\{+|\}+|\[{2,}|\[(?![^[]*\])|(?<=^|\])([^[]*?)\]+|\]{2,}|<\s*\/?([a-z]\w*)/giu,
@@ -161,8 +160,8 @@ class AstText extends AstNode {
 						startCol,
 						endCol: startCol + length,
 						excerpt: rootStr.slice(Math.max(0, end - 50), end),
-					} as LintError;
-				}).filter(Boolean) as LintError[];
+					} as Parser.LintError;
+				}).filter(Boolean) as Parser.LintError[];
 		}
 		return [];
 	}

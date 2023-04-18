@@ -2,10 +2,28 @@ import {typeError} from '../util/debug';
 import assert = require('assert/strict');
 import EventEmitter = require('events');
 import Parser = require('..');
-import {TokenAttributeGetter, TokenAttributeSetter} from '../typings/tokenAttribute';
-import {AstListener, AstEventData} from '../typings/event';
-import {Inserted} from '../typings/insert';
-import AstNodeTypes = require('../typings/node');
+
+declare type AstNodeTypes = import('./text') | import('../src');
+declare type Inserted = string | AstNodeTypes;
+declare type InsertionReturn<T extends Inserted> = T extends string ? import('./text') : T;
+declare type TokenAttribute<T extends string> =
+	T extends 'stage' ? number :
+	T extends 'config' ? Parser.Config :
+	T extends 'accum' ? import('../src')[] :
+	T extends 'parentNode' ? import('../src') | undefined :
+	T extends 'childNodes' ? AstNodeTypes[] :
+	T extends 'bracket' | 'include' ? boolean :
+	T extends 'pattern' ? RegExp :
+	T extends 'tags' | 'flags' | 'quotes' ? string[] :
+	T extends 'optional' | 'keys' ? Set<string> :
+	// T extends 'args' ? Record<string, Set<ParameterToken>> :
+	T extends 'protectedChildren' ? import('./ranges') :
+	string;
+declare type TokenAttributeGetter<T extends string> =
+	T extends 'acceptable' ? Record<string, import('./ranges')> | undefined : TokenAttribute<T>;
+
+declare type TokenAttributeSetter<T extends string> =
+	T extends 'acceptable' ? Acceptable | undefined : TokenAttribute<T>;
 
 /** 类似Node */
 class AstNode {
@@ -223,19 +241,12 @@ class AstNode {
 		return {height: lines.length, width: lines.at(-1)!.length};
 	}
 
-	/**
-	 * 第一个子节点前的间距
-	 * @browser
-	 */
+	/** @private */
 	getPadding() {
 		return 0;
 	}
 
-	/**
-	 * 子节点间距
-	 * @browser
-	 * @param i 子节点序号
-	 */
+	/** @private */
 	getGaps(i = 0) { // eslint-disable-line @typescript-eslint/no-unused-vars
 		return 0;
 	}
@@ -279,20 +290,12 @@ class AstNode {
 		return parentNode ? parentNode.getAbsoluteIndex() + this.getRelativeIndex() : 0;
 	}
 
-	/**
-	 * 抛出`TypeError`
-	 * @param method
-	 * @param types 可接受的参数类型
-	 */
+	/** @private */
 	typeError(method: string, ...types: string[]) {
 		return typeError(this.constructor, method, ...types);
 	}
 
-	/**
-	 * 冻结部分属性
-	 * @param props 属性键
-	 * @param permanent 是否永久
-	 */
+	/** @private */
 	seal(props: string | string[], permanent = false) {
 		const keys = Array.isArray(props) ? props : [props];
 		if (!permanent) {
@@ -389,12 +392,7 @@ class AstNode {
 			: this.typeError('contains', 'AstNode');
 	}
 
-	/**
-	 * 检查在某个位置增删子节点是否合法
-	 * @param i 增删位置
-	 * @param addition 将会插入的子节点个数
-	 * @throws `RangeError` 指定位置不存在子节点
-	 */
+	/** @private */
 	verifyChild(i: number, addition = 0) {
 		if (!Number.isInteger(i)) {
 			this.typeError('verifyChild', 'Number');
@@ -557,6 +555,16 @@ class AstNode {
 	getBoundingClientRect() {
 		return {...this.#getDimension(), ...this.getRootNode().posFromIndex(this.getAbsoluteIndex())};
 	}
+}
+
+declare namespace AstNode {
+	export {
+		AstNodeTypes,
+		Inserted,
+		InsertionReturn,
+		TokenAttributeGetter,
+		TokenAttributeSetter,
+	};
 }
 
 Parser.classes['AstNode'] = __filename;

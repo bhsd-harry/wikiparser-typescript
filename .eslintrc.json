@@ -604,15 +604,7 @@
 		"unicorn/throw-new-error": 2,
 		"jsdoc/check-alignment": 1,
 		"jsdoc/check-indentation": 1,
-		"jsdoc/check-tag-names": [
-			1,
-			{
-				"definedTags": [
-					"template",
-					"complexity"
-				]
-			}
-		],
+		"jsdoc/check-tag-names": 1,
 		"jsdoc/check-types": 0,
 		"jsdoc/multiline-blocks": 1,
 		"jsdoc/newline-after-description": [
@@ -665,12 +657,6 @@
 		"jsdoc/require-param-description": [
 			1,
 			{
-				"exceptions": [
-					"accum",
-					"selector",
-					"callback",
-					"method"
-				],
 				"contexts": [
 					"FunctionDeclaration",
 					"VariableDeclarator > FunctionExpression",
@@ -697,7 +683,14 @@
 				"exceptions": [
 					"_",
 					"config",
-					"halfParsed"
+					"halfParsed",
+					"accum",
+					"selector",
+					"callback",
+					"method",
+					"wikitext",
+					"type",
+					"acceptable"
 				],
 				"contexts": [
 					"FunctionDeclaration",
@@ -969,7 +962,8 @@
 					"name": false,
 					"type": false
 				}
-			}
+			},
+			"ignorePrivate": true
 		}
 	}
 }

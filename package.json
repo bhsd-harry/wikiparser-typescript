@@ -14,32 +14,22 @@
 	"license": "GPL-3.0",
 	"author": "Bhsd",
 	"files": [
-		"/index.js",
+		"/main.js",
 		"/errors/README",
 		"/printed/README",
 		"/config/",
 		"/i18n/",
-		"/lib/",
-		"/mixin/",
-		"/parser/",
-		"/src/",
-		"/tool/",
-		"/util/",
-		"/typings/",
 		"/dist/"
 	],
+	"main": "./main.js",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bhsd-harry/wikiparser-node.git"
 	},
 	"scripts": {
-		"build": "tsc; eslint --fix dist/",
-		"diff": "./bin/diff.sh",
-		"doc": "node ./bin/doc.js",
-		"toc": "node ./bin/toc.js",
-		"test": "eslint . && ajv -s config/.schema.json -d 'config/*.json' --strict=true --strict-required=false",
-		"real": "node test/real.js",
-		"single": "node --prof test/single.js && node --prof-process isolate-0x*-v8.log > test/processed.txt && rm isolate-0x*-v8.log"
+		"prepublishOnly": "rm -rf dist/; tsc; rm dist/[mpu]*/*.d.ts && grep -rl --include='*.d.ts' '@private' dist/ | xargs gsed -i '/@private/,+1d'",
+		"build": "rm -rf dist/; tsc; eslint --fix dist/",
+		"diff": "./bin/diff.sh"
 	},
 	"devDependencies": {
 		"@types/node": "^17.0.23",

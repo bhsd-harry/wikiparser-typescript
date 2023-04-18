@@ -1,11 +1,11 @@
 import Parser = require('..');
-import Constructor = require('../typings/constructor');
 
 /**
  * 解析后不可见的类
  * @param constructor 基类
  */
-const hidden = <T extends Constructor>(constructor: T) => class extends constructor {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const hidden = <T extends new (...args: any[]) => object>(constructor: T) => class extends constructor {
 	static readonly hidden = true;
 
 	/** 没有可见部分 */
