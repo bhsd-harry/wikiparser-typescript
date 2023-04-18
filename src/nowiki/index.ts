@@ -19,11 +19,11 @@ declare type NowikiTypes = 'ext-inner'
 class NowikiToken extends fixedToken(Token) {
 	/** @browser */
 	override type: NowikiTypes = 'ext-inner';
-	declare childNodes: [import('../../lib/text')];
+	declare childNodes: [import('../../lib/text')] | [];
 	// @ts-expect-error override accessor
-	declare firstChild: import('../../lib/text');
+	declare firstChild: import('../../lib/text') | undefined;
 	// @ts-expect-error override accessor
-	declare lastChild: import('../../lib/text');
+	declare lastChild: import('../../lib/text') | undefined;
 
 	/** @browser */
 	constructor(wikitext: string | undefined, config = Parser.getConfig(), accum: Token[] = []) {
@@ -44,8 +44,10 @@ class NowikiToken extends fixedToken(Token) {
 
 	/** @override */
 	override cloneNode() {
-		const {constructor, firstChild: {data}, type} = this,
-			token = Parser.run(() => new (constructor as typeof NowikiToken)(data, this.getAttribute('config')));
+		const {constructor, firstChild, type} = this,
+			token = Parser.run(
+				() => new (constructor as typeof NowikiToken)(firstChild?.data, this.getAttribute('config')),
+			);
 		token.type = type;
 		return token as this;
 	}
