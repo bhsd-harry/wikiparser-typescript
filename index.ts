@@ -121,8 +121,15 @@ declare interface Parser {
 	reparse(date: string): import('./src');
 }
 
+/**
+ * 从根路径require
+ * @param file 文件名
+ * @param dir 子路径
+ */
+const rootRequire = (file: string, dir = ''): unknown => require(`${file.includes('/') ? '' : `../${dir}`}${file}`);
+
 const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
-	config: './config/default',
+	config: 'default',
 	i18n: undefined,
 
 	MAX_STAGE: 11,
@@ -242,7 +249,7 @@ const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
 	/** @implements */
 	getConfig() {
 		if (typeof this.config === 'string') {
-			this.config = require.main?.require(this.config);
+			this.config = rootRequire(this.config, 'config/') as Config;
 			return this.getConfig();
 		}
 		return {...this.config, excludes: []};
@@ -251,7 +258,7 @@ const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
 	/** @implements */
 	msg(msg, arg = '') {
 		if (typeof this.i18n === 'string') {
-			this.i18n = require.main?.require(this.i18n);
+			this.i18n = rootRequire(this.i18n, 'i18n/') as Record<string, string>;
 			return this.msg(msg, arg);
 		}
 		return (this.i18n?.[msg] ?? msg).replace('$1', arg);
