@@ -1,9 +1,7 @@
-import Parser = require('../..');
-import Token = require('..');
+import Parser = require('..');
+import Token = require('.');
 
-declare type AtomTypes = 'plain'
-	| 'hidden'
-	| 'arg-name'
+declare type AtomTypes = 'arg-name'
 	| 'attr-key'
 	| 'attr-value'
 	| 'ext-attr-dirty'
@@ -19,13 +17,9 @@ declare type AtomTypes = 'plain'
 	| 'template-name'
 	| 'link-target';
 
-/**
- * 不会被继续解析的plain Token
- * @classdesc `{childNodes: ...AstText|Token}`
- */
+/** 不会被继续解析的plain Token */
 class AtomToken extends Token {
-	/** @browser */
-	override type: AtomTypes = 'plain';
+	declare type: AtomTypes;
 
 	/** @browser */
 	constructor(
@@ -47,7 +41,7 @@ class AtomToken extends Token {
 			config = this.getAttribute('config'),
 			acceptable = this.getAttribute('acceptable');
 		return Parser.run(() => {
-			const token = new (this.constructor as typeof AtomToken)(undefined, this.type, config, [], acceptable);
+			const token = new AtomToken(undefined, this.type, config, [], acceptable);
 			token.append(...cloned);
 			return token as this;
 		});

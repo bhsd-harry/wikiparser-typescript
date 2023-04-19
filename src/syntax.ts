@@ -6,10 +6,7 @@ import {TokenAttributeGetter, Inserted} from '../lib/node';
 
 declare type SyntaxTypes = 'plain' | 'heading-trail' | 'magic-word-name' | 'table-syntax';
 
-/**
- * 满足特定语法格式的plain Token
- * @classdesc `{childNodes: ...AstText|Token}`
- */
+/** 满足特定语法格式的plain Token */
 class SyntaxToken extends Token {
 	declare type: SyntaxTypes;
 	#pattern;

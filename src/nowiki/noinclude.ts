@@ -2,10 +2,7 @@ import hidden = require('../../mixin/hidden');
 import Parser = require('../..');
 import NowikiToken = require('.');
 
-/**
- * `<noinclude>`和`</noinclude>`，不可进行任何更改
- * @classdesc `{childNodes: [AstText]}`
- */
+/** `<noinclude>`和`</noinclude>`，不可进行任何更改 */
 class NoincludeToken extends hidden(NowikiToken) {
 	/** @browser */
 	override readonly type = 'noinclude';
