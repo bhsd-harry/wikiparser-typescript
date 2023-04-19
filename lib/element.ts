@@ -3,6 +3,7 @@ import path = require('path');
 import {toCase, noWrap, print, text} from '../util/string';
 import {nth} from './ranges';
 import parseSelector = require('../parser/selector');
+import Title = require('./title');
 import Parser = require('..');
 import AstNode = require('./node');
 
@@ -45,7 +46,7 @@ class AstElement extends AstNode {
 
 	/** 首位非文本子节点 */
 	get firstElementChild() {
-		return this.childNodes.find(({type}) => type !== 'text') as import('../src');
+		return this.childNodes.find(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
 	/** 末位非文本子节点 */
@@ -372,7 +373,6 @@ class AstElement extends AstNode {
 	 * @throws `SyntaxError` 未定义的伪选择器
 	 */
 	#matches(step: SelectorArray): boolean {
-		const Title: typeof import('./title') = require('./title');
 		const {
 				parentNode, type, name, childNodes, link, constructor: {fixed, name: tokenName},
 			} = this as unknown as import('../src') & {constructor: {fixed?: true}, link?: string | import('./title')},

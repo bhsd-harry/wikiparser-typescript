@@ -45,7 +45,7 @@ class SyntaxToken extends Token {
 		});
 	}
 
-	/** @override */
+	/** @private */
 	override afterBuild() {
 		const /** @implements */ syntaxListener: AstListener = (e, data) => {
 			const pattern = this.#pattern;

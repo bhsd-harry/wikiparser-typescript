@@ -9,6 +9,10 @@ import {Inserted, InsertionReturn} from '../lib/node';
 const fixed = <S extends new (...args: any[]) => {length: number}>(constructor: S) => class extends constructor {
 	static readonly fixed = true;
 
+	/** @override */
+	// @ts-expect-error declare method
+	declare toString(selector?: string | undefined, separator?: string): string;
+
 	/**
 	 * @override
 	 * @throws `Error`

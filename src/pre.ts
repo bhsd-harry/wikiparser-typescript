@@ -11,6 +11,18 @@ class PreToken extends Token {
 	override readonly type = 'ext-inner';
 	/** @browser */
 	override readonly name = 'pre';
+	// @ts-expect-error declare accessor
+	declare parentNode: import('./tagPair/ext');
+	// @ts-expect-error declare accessor
+	declare parentElement: import('./tagPair/ext');
+	// @ts-expect-error declare accessor
+	declare nextSibling: undefined;
+	// @ts-expect-error declare accessor
+	declare nextElementSibling: undefined;
+	// @ts-expect-error declare accessor
+	declare previousSibling: import('./attributes');
+	// @ts-expect-error declare accessor
+	declare previousElementSibling: import('./attributes');
 
 	/** @browser */
 	constructor(wikitext: string | undefined, config = Parser.getConfig(), accum: Token[] = []) {
