@@ -1,9 +1,9 @@
 import hidden = require('../../mixin/hidden');
 import Parser = require('../..');
-import NowikiToken = require('.');
+import NowikiBaseToken = require('./base');
 
 /** `<noinclude>`和`</noinclude>`，不可进行任何更改 */
-class NoincludeToken extends hidden(NowikiToken) {
+class NoincludeToken extends hidden(NowikiBaseToken) {
 	/** @browser */
 	override readonly type = 'noinclude';
 

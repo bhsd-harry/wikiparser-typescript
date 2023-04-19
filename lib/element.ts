@@ -258,7 +258,7 @@ class AstElement extends AstNode {
 	 * @param start 起始位置
 	 */
 	lint(start = this.getAbsoluteIndex()) {
-		const SyntaxToken = require('../src/syntax');
+		const SyntaxToken: typeof import('../src/syntax') = require('../src/syntax');
 		if (this instanceof SyntaxToken || (this.constructor as {hidden?: true}).hidden
 			|| this.type === 'ext-inner' && lintIgnoredExt.has(this.name)
 		) {
@@ -372,7 +372,7 @@ class AstElement extends AstNode {
 	 * @throws `SyntaxError` 未定义的伪选择器
 	 */
 	#matches(step: SelectorArray): boolean {
-		const Title: typeof import('./title') = require('./title'); // eslint-disable-line n/no-missing-require
+		const Title: typeof import('./title') = require('./title');
 		const {
 				parentNode, type, name, childNodes, link, constructor: {fixed, name: tokenName},
 			} = this as unknown as import('../src') & {constructor: {fixed?: true}, link?: string | import('./title')},

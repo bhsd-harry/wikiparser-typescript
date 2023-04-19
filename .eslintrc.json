@@ -482,7 +482,7 @@
 		"n/no-unpublished-require": 0,
 		"n/shebang": 0,
 		"n/exports-style": 0,
-		"n/no-missing-require": 2,
+		"n/no-missing-require": 0,
 		"n/no-mixed-requires": 2,
 		"regexp/no-contradiction-with-assertion": 2,
 		"regexp/no-dupe-disjunctions": [
