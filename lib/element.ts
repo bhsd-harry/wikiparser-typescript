@@ -469,8 +469,8 @@ class AstElement extends AstNode {
 		});
 	}
 
-	/** @private */
-	private matchesArray(selector: SelectorArray[]): boolean {
+	/** 检查是否符合解析后的选择器 */
+	#matchesArray(selector: SelectorArray[]): boolean {
 		const step = selector.pop()!;
 		if (this.#matches(step)) {
 			const {parentNode, previousElementSibling} = this;
@@ -478,19 +478,19 @@ class AstElement extends AstNode {
 				case undefined:
 					return true;
 				case '>':
-					return Boolean(parentNode?.matchesArray(selector));
+					return Boolean(parentNode && parentNode.#matchesArray(selector));
 				case '+':
-					return Boolean(previousElementSibling?.matchesArray(selector));
+					return Boolean(previousElementSibling && previousElementSibling.#matchesArray(selector));
 				case '~': {
 					if (!parentNode) {
 						return false;
 					}
 					const {children} = parentNode,
 						i = children.indexOf(this as unknown as import('../src'));
-					return children.slice(0, i).some(child => child.matchesArray(selector));
+					return children.slice(0, i).some(child => child.#matchesArray(selector));
 				}
 				default: // ' '
-					return this.getAncestors().some(ancestor => ancestor.matchesArray(selector));
+					return this.getAncestors().some(ancestor => ancestor.#matchesArray(selector));
 			}
 		}
 		return false;
@@ -508,7 +508,7 @@ class AstElement extends AstNode {
 			if (pseudos.size > 0) {
 				Parser.warn('检测到伪选择器，请确认是否需要将":"转义成"\\:"。', pseudos);
 			}
-			return Parser.run(() => stack.some(condition => this.matchesArray(condition)));
+			return Parser.run(() => stack.some(condition => this.#matchesArray(condition)));
 		}
 		return this.typeError('matches', 'String');
 	}
