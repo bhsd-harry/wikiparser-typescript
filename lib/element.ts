@@ -325,7 +325,7 @@ class AstElement extends AstNode {
 	}
 
 	/** @private */
-	private matchesAttr(
+	matchesAttr(
 		key: string,
 		equal: string | undefined = undefined,
 		val: string | undefined = undefined,
