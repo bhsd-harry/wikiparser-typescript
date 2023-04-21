@@ -40,10 +40,7 @@ class PreToken extends Token {
 		this.setAttribute('stage', Parser.MAX_STAGE - 1);
 	}
 
-	/**
-	 * @override
-	 * @browser
-	 */
+	/** @private */
 	override isPlain() {
 		return true;
 	}

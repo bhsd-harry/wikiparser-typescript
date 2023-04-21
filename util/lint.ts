@@ -1,7 +1,7 @@
 import Parser = require('..');
 import {AstNodeTypes} from '../lib/node';
 
-declare type BoundingRect = {top: number, left: number, start: number} | {start: number};
+export type BoundingRect = {top: number, left: number, start: number} | {start: number};
 
 /**
  * 生成对于子节点的LintError对象

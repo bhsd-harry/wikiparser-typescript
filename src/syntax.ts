@@ -58,18 +58,12 @@ class SyntaxToken extends Token {
 		this.addEventListener(['remove', 'insert', 'replace', 'text'], syntaxListener);
 	}
 
-	/**
-	 * @override
-	 * @param key 属性键
-	 */
+	/** @private */
 	override getAttribute<T extends string>(key: T) {
 		return key === 'pattern' ? this.#pattern as TokenAttributeGetter<T> : super.getAttribute(key);
 	}
 
-	/**
-	 * @override
-	 * @param key 属性键
-	 */
+	/** @private */
 	override hasAttribute(key: string) {
 		return key === 'pattern' || super.hasAttribute(key);
 	}

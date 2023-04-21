@@ -14,9 +14,10 @@ declare type TokenAttribute<T extends string> =
 	T extends 'childNodes' ? AstNodeTypes[] :
 	T extends 'bracket' | 'include' ? boolean :
 	T extends 'pattern' ? RegExp :
-	T extends 'tags' | 'flags' | 'quotes' ? string[] :
+	T extends 'tags' | 'flags' ? string[] :
+	T extends 'quotes' ? [string?, string?] :
 	T extends 'optional' | 'keys' ? Set<string> :
-	// T extends 'args' ? Record<string, Set<ParameterToken>> :
+	T extends 'args' ? Record<string, Set<import('../src/parameter')>> :
 	T extends 'protectedChildren' ? import('./ranges') :
 	string;
 declare type TokenAttributeGetter<T extends string> =
@@ -151,20 +152,12 @@ class AstNode {
 		Object.freeze(this.childNodes);
 	}
 
-	/**
-	 * 是否具有某属性
-	 * @browser
-	 * @param key 属性键
-	 */
+	/** @private */
 	hasAttribute(key: string) {
 		return typeof key === 'string' ? key in this : this.typeError('hasAttribute', 'String');
 	}
 
-	/**
-	 * 获取属性值。除非用于私有属性，否则总是返回字符串。
-	 * @browser
-	 * @param key 属性键
-	 */
+	/** @private */
 	getAttribute<T extends string>(key: T) {
 		if (key === 'optional') {
 			return new Set(this.#optional) as TokenAttributeGetter<T>;
@@ -175,12 +168,7 @@ class AstNode {
 			: undefined as TokenAttributeGetter<T>;
 	}
 
-	/**
-	 * 设置属性
-	 * @browser
-	 * @param key 属性键
-	 * @param value 属性值
-	 */
+	/** @private */
 	setAttribute<T extends string>(key: T, value: TokenAttributeSetter<T>) {
 		if (key === 'parentNode') {
 			this.#parentNode = value as TokenAttributeSetter<'parentNode'>;
@@ -548,12 +536,12 @@ class AstNode {
 	#getPosition(j?: number) {
 		return j === undefined
 			? this.parentNode?.posFromIndex(this.getRelativeIndex()) ?? {top: 0, left: 0}
-			: this.posFromIndex(this.getRelativeIndex(j));
+			: this.posFromIndex(this.getRelativeIndex(j))!;
 	}
 
 	/** 获取当前节点的行列位置和大小 */
 	getBoundingClientRect() {
-		return {...this.#getDimension(), ...this.getRootNode().posFromIndex(this.getAbsoluteIndex())};
+		return {...this.#getDimension(), ...this.getRootNode().posFromIndex(this.getAbsoluteIndex())!};
 	}
 }
 
