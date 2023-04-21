@@ -247,7 +247,7 @@ class AstElement extends AstNode {
 	 * @browser
 	 * @param separator 子节点间的连接符
 	 */
-	override toString(selector: string | undefined = undefined, separator = ''): string {
+	override toString(selector?: string, separator = ''): string {
 		return selector && this.matches(selector)
 			? ''
 			: this.childNodes.map(child => child.toString(selector)).join(separator);
@@ -290,7 +290,7 @@ class AstElement extends AstNode {
 	 * @browser
 	 * @param file 文件名
 	 */
-	json(file: string | undefined = undefined) {
+	json(file?: string) {
 		const json: unknown = {
 			...this,
 			childNodes: this.childNodes.map(child => child.type === 'text' ? String(child) : child.json()),
@@ -325,12 +325,7 @@ class AstElement extends AstNode {
 	}
 
 	/** @private */
-	matchesAttr(
-		key: string,
-		equal: string | undefined = undefined,
-		val: string | undefined = undefined,
-		i: string | undefined = undefined,
-	) {
+	matchesAttr(key: string, equal?: string, val?: string, i?: string) {
 		if (!equal || val === undefined || i === undefined) {
 			return this.hasAttribute(key);
 		} else if (!this.hasAttribute(key)) {
@@ -497,7 +492,7 @@ class AstElement extends AstNode {
 	}
 
 	/** 检查是否符合选择器 */
-	matches(selector: string | undefined) {
+	matches(selector?: string) {
 		if (selector === undefined) {
 			return true;
 		} else if (typeof selector === 'string') {

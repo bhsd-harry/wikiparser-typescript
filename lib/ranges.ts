@@ -72,7 +72,7 @@ class Range {
 /** @extends {Array<number|Range>} */
 class Ranges extends Array<number | Range> {
 	/** @param a 表达式数组 */
-	constructor(a: number | string | Range | (number | string | Range)[] | undefined = undefined) {
+	constructor(a?: number | string | Range | (number | string | Range)[]) {
 		super();
 		if (a === undefined) {
 			return;

@@ -17,7 +17,7 @@ const cmd = (command: string, args: string[]): Promise<string | undefined> => ne
 	 * 清除进程并返回
 	 * @param val 返回值
 	 */
-	const r = (val: string | undefined) => {
+	const r = (val?: string) => {
 		clearTimeout(timer);
 		shell?.kill('SIGINT');
 		resolve(val);

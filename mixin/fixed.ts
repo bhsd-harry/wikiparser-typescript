@@ -11,7 +11,7 @@ const fixed = <S extends new (...args: any[]) => {length: number}>(constructor: 
 
 	/** @override */
 	// @ts-expect-error declare method
-	declare toString(selector?: string | undefined, separator?: string): string;
+	declare toString(selector?: string, separator?: string): string;
 
 	/**
 	 * @override

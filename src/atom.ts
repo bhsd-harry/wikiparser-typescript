@@ -27,7 +27,7 @@ class AtomToken extends Token {
 		type: AtomTypes,
 		config = Parser.getConfig(),
 		accum: Token[] = [],
-		acceptable: Acceptable | undefined = undefined,
+		acceptable?: Acceptable,
 	) {
 		super(wikitext, config, true, accum, acceptable);
 		if (type) {

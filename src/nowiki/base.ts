@@ -24,7 +24,7 @@ class NowikiBaseToken extends fixed(Token) {
 	declare lastChild: import('../../lib/text') | undefined;
 
 	/** @browser */
-	constructor(wikitext: string | undefined, config = Parser.getConfig(), accum: Token[] = []) {
+	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {
 		super(wikitext, config, true, accum);
 	}
 

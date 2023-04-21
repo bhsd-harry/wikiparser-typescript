@@ -46,7 +46,8 @@ class Title {
 		}
 		const m = title.split(':');
 		if (m.length > 1) {
-			const id = namespaces[String(nsid[m[0]!.trim().toLowerCase()])];
+			const ns = nsid[m[0]!.trim().toLowerCase()],
+				id = ns === undefined ? undefined : namespaces[ns];
 			if (id !== undefined) {
 				namespace = id;
 				title = m.slice(1).join(':').trim();

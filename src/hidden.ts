@@ -8,12 +8,7 @@ class HiddenToken extends hidden(Token) {
 	override readonly type = 'hidden';
 
 	/** @browser */
-	constructor(
-		wikitext: string | undefined,
-		config = Parser.getConfig(),
-		accum: Token[] = [],
-		acceptable: Acceptable | undefined = undefined,
-	) {
+	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = [], acceptable?: Acceptable) {
 		super(wikitext, config, true, accum, acceptable);
 	}
 

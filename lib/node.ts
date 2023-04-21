@@ -256,7 +256,7 @@ class AstNode {
 	 * @browser
 	 * @param j 子节点序号
 	 */
-	getRelativeIndex(j: number | undefined = undefined): number {
+	getRelativeIndex(j?: number): number {
 		let childNodes: AstNodeTypes[];
 
 		/**
@@ -410,7 +410,7 @@ class AstNode {
 	 * @param options 选项
 	 * @param options.once 仅执行一次
 	 */
-	addEventListener(types: string | string[], listener: AstListener, options: {once?: boolean} | undefined = undefined) {
+	addEventListener(types: string | string[], listener: AstListener, options?: {once?: boolean}) {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.addEventListener(type, listener, options);
@@ -545,7 +545,7 @@ class AstNode {
 	 * 获取当前节点的相对位置，或其第`j`个子节点的相对位置
 	 * @param j 子节点序号
 	 */
-	#getPosition(j: number | undefined = undefined) {
+	#getPosition(j?: number) {
 		return j === undefined
 			? this.parentNode?.posFromIndex(this.getRelativeIndex()) ?? {top: 0, left: 0}
 			: this.posFromIndex(this.getRelativeIndex(j));

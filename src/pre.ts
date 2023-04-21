@@ -25,7 +25,7 @@ class PreToken extends Token {
 	declare previousElementSibling: import('./attributes');
 
 	/** @browser */
-	constructor(wikitext: string | undefined, config = Parser.getConfig(), accum: Token[] = []) {
+	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {
 		wikitext = wikitext?.replace( // eslint-disable-line no-param-reassign
 			/(<nowiki>)(.*?)(<\/nowiki>)/giu,
 			(_, opening: string, inner: string, closing: string) => {

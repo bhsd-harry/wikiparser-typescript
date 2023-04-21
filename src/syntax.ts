@@ -22,7 +22,7 @@ class SyntaxToken extends Token {
 		type: SyntaxTypes = 'plain',
 		config = Parser.getConfig(),
 		accum: Token[] = [],
-		acceptable: Acceptable | undefined = undefined,
+		acceptable?: Acceptable,
 	) {
 		if (pattern.global) {
 			throw new RangeError(`SyntaxToken 的语法正则不能含有 g 修饰符：${String(pattern)}`);

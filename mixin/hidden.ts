@@ -10,7 +10,7 @@ const hidden = <T extends new (...args: any[]) => object>(constructor: T) => cla
 
 	/** @override */
 	// @ts-expect-error declare method
-	declare toString(selector?: string | undefined, separator?: string): string;
+	declare toString(selector?: string, separator?: string): string;
 
 	/** 没有可见部分 */
 	text() { // eslint-disable-line class-methods-use-this

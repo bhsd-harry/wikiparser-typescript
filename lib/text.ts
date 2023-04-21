@@ -118,7 +118,7 @@ class AstText extends AstNode {
 			const root = this.getRootNode(),
 				{top, left} = root.posFromIndex(start)!,
 				tags = new Set([ext, html, disallowedTags].flat(2));
-			return (errors as unknown as {0: string, 1: string, 2: string | undefined, index: number}[])
+			return (errors as unknown as {0: string, 1: string, 2?: string, index: number}[])
 				.map(({0: error, 1: prefix, 2: tag, index}) => {
 					if (prefix) {
 						/* eslint-disable no-param-reassign */
@@ -169,11 +169,10 @@ class AstText extends AstNode {
 	/**
 	 * 修改内容
 	 * @browser
-	 * @param str 新内容
+	 * @param text 新内容
 	 */
-	#setData(str: string) {
-		const text = String(str),
-			{data} = this,
+	#setData(text: string) {
+		const {data} = this,
 			e = new Event('text', {bubbles: true});
 		this.setAttribute('data', text);
 		if (data !== text) {
