@@ -61,8 +61,10 @@ class HtmlAttributeToken extends AttributeToken {
 	 * @override
 	 * @browser
 	 */
-	// @ts-expect-error declare method
-	declare getValue(): string;
+	override getValue() {
+		const value = super.getValue();
+		return value === true ? '' : value;
+	}
 
 	/** @override */
 	// @ts-expect-error declare method
