@@ -2,10 +2,7 @@ import {generateForSelf} from '../../util/lint';
 import Parser = require('../..');
 import NowikiBaseToken = require('./base');
 
-/**
- * 扩展标签内的纯文字Token，不会被解析
- * @classdesc `{childNodes: [AstText]}`
- */
+/** 扩展标签内的纯文字Token */
 class NowikiToken extends NowikiBaseToken {
 	/** @browser */
 	override readonly type = 'ext-inner';

@@ -13,9 +13,15 @@ class ParameterToken extends fixed(Token) {
 	override readonly type = 'parameter';
 	declare childNodes: [Token, Token];
 	// @ts-expect-error declare accessor
+	declare children: [Token, Token];
+	// @ts-expect-error declare accessor
 	declare firstChild: Token;
 	// @ts-expect-error declare accessor
+	declare firstElementChild: Token;
+	// @ts-expect-error declare accessor
 	declare lastChild: Token;
+	// @ts-expect-error declare accessor
+	declare lastElementChild: Token;
 	// @ts-expect-error declare accessor
 	declare parentNode: import('./transclude');
 	// @ts-expect-error declare accessor

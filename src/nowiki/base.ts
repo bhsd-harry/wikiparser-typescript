@@ -17,11 +17,17 @@ declare type NowikiTypes = 'ext-inner'
  */
 class NowikiBaseToken extends fixed(Token) {
 	declare type: NowikiTypes;
-	declare childNodes: [import('../../lib/text')] | [];
+	declare childNodes: [import('../../lib/text')];
 	// @ts-expect-error declare accessor
-	declare firstChild: import('../../lib/text') | undefined;
+	declare children: [];
 	// @ts-expect-error declare accessor
-	declare lastChild: import('../../lib/text') | undefined;
+	declare firstChild: import('../../lib/text');
+	// @ts-expect-error declare accessor
+	declare firstElementChild: undefined;
+	// @ts-expect-error declare accessor
+	declare lastChild: import('../../lib/text');
+	// @ts-expect-error declare accessor
+	declare lastElementChild: undefined;
 
 	/** @browser */
 	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {
