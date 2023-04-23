@@ -1,4 +1,4 @@
-import Parser = require('..');
+import Parser = require('../index');
 import {Inserted, InsertionReturn} from '../lib/node';
 
 /**

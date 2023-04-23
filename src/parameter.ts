@@ -1,7 +1,7 @@
 import {noWrap, extUrlChar, extUrlCharFirst} from '../util/string';
 import {generateForChild} from '../util/lint';
 import fixed = require('../mixin/fixed');
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 
 /**

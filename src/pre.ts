@@ -1,4 +1,4 @@
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 import NoincludeToken = require('./nowiki/noinclude');
 

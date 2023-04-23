@@ -1,4 +1,4 @@
-import Parser = require('..');
+import Parser = require('../index');
 
 const simplePseudos: Set<string> = new Set([
 	'root',
@@ -145,7 +145,7 @@ const parseSelector = (selector: string) => {
 			pushSimple(step, sanitized.slice(0, pseudoExec.index));
 			step.push(pseudoExec[1]!); // 临时存放复杂伪选择器
 			regex = functionRegex;
-		} else if (syntax === ')') { // 情形6：伪选择器闭合
+		} else { // 情形6：伪选择器闭合
 			const pseudo = step.pop() as string;
 			mt.push(pseudo);
 			mt[1] &&= deQuote(mt[1]);

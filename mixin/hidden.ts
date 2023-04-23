@@ -1,4 +1,4 @@
-import Parser = require('..');
+import Parser = require('../index');
 
 /**
  * 解析后不可见的类

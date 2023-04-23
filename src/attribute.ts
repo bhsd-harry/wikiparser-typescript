@@ -1,7 +1,7 @@
 import {generateForChild} from '../util/lint';
 import {noWrap, removeComment} from '../util/string';
 import fixed = require('../mixin/fixed');
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 import AtomToken = require('./atom');
 import {TokenAttributeGetter} from '../lib/node';

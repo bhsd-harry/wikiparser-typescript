@@ -1,5 +1,5 @@
 import {generateForSelf} from '../../util/lint';
-import Parser = require('../..');
+import Parser = require('../../index');
 import NowikiBaseToken = require('./base');
 
 /** 扩展标签内的纯文字Token */

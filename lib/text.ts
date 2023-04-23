@@ -1,4 +1,4 @@
-import Parser = require('..');
+import Parser = require('../index');
 import AstNode = require('./node');
 
 const errorSyntax = /https?:\/\/|\{+|\}+|\[{2,}|\[(?![^[]*\])|(?<=^|\])([^[]*?)\]+|\]{2,}|<\s*\/?([a-z]\w*)/giu,

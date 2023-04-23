@@ -1,5 +1,5 @@
 import fixed = require('../../mixin/fixed');
-import Parser = require('../..');
+import Parser = require('../../index');
 import Token = require('..');
 
 declare type NowikiTypes = 'ext-inner'

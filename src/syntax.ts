@@ -1,4 +1,4 @@
-import Parser = require('..');
+import Parser = require('../index');
 import {undo} from '../util/debug';
 import {text} from '../util/string';
 import Token = require('.');

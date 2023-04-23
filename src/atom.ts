@@ -1,4 +1,4 @@
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 
 declare type AtomTypes = 'arg-name'

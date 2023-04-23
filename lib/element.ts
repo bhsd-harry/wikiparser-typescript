@@ -4,7 +4,7 @@ import {toCase, noWrap, print, text} from '../util/string';
 import {nth} from './ranges';
 import parseSelector = require('../parser/selector');
 import Title = require('./title');
-import Parser = require('..');
+import Parser = require('../index');
 import AstNode = require('./node');
 
 const lintIgnoredExt = new Set([

@@ -1,5 +1,5 @@
 import hidden = require('../mixin/hidden');
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 
 /** 不可见的节点 */
