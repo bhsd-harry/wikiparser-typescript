@@ -309,7 +309,7 @@ class AttributeToken extends fixed(Token) {
 			}
 			return this.#quotes[0] ? value.trimEnd() : value.trim();
 		}
-		return true;
+		return this.type === 'ext-attr' && !AttributeToken.commonHtmlAttrs.has(this.name) || '';
 	}
 
 	/** @private */
