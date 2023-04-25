@@ -325,8 +325,8 @@ class AstElement extends AstNode {
 	}
 
 	/** @private */
-	matchesAttr(key: string, equal?: string, val?: string, i?: string) {
-		if (!equal || val === undefined || i === undefined) {
+	matchesAttr(key: string, equal?: string, val = '', i?: string) {
+		if (!equal) {
 			return this.hasAttribute(key);
 		} else if (!this.hasAttribute(key)) {
 			return equal === '!=';
@@ -464,28 +464,31 @@ class AstElement extends AstNode {
 		});
 	}
 
-	/** 检查是否符合解析后的选择器 */
-	#matchesArray(selector: SelectorArray[]): boolean {
-		const step = selector.pop()!;
+	/**
+	 * 检查是否符合解析后的选择器
+	 * @param condition 解析后的选择器
+	 */
+	#matchesArray(condition: SelectorArray[]): boolean {
+		const step = condition.pop()!;
 		if (this.#matches(step)) {
 			const {parentNode, previousElementSibling} = this;
-			switch (selector.at(-1)?.relation) {
+			switch (condition.at(-1)?.relation) {
 				case undefined:
 					return true;
 				case '>':
-					return Boolean(parentNode && parentNode.#matchesArray(selector));
+					return Boolean(parentNode && parentNode.#matchesArray(condition));
 				case '+':
-					return Boolean(previousElementSibling && previousElementSibling.#matchesArray(selector));
+					return Boolean(previousElementSibling && previousElementSibling.#matchesArray(condition));
 				case '~': {
 					if (!parentNode) {
 						return false;
 					}
 					const {children} = parentNode,
 						i = children.indexOf(this as unknown as import('../src'));
-					return children.slice(0, i).some(child => child.#matchesArray(selector));
+					return children.slice(0, i).some(child => child.#matchesArray(condition));
 				}
 				default: // ' '
-					return this.getAncestors().some(ancestor => ancestor.#matchesArray(selector));
+					return this.getAncestors().some(ancestor => ancestor.#matchesArray(condition));
 			}
 		}
 		return false;
