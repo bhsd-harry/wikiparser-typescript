@@ -2,6 +2,7 @@ import {generateForSelf} from '../../util/lint';
 import Parser = require('../../index');
 import NowikiBaseToken = require('./base');
 import AttributesToken = require('../attributes');
+import ExtToken = require('../tagPair/ext');
 
 /** 扩展标签内的纯文字Token */
 abstract class NowikiToken extends NowikiBaseToken {
@@ -11,6 +12,8 @@ abstract class NowikiToken extends NowikiBaseToken {
 	abstract override get nextElementSibling(): undefined;
 	abstract override get previousSibling(): AttributesToken;
 	abstract override get previousElementSibling(): AttributesToken;
+	abstract override get parentNode(): ExtToken;
+	abstract override get parentElement(): ExtToken;
 
 	/**
 	 * @override

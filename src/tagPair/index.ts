@@ -1,4 +1,4 @@
-import Parser = require('../..');
+import Parser = require('../../index');
 import fixed = require('../../mixin/fixed');
 import Token = require('..');
 import {AstNodeTypes, TokenAttributeGetter} from '../../lib/node';
