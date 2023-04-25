@@ -8,32 +8,21 @@ import Token = require('.');
  * 模板或魔术字参数
  * @classdesc `{childNodes: [Token, Token]}`
  */
-class ParameterToken extends fixed(Token) {
+abstract class ParameterToken extends fixed(Token) {
 	/** @browser */
 	override readonly type = 'parameter';
 	declare childNodes: [Token, Token];
-	// @ts-expect-error declare accessor
-	declare children: [Token, Token];
-	// @ts-expect-error declare accessor
-	declare firstChild: Token;
-	// @ts-expect-error declare accessor
-	declare firstElementChild: Token;
-	// @ts-expect-error declare accessor
-	declare lastChild: Token;
-	// @ts-expect-error declare accessor
-	declare lastElementChild: Token;
-	// @ts-expect-error declare accessor
-	declare parentNode: import('./transclude');
-	// @ts-expect-error declare accessor
-	declare parentElement: import('./transclude');
-	// @ts-expect-error declare accessor
-	declare nextSibling: ParameterToken | undefined;
-	// @ts-expect-error declare accessor
-	declare nextElementSibling: ParameterToken | undefined;
-	// @ts-expect-error declare accessor
-	declare previousSibling: Token;
-	// @ts-expect-error declare accessor
-	declare previousElementSibling: Token;
+	abstract override get children(): [Token, Token];
+	abstract override get firstChild(): Token;
+	abstract override get firstElementChild(): Token;
+	abstract override get lastChild(): Token;
+	abstract override get lastElementChild(): Token;
+	abstract override get parentNode(): import('./transclude');
+	abstract override get parentElement(): import('./transclude');
+	abstract override get nextSibling(): ParameterToken | undefined;
+	abstract override get nextElementSibling(): ParameterToken | undefined;
+	abstract override get previousSibling(): Token;
+	abstract override get previousElementSibling(): Token;
 
 	/**
 	 * 是否是匿名参数
@@ -163,11 +152,12 @@ class ParameterToken extends fixed(Token) {
 		const [key, value] = this.cloneChildNodes() as [Token, Token],
 			config = this.getAttribute('config');
 		return Parser.run(() => {
-			const token = new ParameterToken(this.anon ? Number(this.name) : undefined, undefined, config);
+			// @ts-expect-error abstract class
+			const token: this = new ParameterToken(this.anon ? Number(this.name) : undefined, undefined, config);
 			token.firstChild.safeReplaceWith(key);
 			token.lastChild.safeReplaceWith(value);
 			token.afterBuild();
-			return token as this;
+			return token;
 		});
 	}
 

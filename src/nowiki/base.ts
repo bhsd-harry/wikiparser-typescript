@@ -15,19 +15,14 @@ declare type NowikiTypes = 'ext-inner'
  * 纯文字Token，不会被解析
  * @classdesc `{childNodes: [AstText]}`
  */
-class NowikiBaseToken extends fixed(Token) {
+abstract class NowikiBaseToken extends fixed(Token) {
 	declare type: NowikiTypes;
 	declare childNodes: [import('../../lib/text')];
-	// @ts-expect-error declare accessor
-	declare children: [];
-	// @ts-expect-error declare accessor
-	declare firstChild: import('../../lib/text');
-	// @ts-expect-error declare accessor
-	declare firstElementChild: undefined;
-	// @ts-expect-error declare accessor
-	declare lastChild: import('../../lib/text');
-	// @ts-expect-error declare accessor
-	declare lastElementChild: undefined;
+	abstract override get children(): [];
+	abstract override get firstChild(): import('../../lib/text');
+	abstract override get firstElementChild(): undefined;
+	abstract override get lastChild(): import('../../lib/text');
+	abstract override get lastElementChild(): undefined;
 
 	/** @browser */
 	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {
@@ -35,13 +30,11 @@ class NowikiBaseToken extends fixed(Token) {
 	}
 
 	/** @override */
-	override cloneNode() {
+	override cloneNode(this: this & {constructor: new (...args: unknown[]) => unknown}) {
 		const {constructor, firstChild, type} = this,
-			token = Parser.run(
-				() => new (constructor as typeof NowikiBaseToken)(firstChild?.data, this.getAttribute('config')),
-			);
+			token = Parser.run(() => new constructor(firstChild?.data, this.getAttribute('config'))) as this;
 		token.type = type;
-		return token as this;
+		return token;
 	}
 
 	/**

@@ -3,7 +3,7 @@ import Parser = require('../../index');
 import NowikiBaseToken = require('./base');
 
 /** `<noinclude>`和`</noinclude>`，不可进行任何更改 */
-class NoincludeToken extends hidden(NowikiBaseToken) {
+abstract class NoincludeToken extends hidden(NowikiBaseToken) {
 	/** @browser */
 	override readonly type = 'noinclude';
 

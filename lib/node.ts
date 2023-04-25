@@ -147,6 +147,11 @@ class AstNode {
 		return {...this.#getPosition(), ...this.#getDimension(), padding: this.getPadding()};
 	}
 
+	/** @private */
+	get fixed() {
+		return 'fixed' in this.constructor;
+	}
+
 	constructor() {
 		Object.defineProperty(this, 'childNodes', {writable: false});
 		Object.freeze(this.childNodes);

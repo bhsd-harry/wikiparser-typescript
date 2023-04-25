@@ -930,8 +930,16 @@
 						"allowDeclarations": true
 					}
 				],
+				"@typescript-eslint/no-explicit-any": [
+					2,
+					{
+						"ignoreRestArgs": true
+					}
+				],
 				"@typescript-eslint/no-non-null-assertion": 0,
 				"@typescript-eslint/no-unsafe-assignment": 0,
+				"@typescript-eslint/no-unsafe-call": 0,
+				"@typescript-eslint/no-unsafe-return": 0,
 				"@typescript-eslint/no-var-requires": 0
 			}
 		},

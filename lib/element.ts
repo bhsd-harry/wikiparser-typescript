@@ -319,9 +319,9 @@ class AstElement extends AstNode {
 		if (!parentNode) {
 			return undefined;
 		}
-		const {childNodes, constructor: {fixed}} = parentNode as import('../src') & {constructor: {fixed?: true}},
+		const {childNodes, fixed} = parentNode,
 			protectedIndices = parentNode.getAttribute('protectedChildren')?.applyTo(childNodes);
-		return Boolean(fixed || protectedIndices?.includes(childNodes.indexOf(this as unknown as import('../src'))));
+		return fixed || Boolean(protectedIndices?.includes(childNodes.indexOf(this as unknown as import('../src'))));
 	}
 
 	/** @private */
@@ -369,8 +369,8 @@ class AstElement extends AstNode {
 	 */
 	#matches(step: SelectorArray): boolean {
 		const {
-				parentNode, type, name, childNodes, link, constructor: {fixed, name: tokenName},
-			} = this as unknown as import('../src') & {constructor: {fixed?: true}, link?: string | import('./title')},
+				parentNode, type, name, childNodes, link, fixed, constructor: {name: tokenName},
+			} = this as this & {link?: string | Title},
 			children = parentNode?.children,
 			childrenOfType = children?.filter(({type: t}) => t === type),
 			siblingsCount = children?.length ?? 1,
@@ -691,7 +691,7 @@ class AstElement extends AstNode {
  * @param node.attributes 节点属性
  * @param regex 语言正则
  */
-const matchesLang = ({attributes}: AstElement & {attributes?: Record<string, string>}, regex: RegExp) => {
+const matchesLang = ({attributes}: AstElement & {attributes?: Record<string, string | true>}, regex: RegExp) => {
 	const lang = attributes?.['lang'];
 	return typeof lang === 'string' && regex.test(lang);
 };

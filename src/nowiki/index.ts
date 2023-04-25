@@ -3,21 +3,13 @@ import Parser = require('../../index');
 import NowikiBaseToken = require('./base');
 
 /** 扩展标签内的纯文字Token */
-class NowikiToken extends NowikiBaseToken {
+abstract class NowikiToken extends NowikiBaseToken {
 	/** @browser */
 	override readonly type = 'ext-inner';
-	// @ts-expect-error declare accessor
-	declare parentNode: import('../tagPair/ext');
-	// @ts-expect-error declare accessor
-	declare parentElement: import('../tagPair/ext');
-	// @ts-expect-error declare accessor
-	declare nextSibling: undefined;
-	// @ts-expect-error declare accessor
-	declare nextElementSibling: undefined;
-	// @ts-expect-error declare accessor
-	declare previousSibling: import('../attributes');
-	// @ts-expect-error declare accessor
-	declare previousElementSibling: import('../attributes');
+	abstract override get nextSibling(): undefined;
+	abstract override get nextElementSibling(): undefined;
+	abstract override get previousSibling(): import('../attributes');
+	abstract override get previousElementSibling(): import('../attributes');
 
 	/**
 	 * @override

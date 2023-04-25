@@ -178,29 +178,19 @@ const stages = {'ext-attr': 0, 'html-attr': 2, 'table-attr': 3},
  * 扩展和HTML标签属性
  * @classdesc `{childNodes: [AtomToken, Token|AtomToken]}`
  */
-class AttributeToken extends fixed(Token) {
+abstract class AttributeToken extends fixed(Token) {
 	declare type: AttributeTypes;
 	declare childNodes: [AtomToken, Token];
-	// @ts-expect-error declare accessor
-	declare firstChild: AtomToken;
-	// @ts-expect-error declare accessor
-	declare firstElementChild: AtomToken;
-	// @ts-expect-error declare accessor
-	declare lastChild: Token;
-	// @ts-expect-error declare accessor
-	declare lastElementChild: Token;
-	// @ts-expect-error declare accessor
-	declare parentNode: import('./attributes');
-	// @ts-expect-error declare accessor
-	declare parentElement: import('./attributes');
-	// @ts-expect-error declare accessor
-	declare nextSibling: AtomToken | AttributeToken | undefined;
-	// @ts-expect-error declare accessor
-	declare nextElementSibling: AtomToken | AttributeToken | undefined;
-	// @ts-expect-error declare accessor
-	declare previousSibling: AtomToken | AttributeToken | undefined;
-	// @ts-expect-error declare accessor
-	declare previousElementSibling: AtomToken | AttributeToken | undefined;
+	abstract override get firstChild(): AtomToken;
+	abstract override get firstElementChild(): AtomToken;
+	abstract override get lastChild(): Token;
+	abstract override get lastElementChild(): Token;
+	abstract override get parentNode(): import('./attributes');
+	abstract override get parentElement(): import('./attributes');
+	abstract override get nextSibling(): AtomToken | AttributeToken | undefined;
+	abstract override get nextElementSibling(): AtomToken | AttributeToken | undefined;
+	abstract override get previousSibling(): AtomToken | AttributeToken | undefined;
+	abstract override get previousElementSibling(): AtomToken | AttributeToken | undefined;
 
 	/** @browser */
 	#equal;
@@ -416,11 +406,12 @@ class AttributeToken extends fixed(Token) {
 		const [key, value] = this.cloneChildNodes() as [AtomToken, Token],
 			config = this.getAttribute('config');
 		return Parser.run(() => {
-			const token = new AttributeToken(this.type, this.#tag, '', this.#equal, '', this.#quotes, config);
+			// @ts-expect-error abstract class
+			const token: this = new AttributeToken(this.type, this.#tag, '', this.#equal, '', this.#quotes, config);
 			token.firstChild.safeReplaceWith(key);
 			token.lastChild.safeReplaceWith(value);
 			token.afterBuild();
-			return token as this;
+			return token;
 		});
 	}
 
