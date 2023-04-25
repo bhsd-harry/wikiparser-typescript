@@ -1,6 +1,7 @@
 import Parser = require('../index');
 import Token = require('.');
 import NoincludeToken = require('./nowiki/noinclude');
+import AttributesToken = require('./attributes');
 
 /**
  * `<pre>`
@@ -13,8 +14,8 @@ abstract class PreToken extends Token {
 	override readonly name = 'pre';
 	abstract override get nextSibling(): undefined;
 	abstract override get nextElementSibling(): undefined;
-	abstract override get previousSibling(): import('./attributes');
-	abstract override get previousElementSibling(): import('./attributes');
+	abstract override get previousSibling(): AttributesToken;
+	abstract override get previousElementSibling(): AttributesToken;
 
 	/** @browser */
 	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {

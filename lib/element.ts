@@ -26,7 +26,7 @@ const lintIgnoredExt = new Set([
 ]);
 
 /** 类似HTMLElement */
-class AstElement extends AstNode {
+abstract class AstElement extends AstNode {
 	/** @browser */
 	name: string;
 
@@ -175,7 +175,7 @@ class AstElement extends AstNode {
 			j = Parser.running ? -1 : childNodes.indexOf(node);
 		if (j === -1) {
 			node.parentNode?.removeChild(node);
-			node.setAttribute('parentNode', this as unknown as import('../src'));
+			node.setAttribute('parentNode', this as AstElement as import('../src'));
 		} else {
 			childNodes.splice(j, 1);
 		}
@@ -321,7 +321,7 @@ class AstElement extends AstNode {
 		}
 		const {childNodes, fixed} = parentNode,
 			protectedIndices = parentNode.getAttribute('protectedChildren')?.applyTo(childNodes);
-		return fixed || Boolean(protectedIndices?.includes(childNodes.indexOf(this as unknown as import('../src'))));
+		return fixed || Boolean(protectedIndices?.includes(childNodes.indexOf(this as AstElement as import('../src'))));
 	}
 
 	/** @private */
@@ -375,8 +375,8 @@ class AstElement extends AstNode {
 			childrenOfType = children?.filter(({type: t}) => t === type),
 			siblingsCount = children?.length ?? 1,
 			siblingsCountOfType = childrenOfType?.length ?? 1,
-			index = (children?.indexOf(this as unknown as import('../src')) ?? 0) + 1,
-			indexOfType = (childrenOfType?.indexOf(this as unknown as import('../src')) ?? 0) + 1,
+			index = (children?.indexOf(this as AstElement as import('../src')) ?? 0) + 1,
+			indexOfType = (childrenOfType?.indexOf(this as AstElement as import('../src')) ?? 0) + 1,
 			lastIndex = siblingsCount - index + 1,
 			lastIndexOfType = siblingsCountOfType - indexOfType + 1;
 		return step.every(selector => {
@@ -484,7 +484,7 @@ class AstElement extends AstNode {
 						return false;
 					}
 					const {children} = parentNode,
-						i = children.indexOf(this as unknown as import('../src'));
+						i = children.indexOf(this as AstElement as import('../src'));
 					return children.slice(0, i).some(child => child.#matchesArray(condition));
 				}
 				default: // ' '

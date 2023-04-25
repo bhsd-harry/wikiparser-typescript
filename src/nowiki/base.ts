@@ -1,6 +1,7 @@
 import fixed = require('../../mixin/fixed');
 import Parser = require('../../index');
 import Token = require('..');
+import AstText = require('../../lib/text');
 
 declare type NowikiTypes = 'ext-inner'
 	| 'comment'
@@ -17,11 +18,11 @@ declare type NowikiTypes = 'ext-inner'
  */
 abstract class NowikiBaseToken extends fixed(Token) {
 	declare type: NowikiTypes;
-	declare childNodes: [import('../../lib/text')];
+	declare childNodes: [AstText];
 	abstract override get children(): [];
-	abstract override get firstChild(): import('../../lib/text');
+	abstract override get firstChild(): AstText;
 	abstract override get firstElementChild(): undefined;
-	abstract override get lastChild(): import('../../lib/text');
+	abstract override get lastChild(): AstText;
 	abstract override get lastElementChild(): undefined;
 
 	/** @browser */

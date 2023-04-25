@@ -2,6 +2,7 @@ import {typeError} from '../util/debug';
 import assert = require('assert/strict');
 import EventEmitter = require('events');
 import Parser = require('../index');
+import Ranges = require('./ranges');
 
 declare type AstNodeTypes = import('./text') | import('../src');
 declare type Inserted = string | AstNodeTypes;
@@ -18,16 +19,16 @@ declare type TokenAttribute<T extends string> =
 	T extends 'quotes' ? [string?, string?] :
 	T extends 'optional' | 'keys' ? Set<string> :
 	T extends 'args' ? Record<string, Set<import('../src/parameter')>> :
-	T extends 'protectedChildren' ? import('./ranges') :
+	T extends 'protectedChildren' ? Ranges :
 	string;
 declare type TokenAttributeGetter<T extends string> =
-	T extends 'acceptable' ? Record<string, import('./ranges')> | undefined : TokenAttribute<T>;
+	T extends 'acceptable' ? Record<string, Ranges> | undefined : TokenAttribute<T>;
 
 declare type TokenAttributeSetter<T extends string> =
 	T extends 'acceptable' ? Acceptable | undefined : TokenAttribute<T>;
 
 /** 类似Node */
-class AstNode {
+abstract class AstNode {
 	/** @browser */
 	type: string;
 	/** @browser */
@@ -265,7 +266,7 @@ class AstNode {
 			const {parentNode} = this;
 			if (parentNode) {
 				({childNodes} = parentNode);
-				return getIndex(childNodes.indexOf(this as unknown as AstNodeTypes), parentNode);
+				return getIndex(childNodes.indexOf(this as AstNode as AstNodeTypes), parentNode);
 			}
 			return 0;
 		}
@@ -332,7 +333,7 @@ class AstNode {
 		if (!parentNode) {
 			throw new Error('不存在父节点！');
 		}
-		const i = parentNode.childNodes.indexOf(this as unknown as AstNodeTypes) + offset;
+		const i = parentNode.childNodes.indexOf(this as AstNode as AstNodeTypes) + offset;
 		for (let j = 0; j < nodes.length; j++) {
 			parentNode.insertAt(nodes[j]!, i + j);
 		}
@@ -363,7 +364,7 @@ class AstNode {
 		if (!parentNode) {
 			throw new Error('不存在父节点！');
 		}
-		parentNode.removeChild(this as unknown as AstNodeTypes);
+		parentNode.removeChild(this as AstNode as AstNodeTypes);
 	}
 
 	/**
