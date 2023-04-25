@@ -1,3 +1,4 @@
+/* eslint-disable func-style */
 import Parser = require('../index');
 
 const simplePseudos: Set<string> = new Set([
@@ -58,29 +59,35 @@ const sanitize = (selector: string) => {
 	return selector;
 };
 
+function desanitize(selector: undefined): undefined;
+function desanitize(selector: string): string;
+
 /** 还原转义符号 */
-const desanitize = <T extends string | undefined>(selector: T) => {
+function desanitize(selector: string | undefined) {
 	if (selector === undefined) {
-		return undefined as T;
+		return undefined;
 	}
 	let str: string = selector;
 	for (const [c, escaped] of specialChars) {
 		str = str.replaceAll(escaped, c);
 	}
-	return str.trim() as T;
-};
+	return str.trim();
+}
+
+function deQuote(val: undefined): undefined;
+function deQuote(val: string): string;
 
 /**
  * 去除首尾的引号
  * @param val 属性值或伪选择器函数的参数
  */
-const deQuote = <T extends string | undefined>(val: T) => {
+function deQuote(val: string | undefined) {
 	if (val === undefined) {
-		return undefined as T;
+		return undefined;
 	}
 	const quotes = /^(["']).*\1$/u.exec(val)?.[1];
-	return (quotes ? val.slice(1, -1) : val) as T;
-};
+	return quotes ? val.slice(1, -1) : val;
+}
 
 /**
  * 解析简单伪选择器
