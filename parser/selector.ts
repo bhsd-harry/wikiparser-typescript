@@ -167,6 +167,10 @@ const parseSelector = (selector: string) => {
 	}
 	if (regex === regularRegex) {
 		pushSimple(step, sanitized);
+		const pseudos = new Set((stack.flat(2) as string[]).filter(s => typeof s === 'string' && s[0] === ':'));
+		if (pseudos.size > 0) {
+			Parser.warn('检测到伪选择器，请确认是否需要将":"转义成"\\:"。', pseudos);
+		}
 		return stack;
 	}
 	throw new SyntaxError(`非法的选择器！\n${selector}\n检测到未闭合的'${regex === attributeRegex ? '[' : '('}'`);

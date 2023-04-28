@@ -193,8 +193,9 @@ abstract class AstElement extends AstNode {
 	 */
 	closest(selector: string) {
 		let {parentNode} = this;
+		const stack = parseSelector(selector);
 		while (parentNode) {
-			if (parentNode.matches(selector)) {
+			if (parentNode.#matchesStack(stack)) {
 				return parentNode;
 			}
 			({parentNode} = parentNode);
@@ -496,30 +497,34 @@ abstract class AstElement extends AstNode {
 		return false;
 	}
 
+	/**
+	 * 检查是否符合解析后的组合选择器
+	 * @param stack 解析后的一组选择器
+	 */
+	#matchesStack(stack: SelectorArray[][]): boolean {
+		return stack.some(condition => this.#matchesArray([...condition]));
+	}
+
 	/** 检查是否符合选择器 */
 	matches(selector?: string) {
 		if (selector === undefined) {
 			return true;
-		} else if (typeof selector === 'string') {
-			const stack = parseSelector(selector),
-				pseudos = new Set(
-					(stack.flat(2) as string[]).filter(step => typeof step === 'string' && step[0] === ':'),
-				);
-			if (pseudos.size > 0) {
-				Parser.warn('检测到伪选择器，请确认是否需要将":"转义成"\\:"。', pseudos);
-			}
-			return Parser.run(() => stack.some(condition => this.#matchesArray(condition)));
 		}
-		return this.typeError('matches', 'String');
+		return typeof selector === 'string'
+			? this.#matchesStack(parseSelector(selector))
+			: this.typeError('matches', 'String');
 	}
 
-	/** 符合选择器的第一个后代节点 */
-	querySelector(selector: string): import('../src') | undefined {
+	/**
+	 * 符合组合选择器的第一个后代节点
+	 * @param stack 解析后的一组选择器
+	 */
+	#queryStack(stack: SelectorArray[][]): import('../src') | undefined {
 		for (const child of this.children) {
-			if (child.matches(selector)) {
+			if (child.#matchesStack(stack)) {
 				return child;
 			}
-			const descendant = child.querySelector(selector);
+			const descendant = child.#queryStack(stack);
 			if (descendant) {
 				return descendant;
 			}
@@ -527,16 +532,29 @@ abstract class AstElement extends AstNode {
 		return undefined;
 	}
 
-	/** 符合选择器的所有后代节点 */
-	querySelectorAll(selector: string) {
+	/** 符合选择器的第一个后代节点 */
+	querySelector(selector: string) {
+		return this.#queryStack(parseSelector(selector));
+	}
+
+	/**
+	 * 符合组合选择器的所有后代节点
+	 * @param stack 解析后的一组选择器
+	 */
+	#queryStackAll(stack: SelectorArray[][]) {
 		const descendants: import('../src')[] = [];
 		for (const child of this.children) {
-			if (child.matches(selector)) {
+			if (child.#matchesStack(stack)) {
 				descendants.push(child);
 			}
-			descendants.push(...child.querySelectorAll(selector));
+			descendants.push(...child.#queryStackAll(stack));
 		}
 		return descendants;
+	}
+
+	/** 符合选择器的所有后代节点 */
+	querySelectorAll(selector: string) {
+		return this.#queryStackAll(parseSelector(selector));
 	}
 
 	/**
