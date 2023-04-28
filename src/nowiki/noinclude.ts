@@ -12,7 +12,7 @@ abstract class NoincludeToken extends hidden(NowikiBaseToken) {
 	 * @param str 新文本
 	 * @throws `Error` 不可更改
 	 */
-	override setText(str: string) {
+	override setText(str: string): string {
 		if (/^<\/?(?:(?:no|only)include|includeonly)(?:\s.*)?\/?>$/isu.test(String(this))) {
 			throw new Error(`${this.constructor.name} 不可更改文字内容！`);
 		}

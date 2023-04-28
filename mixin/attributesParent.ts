@@ -1,12 +1,13 @@
 import Parser = require('../index');
 import AttributesToken = require('../src/attributes');
-import {AstNodeTypes} from '../lib/node';
+import type {AstNodeTypes} from '../lib/node';
 
 /**
  * 子节点含有AttributesToken的类
  * @param constructor 基类
  * @param i AttributesToken子节点的位置
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const attributesParent = <T extends abstract new (...args: any[]) => object>(constructor: T, i = 0) => {
 	/** 子节点含有AttributesToken的类 */
 	abstract class AttributesParent extends constructor {
@@ -16,17 +17,17 @@ const attributesParent = <T extends abstract new (...args: any[]) => object>(con
 		abstract override toString(selector?: string, separator?: string): string;
 
 		/** AttributesToken子节点 */
-		get #attributesChild() {
+		get #attributesChild(): AttributesToken {
 			return this.childNodes.at(i) as AttributesToken;
 		}
 
 		/** getAttrs()方法的getter写法 */
-		get attributes() {
+		get attributes(): Record<string, string | true> {
 			return this.#attributesChild.attributes;
 		}
 
 		/** 以字符串表示的class属性 */
-		get className() {
+		get className(): string {
 			return this.#attributesChild.className;
 		}
 
@@ -35,12 +36,12 @@ const attributesParent = <T extends abstract new (...args: any[]) => object>(con
 		}
 
 		/** 以Set表示的class属性 */
-		get classList() {
+		get classList(): Set<string> {
 			return this.#attributesChild.classList;
 		}
 
 		/** id属性 */
-		get id() {
+		get id(): string {
 			return this.#attributesChild.id;
 		}
 
@@ -52,7 +53,7 @@ const attributesParent = <T extends abstract new (...args: any[]) => object>(con
 		 * AttributesToken子节点是否具有某属性
 		 * @param key 属性键
 		 */
-		hasAttr(key: string) {
+		hasAttr(key: string): boolean {
 			return this.#attributesChild.hasAttr(key);
 		}
 
@@ -60,22 +61,22 @@ const attributesParent = <T extends abstract new (...args: any[]) => object>(con
 		 * 获取AttributesToken子节点的属性
 		 * @param key 属性键
 		 */
-		getAttr(key: string) {
+		getAttr(key: string): string | true | undefined {
 			return this.#attributesChild.getAttr(key);
 		}
 
 		/** 列举AttributesToken子节点的属性键 */
-		getAttrNames() {
+		getAttrNames(): Set<string> {
 			return this.#attributesChild.getAttrNames();
 		}
 
 		/** AttributesToken子节点是否具有任意属性 */
-		hasAttrs() {
+		hasAttrs(): boolean {
 			return this.#attributesChild.hasAttrs();
 		}
 
 		/** 获取AttributesToken子节点的全部标签属性 */
-		getAttrs() {
+		getAttrs(): Record<string, string | true> {
 			return this.#attributesChild.getAttrs();
 		}
 
@@ -84,7 +85,7 @@ const attributesParent = <T extends abstract new (...args: any[]) => object>(con
 		 * @param key 属性键
 		 * @param value 属性值
 		 */
-		setAttr(key: string, value: string | boolean) {
+		setAttr(key: string, value: string | boolean): void {
 			this.#attributesChild.setAttr(key, value);
 		}
 
@@ -92,7 +93,7 @@ const attributesParent = <T extends abstract new (...args: any[]) => object>(con
 		 * 移除AttributesToken子节点的某属性
 		 * @param key 属性键
 		 */
-		removeAttr(key: string) {
+		removeAttr(key: string): void {
 			this.#attributesChild.removeAttr(key);
 		}
 
@@ -101,7 +102,7 @@ const attributesParent = <T extends abstract new (...args: any[]) => object>(con
 		 * @param key 属性键
 		 * @param force 强制开启或关闭
 		 */
-		toggleAttr(key: string, force?: boolean) {
+		toggleAttr(key: string, force?: boolean): void {
 			this.#attributesChild.toggleAttr(key, force);
 		}
 	}

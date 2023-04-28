@@ -1,6 +1,6 @@
 import Parser = require('../index');
 
-const simplePseudos: Set<string> = new Set([
+const simplePseudos = new Set<string>([
 	'root',
 	'first-child',
 	'first-of-type',
@@ -51,7 +51,7 @@ const pseudoRegex = new RegExp(`:(${complexPseudos.join('|')})$`, 'u'),
 	combinator = new Set(['>', '+', '~', '']);
 
 /** 清理转义符号 */
-const sanitize = (selector: string) => {
+const sanitize = (selector: string): string => {
 	for (const [c, escaped] of specialChars) {
 		selector = selector.replaceAll(`\\${c}`, escaped); // eslint-disable-line no-param-reassign
 	}
@@ -59,7 +59,7 @@ const sanitize = (selector: string) => {
 };
 
 /** 还原转义符号 */
-const desanitize = (selector: string) => {
+const desanitize = (selector: string): string => {
 	let str: string = selector;
 	for (const [c, escaped] of specialChars) {
 		str = str.replaceAll(escaped, c);
@@ -71,7 +71,7 @@ const desanitize = (selector: string) => {
  * 去除首尾的引号
  * @param val 属性值或伪选择器函数的参数
  */
-const deQuote = (val: string) => {
+const deQuote = (val: string): string => {
 	const quotes = /^(["']).*\1$/u.exec(val)?.[1];
 	return quotes ? val.slice(1, -1) : val;
 };
@@ -82,7 +82,7 @@ const deQuote = (val: string) => {
  * @param str 不含属性和复杂伪选择器的语句
  * @throws `SyntaxError` 非法的选择器
  */
-const pushSimple = (step: SelectorArray, str: string) => {
+const pushSimple = (step: SelectorArray, str: string): void => {
 	const pieces = str.trim().split(':'),
 		// eslint-disable-next-line unicorn/explicit-length-check
 		i = pieces.slice(1).findIndex(pseudo => simplePseudos.has(pseudo)) + 1 || pieces.length;
@@ -96,7 +96,7 @@ const pushSimple = (step: SelectorArray, str: string) => {
  * 解析选择器
  * @throws `SyntaxError` 非法的选择器
  */
-const parseSelector = (selector: string) => {
+const parseSelector = (selector: string): SelectorArray[][] => {
 	selector = selector.trim(); // eslint-disable-line no-param-reassign
 	const stack: SelectorArray[][] = [[[]]];
 	let sanitized = sanitize(selector),
@@ -154,7 +154,7 @@ const parseSelector = (selector: string) => {
 	}
 	if (regex === regularRegex) {
 		pushSimple(step, sanitized);
-		const pseudos = new Set((stack.flat(2) as string[]).filter(s => typeof s === 'string' && s[0] === ':'));
+		const pseudos = new Set(stack.flat(2).filter(s => typeof s === 'string' && s.startsWith(':')) as string[]);
 		if (pseudos.size > 0) {
 			Parser.warn('检测到伪选择器，请确认是否需要将":"转义成"\\:"。', pseudos);
 		}

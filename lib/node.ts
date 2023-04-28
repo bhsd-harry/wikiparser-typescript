@@ -27,6 +27,14 @@ declare type TokenAttributeGetter<T extends string> =
 
 declare type TokenAttributeSetter<T extends string> =
 	T extends 'acceptable' ? Acceptable | undefined : TokenAttribute<T>;
+declare interface Dimension {
+	height: number;
+	width: number;
+}
+declare interface Position {
+	top: number;
+	left: number;
+}
 
 /** 类似Node */
 abstract class AstNode {
@@ -36,14 +44,14 @@ abstract class AstNode {
 	readonly childNodes: AstNodeTypes[] = [];
 	/** @browser */
 	#parentNode: import('../src') | undefined;
-	#optional: Set<string> = new Set();
+	#optional = new Set<string>();
 	#events = new EventEmitter();
 
 	/**
 	 * 首位子节点
 	 * @browser
 	 */
-	get firstChild() {
+	get firstChild(): AstNodeTypes | undefined {
 		return this.childNodes[0];
 	}
 
@@ -51,7 +59,7 @@ abstract class AstNode {
 	 * 末位子节点
 	 * @browser
 	 */
-	get lastChild() {
+	get lastChild(): AstNodeTypes | undefined {
 		return this.childNodes.at(-1);
 	}
 
@@ -59,7 +67,7 @@ abstract class AstNode {
 	 * 父节点
 	 * @browser
 	 */
-	get parentNode() {
+	get parentNode(): import('../src') | undefined {
 		return this.#parentNode;
 	}
 
@@ -67,7 +75,7 @@ abstract class AstNode {
 	 * 后一个兄弟节点
 	 * @browser
 	 */
-	get nextSibling() {
+	get nextSibling(): AstNodeTypes | undefined {
 		const childNodes = this.#parentNode?.childNodes;
 		return childNodes && childNodes[childNodes.indexOf(this as unknown as AstNodeTypes) + 1];
 	}
@@ -76,7 +84,7 @@ abstract class AstNode {
 	 * 前一个兄弟节点
 	 * @browser
 	 */
-	get previousSibling() {
+	get previousSibling(): AstNodeTypes | undefined {
 		const childNodes = this.#parentNode?.childNodes;
 		return childNodes && childNodes[childNodes.indexOf(this as unknown as AstNodeTypes) - 1];
 	}
@@ -85,7 +93,7 @@ abstract class AstNode {
 	 * 行数
 	 * @browser
 	 */
-	get offsetHeight() {
+	get offsetHeight(): number {
 		return this.#getDimension().height;
 	}
 
@@ -93,26 +101,26 @@ abstract class AstNode {
 	 * 最后一行的列数
 	 * @browser
 	 */
-	get offsetWidth() {
+	get offsetWidth(): number {
 		return this.#getDimension().width;
 	}
 
 	/** 后一个非文本兄弟节点 */
-	get nextElementSibling() {
+	get nextElementSibling(): import('../src') | undefined {
 		const childNodes = this.#parentNode?.childNodes,
 			i = childNodes?.indexOf(this as unknown as AstNodeTypes);
 		return childNodes?.slice(i! + 1)?.find(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
 	/** 前一个非文本兄弟节点 */
-	get previousElementSibling() {
+	get previousElementSibling(): import('../src') | undefined {
 		const childNodes = this.#parentNode?.childNodes,
 			i = childNodes?.indexOf(this as unknown as AstNodeTypes);
 		return childNodes?.slice(0, i)?.findLast(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
 	/** 是否具有根节点 */
-	get isConnected() {
+	get isConnected(): boolean {
 		return this.getRootNode().type === 'root';
 	}
 
@@ -135,22 +143,22 @@ abstract class AstNode {
 	}
 
 	/** 相对于父容器的行号 */
-	get offsetTop() {
+	get offsetTop(): number {
 		return this.#getPosition().top;
 	}
 
 	/** 相对于父容器的列号 */
-	get offsetLeft() {
+	get offsetLeft(): number {
 		return this.#getPosition().left;
 	}
 
 	/** 位置、大小和padding */
-	get style() {
+	get style(): Position & Dimension & {padding: number} {
 		return {...this.#getPosition(), ...this.#getDimension(), padding: this.getPadding()};
 	}
 
 	/** @private */
-	get fixed() {
+	get fixed(): boolean {
 		return 'fixed' in this.constructor;
 	}
 
@@ -160,12 +168,12 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	hasAttribute(key: string) {
+	hasAttribute(key: string): boolean {
 		return typeof key === 'string' ? key in this : this.typeError('hasAttribute', 'String');
 	}
 
 	/** @private */
-	getAttribute<T extends string>(key: T) {
+	getAttribute<T extends string>(key: T): TokenAttributeGetter<T> {
 		if (key === 'optional') {
 			return new Set(this.#optional) as TokenAttributeGetter<T>;
 		}
@@ -176,7 +184,7 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	setAttribute<T extends string>(key: T, value: TokenAttributeSetter<T>) {
+	setAttribute<T extends string>(key: T, value: TokenAttributeSetter<T>): this {
 		if (key === 'parentNode') {
 			this.#parentNode = value as TokenAttributeSetter<'parentNode'>;
 		} else if (Object.hasOwn(this, key)) {
@@ -188,7 +196,7 @@ abstract class AstNode {
 			const oldValue = this[key as string],
 				frozen = oldValue !== null && typeof oldValue === 'object' && Object.isFrozen(oldValue);
 			Object.defineProperty(this, key, {...descriptor, value});
-			if (frozen && value !== null && typeof value === 'object') {
+			if (frozen && typeof value === 'object') {
 				Object.freeze(value);
 			}
 		} else {
@@ -215,7 +223,7 @@ abstract class AstNode {
 	 * @browser
 	 * @param index 字符位置
 	 */
-	posFromIndex(index: number) {
+	posFromIndex(index: number): Position | undefined {
 		if (!Number.isInteger(index)) {
 			this.typeError('posFromIndex', 'Number');
 		}
@@ -231,18 +239,18 @@ abstract class AstNode {
 	 * 获取行数和最后一行的列数
 	 * @browser
 	 */
-	#getDimension() {
+	#getDimension(): Dimension {
 		const lines = String(this).split('\n');
 		return {height: lines.length, width: lines.at(-1)!.length};
 	}
 
 	/** @private */
-	getPadding() {
+	getPadding(): number {
 		return 0;
 	}
 
 	/** @private */
-	getGaps(i = 0) { // eslint-disable-line @typescript-eslint/no-unused-vars
+	getGaps(i = 0): number { // eslint-disable-line @typescript-eslint/no-unused-vars
 		return 0;
 	}
 
@@ -259,7 +267,7 @@ abstract class AstNode {
 		 * @param end 子节点序号
 		 * @param parent 父节点
 		 */
-		const getIndex = (end: number, parent: AstNode) => childNodes.slice(0, end).reduce(
+		const getIndex = (end: number, parent: AstNode): number => childNodes.slice(0, end).reduce(
 			(acc, cur, i) => acc + String(cur).length + parent.getGaps(i),
 			0,
 		) + parent.getPadding();
@@ -286,12 +294,12 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	typeError(method: string, ...types: string[]) {
+	typeError(method: string, ...types: string[]): never {
 		return typeError(this.constructor, method, ...types);
 	}
 
 	/** @private */
-	seal(props: string | string[], permanent = false) {
+	seal(props: string | string[], permanent = false): void {
 		const keys = Array.isArray(props) ? props : [props];
 		if (!permanent) {
 			for (const key of keys) {
@@ -311,7 +319,7 @@ abstract class AstNode {
 	 * @param node 待比较的节点
 	 * @throws `assert.AssertionError`
 	 */
-	isEqualNode(node: AstNode) {
+	isEqualNode(node: AstNode): boolean {
 		try {
 			assert.deepStrictEqual(this, node);
 		} catch (e) {
@@ -329,7 +337,7 @@ abstract class AstNode {
 	 * @param offset 插入的相对位置
 	 * @throws `Error` 不存在父节点
 	 */
-	#insertAdjacent(nodes: Inserted[], offset: number) {
+	#insertAdjacent(nodes: Inserted[], offset: number): void {
 		const {parentNode} = this;
 		if (!parentNode) {
 			throw new Error('不存在父节点！');
@@ -344,7 +352,7 @@ abstract class AstNode {
 	 * 在后方批量插入兄弟节点
 	 * @param nodes 插入节点
 	 */
-	after(...nodes: Inserted[]) {
+	after(...nodes: Inserted[]): void {
 		this.#insertAdjacent(nodes, 1);
 	}
 
@@ -352,7 +360,7 @@ abstract class AstNode {
 	 * 在前方批量插入兄弟节点
 	 * @param nodes 插入节点
 	 */
-	before(...nodes: Inserted[]) {
+	before(...nodes: Inserted[]): void {
 		this.#insertAdjacent(nodes, 0);
 	}
 
@@ -360,7 +368,7 @@ abstract class AstNode {
 	 * 移除当前节点
 	 * @throws `Error` 不存在父节点
 	 */
-	remove() {
+	remove(): void {
 		const {parentNode} = this;
 		if (!parentNode) {
 			throw new Error('不存在父节点！');
@@ -372,7 +380,7 @@ abstract class AstNode {
 	 * 将当前节点批量替换为新的节点
 	 * @param nodes 插入节点
 	 */
-	replaceWith(...nodes: Inserted[]) {
+	replaceWith(...nodes: Inserted[]): void {
 		this.after(...nodes);
 		this.remove();
 	}
@@ -388,7 +396,7 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	verifyChild(i: number, addition = 0) {
+	verifyChild(i: number, addition = 0): void {
 		if (!Number.isInteger(i)) {
 			this.typeError('verifyChild', 'Number');
 		}
@@ -405,7 +413,7 @@ abstract class AstNode {
 	 * @param options 选项
 	 * @param options.once 仅执行一次
 	 */
-	addEventListener(types: string | string[], listener: AstListener, options?: {once?: boolean}) {
+	addEventListener(types: string | string[], listener: AstListener, options?: {once?: boolean}): void {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.addEventListener(type, listener, options);
@@ -422,7 +430,7 @@ abstract class AstNode {
 	 * @param types 事件类型
 	 * @param listener 监听函数
 	 */
-	removeEventListener(types: string | string[], listener: AstListener) {
+	removeEventListener(types: string | string[], listener: AstListener): void {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.removeEventListener(type, listener);
@@ -438,7 +446,7 @@ abstract class AstNode {
 	 * 移除事件的所有监听
 	 * @param types 事件类型
 	 */
-	removeAllEventListeners(types: string | string[]) {
+	removeAllEventListeners(types?: string | string[]): void {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.removeAllEventListeners(type);
@@ -454,7 +462,7 @@ abstract class AstNode {
 	 * 列举事件监听
 	 * @param type 事件类型
 	 */
-	listEventListeners(type: string) {
+	listEventListeners(type: string): Function[] {
 		return typeof type === 'string' ? this.#events.listeners(type) : this.typeError('listEventListeners', 'String');
 	}
 
@@ -463,14 +471,14 @@ abstract class AstNode {
 	 * @param e 事件对象
 	 * @param data 事件数据
 	 */
-	dispatchEvent(e: Event, data: AstEventData) {
+	dispatchEvent(e: Event, data: AstEventData): void {
 		if (!(e instanceof Event)) {
 			this.typeError('dispatchEvent', 'Event');
 		} else if (!e.target) { // 初始化
 			Object.defineProperty(e, 'target', {value: this, enumerable: true});
 
 			/** 终止冒泡 */
-			e.stopPropagation = function() {
+			e.stopPropagation = function(): void {
 				Object.defineProperty(this, 'bubbles', {value: false});
 			};
 		}
@@ -485,7 +493,7 @@ abstract class AstNode {
 	}
 
 	/** 获取所有祖先节点 */
-	getAncestors() {
+	getAncestors(): import('../src')[] {
 		const ancestors: import('../src')[] = [];
 		let {parentNode} = this;
 		while (parentNode) {
@@ -500,7 +508,7 @@ abstract class AstNode {
 	 * @param other 待比较的节点
 	 * @throws `Error` 不在同一个语法树
 	 */
-	compareDocumentPosition(this: AstNodeTypes, other: AstNodeTypes) {
+	compareDocumentPosition(this: AstNodeTypes, other: AstNodeTypes): number {
 		if (!(other instanceof AstNode)) {
 			this.typeError('compareDocumentPosition', 'AstNode');
 		} else if (this === other) {
@@ -526,7 +534,7 @@ abstract class AstNode {
 	 * @param top 行号
 	 * @param left 列号
 	 */
-	indexFromPos(top: number, left: number) {
+	indexFromPos(top: number, left: number): number | undefined {
 		if (!Number.isInteger(top) || !Number.isInteger(left)) {
 			this.typeError('indexFromPos', 'Number');
 		}
@@ -540,20 +548,20 @@ abstract class AstNode {
 	 * 获取当前节点的相对位置，或其第`j`个子节点的相对位置
 	 * @param j 子节点序号
 	 */
-	#getPosition(j?: number) {
+	#getPosition(j?: number): Position {
 		return j === undefined
 			? this.parentNode?.posFromIndex(this.getRelativeIndex()) ?? {top: 0, left: 0}
 			: this.posFromIndex(this.getRelativeIndex(j))!;
 	}
 
 	/** 获取当前节点的行列位置和大小 */
-	getBoundingClientRect() {
+	getBoundingClientRect(): Dimension & Position {
 		return {...this.#getDimension(), ...this.getRootNode().posFromIndex(this.getAbsoluteIndex())!};
 	}
 }
 
 declare namespace AstNode {
-	export {
+	export type {
 		AstNodeTypes,
 		Inserted,
 		InsertionReturn,

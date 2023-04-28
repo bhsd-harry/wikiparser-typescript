@@ -1,7 +1,7 @@
 import Parser = require('../../index');
 import fixed = require('../../mixin/fixed');
 import Token = require('..');
-import {AstNodeTypes, TokenAttributeGetter} from '../../lib/node';
+import type {AstNodeTypes, TokenAttributeGetter} from '../../lib/node';
 
 /** 成对标签 */
 abstract class TagPairToken extends fixed(Token) {
@@ -20,7 +20,7 @@ abstract class TagPairToken extends fixed(Token) {
 	 * 是否闭合
 	 * @browser
 	 */
-	get closed() {
+	get closed(): boolean {
 		return this.#closed;
 	}
 
@@ -29,7 +29,7 @@ abstract class TagPairToken extends fixed(Token) {
 	}
 
 	/** 是否自封闭 */
-	get selfClosing() {
+	get selfClosing(): boolean {
 		return this.#selfClosing;
 	}
 
@@ -41,7 +41,7 @@ abstract class TagPairToken extends fixed(Token) {
 	}
 
 	/** 内部wikitext */
-	get innerText() {
+	get innerText(): string | undefined {
 		return this.#selfClosing ? undefined : this.lastChild.text();
 	}
 
@@ -56,13 +56,13 @@ abstract class TagPairToken extends fixed(Token) {
 		name: string,
 		attr: string | Token,
 		inner: string | Token,
-		closed: string,
+		closed: string | undefined,
 		config = Parser.getConfig(),
 		accum: Token[] = [],
 	) {
 		super(undefined, config, true);
 		this.setAttribute('name', name.toLowerCase());
-		this.#tags = [name, closed || name];
+		this.#tags = [name, closed || name]; // eslint-disable-line @typescript-eslint/prefer-nullish-coalescing
 		this.#selfClosing = closed === undefined;
 		this.#closed = closed !== '';
 		this.append(attr, inner);
@@ -80,7 +80,7 @@ abstract class TagPairToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override toString(selector?: string) {
+	override toString(selector?: string): string {
 		const {firstChild, lastChild, nextSibling, name} = this,
 			[opening, closing] = this.#tags;
 		if (selector && this.matches(selector)) {
@@ -98,7 +98,7 @@ abstract class TagPairToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override text() {
+	override text(): string {
 		const [opening, closing] = this.#tags;
 		return this.#selfClosing
 			? `<${opening}${this.firstChild.text()}/>`
@@ -106,12 +106,12 @@ abstract class TagPairToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override getPadding() {
+	override getPadding(): number {
 		return this.#tags[0].length + 1;
 	}
 
 	/** @private */
-	override getGaps() {
+	override getGaps(): number {
 		return 1;
 	}
 
@@ -119,7 +119,7 @@ abstract class TagPairToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override print() {
+	override print(): string {
 		const [opening, closing] = this.#tags;
 		return super.print(this.#selfClosing
 			? {pre: `&lt;${opening}`, post: '/&gt;'}
@@ -127,7 +127,7 @@ abstract class TagPairToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override getAttribute<T extends string>(key: T) {
+	override getAttribute<T extends string>(key: T): TokenAttributeGetter<T> {
 		return key === 'tags' ? [...this.#tags] as TokenAttributeGetter<T> : super.getAttribute(key);
 	}
 }

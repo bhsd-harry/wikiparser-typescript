@@ -13,7 +13,7 @@ class HiddenToken extends hidden(Token) {
 	}
 
 	/** @override */
-	override cloneNode() {
+	override cloneNode(): this {
 		const cloned = this.cloneChildNodes(),
 			config = this.getAttribute('config'),
 			acceptable = this.getAttribute('acceptable');

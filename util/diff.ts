@@ -1,6 +1,6 @@
 import child_process = require('child_process');
 const {spawn} = child_process;
-import {ChildProcessWithoutNullStreams} from 'child_process';
+import type {ChildProcessWithoutNullStreams} from 'child_process';
 import fs = require('fs/promises');
 
 process.on('unhandledRejection', e => {
@@ -19,7 +19,7 @@ const cmd = (command: string, args: string[]): Promise<string | undefined> => ne
 	 * 清除进程并返回
 	 * @param val 返回值
 	 */
-	const r = (val?: string) => {
+	const r = (val?: string): void => {
 		clearTimeout(timer);
 		shell?.kill('SIGINT');
 		resolve(val);
@@ -53,7 +53,7 @@ const cmd = (command: string, args: string[]): Promise<string | undefined> => ne
  * @param newStr 新文本
  * @param uid 唯一标识
  */
-const diff = async (oldStr: string, newStr: string, uid = -1) => {
+const diff = async (oldStr: string, newStr: string, uid = -1): Promise<void> => {
 	if (oldStr === newStr) {
 		return;
 	}

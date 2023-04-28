@@ -25,7 +25,7 @@ class Range {
 		} else if (str.includes(':')) {
 			const [start, end, step = '1'] = str.split(':', 3);
 			this.start = Number(start);
-			this.end = Number(end || Infinity);
+			this.end = Number(end || Infinity); // eslint-disable-line @typescript-eslint/prefer-nullish-coalescing
 			this.step = Math.max(Number(step), 1);
 			if (!Number.isInteger(this.start)) {
 				throw new RangeError(`起点 ${this.start} 应为整数！`);
@@ -62,7 +62,7 @@ class Range {
 	 * 将Range转换为针对特定数组的下标集
 	 * @param arr 参考数组
 	 */
-	applyTo(arr: number | unknown[]) {
+	applyTo(arr: number | unknown[]): number[] {
 		return new Array(typeof arr === 'number' ? arr : arr.length).fill(undefined).map((_, i) => i)
 			.slice(this.start, this.end)
 			.filter((_, j) => j % this.step === 0);
@@ -99,7 +99,7 @@ class Ranges extends Array<number | Range> {
 	 * 将Ranges转换为针对特定Array的下标集
 	 * @param arr 参考数组
 	 */
-	applyTo(arr: number | unknown[]) {
+	applyTo(arr: number | unknown[]): number[] {
 		const length = typeof arr === 'number' ? arr : arr.length;
 		return [
 			...new Set(
@@ -118,7 +118,7 @@ class Ranges extends Array<number | Range> {
 	 * @param str 表达式
 	 * @param i 待检查的下标
 	 */
-	static nth(this: void, str: string, i: number) {
+	static nth(this: void, str: string, i: number): boolean {
 		return new Ranges(str.split(',')).applyTo(i + 1).includes(i);
 	}
 }

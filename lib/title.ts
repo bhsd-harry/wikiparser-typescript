@@ -36,7 +36,7 @@ class Title {
 			} catch {}
 		}
 		title = title.replaceAll('_', ' ').trim();
-		if (title[0] === ':') {
+		if (title.startsWith(':')) {
 			namespace = '';
 			title = title.slice(1).trim();
 		}
@@ -79,7 +79,7 @@ class Title {
 	}
 
 	/** 完整链接 */
-	toString() {
+	toString(): string {
 		return `${this.title}${this.fragment === undefined ? '' : `#${this.fragment}`}`;
 	}
 }

@@ -19,8 +19,8 @@ abstract class ParameterToken extends fixed(Token) {
 	abstract override get firstElementChild(): Token;
 	abstract override get lastChild(): Token;
 	abstract override get lastElementChild(): Token;
-	abstract override get parentNode(): import('./transclude');
-	abstract override get parentElement(): import('./transclude');
+	abstract override get parentNode(): import('./transclude') | undefined;
+	abstract override get parentElement(): import('./transclude') | undefined;
 	abstract override get nextSibling(): ParameterToken | undefined;
 	abstract override get nextElementSibling(): ParameterToken | undefined;
 	abstract override get previousSibling(): Token;
@@ -30,12 +30,12 @@ abstract class ParameterToken extends fixed(Token) {
 	 * 是否是匿名参数
 	 * @browser
 	 */
-	get anon() {
+	get anon(): boolean {
 		return this.firstChild.length === 0;
 	}
 
 	/** getValue()的getter */
-	get value() {
+	get value(): string {
 		return this.getValue();
 	}
 
@@ -44,9 +44,9 @@ abstract class ParameterToken extends fixed(Token) {
 	}
 
 	/** 是否是重复参数 */
-	get duplicated() {
+	get duplicated(): boolean {
 		try {
-			return Boolean(this.parentNode?.getDuplicatedArgs()?.some(([key]) => key === this.name));
+			return Boolean(this.parentNode!.getDuplicatedArgs().some(([key]) => key === this.name));
 		} catch {
 			return false;
 		}
@@ -69,14 +69,16 @@ abstract class ParameterToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override afterBuild() {
+	override afterBuild(): void {
 		if (!this.anon) {
 			const name = this.firstChild.toString('comment, noinclude, include')
 					.replace(/^[ \t\n\0\v]+|(?<=[^ \t\n\0\v])[ \t\n\0\v]+$/gu, ''),
 				{parentNode} = this;
 			this.setAttribute('name', name);
-			parentNode.getAttribute('keys').add(name);
-			parentNode.getArgs(name, false, false).add(this);
+			if (parentNode) {
+				parentNode.getAttribute('keys').add(name);
+				parentNode.getArgs(name, false, false).add(this);
+			}
 		}
 		const /** @implements */ parameterListener: AstListener = ({prevTarget}, data) => {
 			if (!this.anon) { // 匿名参数不管怎么变动还是匿名
@@ -97,7 +99,7 @@ abstract class ParameterToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override toString(selector?: string) {
+	override toString(selector?: string): string {
 		return this.anon && !(selector && this.matches(selector))
 			? this.lastChild.toString(selector)
 			: super.toString(selector, '=');
@@ -107,7 +109,7 @@ abstract class ParameterToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override text() {
+	override text(): string {
 		return this.anon ? this.lastChild.text() : super.text('=');
 	}
 
@@ -120,7 +122,7 @@ abstract class ParameterToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override print() {
+	override print(): string {
 		return super.print({sep: this.anon ? '' : '='});
 	}
 
@@ -129,7 +131,7 @@ abstract class ParameterToken extends fixed(Token) {
 	 * @browser
 	 * @param start 起始位置
 	 */
-	override lint(start = this.getAbsoluteIndex()) {
+	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const errors = super.lint(start),
 			{firstChild, lastChild} = this,
 			link = new RegExp(`https?://${extUrlCharFirst}${extUrlChar}$`, 'iu')
@@ -150,7 +152,7 @@ abstract class ParameterToken extends fixed(Token) {
 	}
 
 	/** @override */
-	override cloneNode() {
+	override cloneNode(): this {
 		const [key, value] = this.cloneChildNodes() as [Token, Token],
 			config = this.getAttribute('config');
 		return Parser.run(() => {
@@ -167,15 +169,15 @@ abstract class ParameterToken extends fixed(Token) {
 	 * @override
 	 * @param token 待替换的节点
 	 */
-	override safeReplaceWith(token: this) {
+	override safeReplaceWith(token: this): void {
 		Parser.warn(`${this.constructor.name}.safeReplaceWith 方法退化到 replaceWith。`);
-		return this.replaceWith(token);
+		this.replaceWith(token);
 	}
 
 	/** 获取参数值 */
-	getValue() {
+	getValue(): string {
 		const value = this.lastChild.text();
-		return this.anon && this.parentNode?.isTemplate() ? value : value.trim();
+		return this.anon && this.parentNode!.isTemplate() ? value : value.trim();
 	}
 
 	/**
@@ -183,13 +185,13 @@ abstract class ParameterToken extends fixed(Token) {
 	 * @param value 参数值
 	 * @throws `SyntaxError` 非法的模板参数
 	 */
-	setValue(value: string) {
-		const templateLike = this.parentNode?.isTemplate(),
+	setValue(value: string): void {
+		const templateLike = this.parentNode!.isTemplate(),
 			wikitext = `{{${templateLike ? ':T|' : 'lc:'}${this.anon ? '' : '1='}${value}}}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: transclude} = root,
 			{lastChild: parameter, type, name, length: transcludeLength} = transclude as import('./transclude') & {
-				lastChild: ParameterToken,
+				lastChild: ParameterToken;
 			},
 			targetType = templateLike ? 'template' : 'magic-word',
 			targetName = templateLike ? 'T' : 'lc';
@@ -211,16 +213,16 @@ abstract class ParameterToken extends fixed(Token) {
 	 * @throws `SyntaxError` 非法的模板参数名
 	 * @throws `RangeError` 更名造成重复参数
 	 */
-	rename(key: string, force = false) {
+	rename(key: string, force = false): void {
 		const {parentNode} = this;
 		// 必须检测是否是TranscludeToken
-		if (!parentNode.isTemplate()) {
+		if (!parentNode!.isTemplate()) {
 			throw new Error(`${this.constructor.name}.rename 方法仅用于模板参数！`);
 		}
 		const root = Parser.parse(`{{:T|${key}=}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: template} = root,
 			{type, name, lastChild: parameter, length: templateLength} = template as import('./transclude') & {
-				lastChild: ParameterToken,
+				lastChild: ParameterToken;
 			};
 		if (length !== 1 || type !== 'template' || name !== 'T' || templateLength !== 2) {
 			throw new SyntaxError(`非法的模板参数名：${key}`);
@@ -228,7 +230,7 @@ abstract class ParameterToken extends fixed(Token) {
 		const {name: parameterName, firstChild} = parameter;
 		if (this.name === parameterName) {
 			Parser.warn('未改变实际参数名', parameterName);
-		} else if (parentNode.hasArg(parameterName)) {
+		} else if (parentNode!.hasArg(parameterName)) {
 			if (force) {
 				Parser.warn('参数更名造成重复参数', parameterName);
 			} else {

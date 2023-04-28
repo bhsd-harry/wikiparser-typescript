@@ -6,7 +6,7 @@ import fixed = require('../mixin/fixed');
 import Parser = require('../index');
 import Token = require('.');
 import AtomToken = require('./atom');
-import {TokenAttributeGetter} from '../lib/node';
+import type {TokenAttributeGetter} from '../lib/node';
 
 declare type AttributeTypes = 'ext-attr' | 'html-attr' | 'table-attr';
 
@@ -95,7 +95,7 @@ const stages = {'ext-attr': 0, 'html-attr': 2, 'table-attr': 3},
 		]),
 		combooption: new Set(['name', 'for', 'inline', 'align']),
 	},
-	empty: Set<string> = new Set(),
+	empty = new Set<string>(),
 	extAttrs: Record<string, Set<string>> = {
 		nowiki: empty,
 		indicator: new Set(['name']),
@@ -187,8 +187,8 @@ abstract class AttributeToken extends fixed(Token) {
 	abstract override get firstElementChild(): AtomToken;
 	abstract override get lastChild(): Token;
 	abstract override get lastElementChild(): Token;
-	abstract override get parentNode(): import('./attributes');
-	abstract override get parentElement(): import('./attributes');
+	abstract override get parentNode(): import('./attributes') | undefined;
+	abstract override get parentElement(): import('./attributes') | undefined;
 	abstract override get nextSibling(): AtomToken | AttributeToken | undefined;
 	abstract override get nextElementSibling(): AtomToken | AttributeToken | undefined;
 	abstract override get previousSibling(): AtomToken | AttributeToken | undefined;
@@ -205,7 +205,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * 引号是否匹配
 	 * @browser
 	 */
-	get balanced() {
+	get balanced(): boolean {
 		return !this.#equal || this.#quotes[0] === this.#quotes[1];
 	}
 
@@ -213,7 +213,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * 标签名
 	 * @browser
 	 */
-	get tag() {
+	get tag(): string {
 		return this.#tag;
 	}
 
@@ -221,7 +221,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * getValue()的getter
 	 * @browser
 	 */
-	get value() {
+	get value(): string | true {
 		return this.getValue();
 	}
 
@@ -295,7 +295,7 @@ abstract class AttributeToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override afterBuild() {
+	override afterBuild(): void {
 		if (this.#equal.includes('\0')) {
 			this.#equal = this.buildFromStr(this.#equal, 'string');
 		}
@@ -309,7 +309,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override toString(selector?: string) {
+	override toString(selector?: string): string {
 		if (selector && this.matches(selector)) {
 			return '';
 		}
@@ -323,12 +323,12 @@ abstract class AttributeToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override text() {
+	override text(): string {
 		return this.#equal ? `${super.text(`${this.#equal.trim()}"`)}"` : this.firstChild.text();
 	}
 
 	/** @private */
-	override getGaps() {
+	override getGaps(): number {
 		return this.#equal ? this.#equal.length + (this.#quotes[0]?.length ?? 0) : 0;
 	}
 
@@ -336,7 +336,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * @override
 	 * @browser
 	 */
-	override print() {
+	override print(): string {
 		const [quoteStart = '', quoteEnd = ''] = this.#quotes;
 		return this.#equal ? super.print({sep: `${this.#equal}${quoteStart}`, post: quoteEnd}) : super.print();
 	}
@@ -346,7 +346,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * @browser
 	 * @param start 起始位置
 	 */
-	override lint(start = this.getAbsoluteIndex()) {
+	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const errors = super.lint(start),
 			{balanced, firstChild, lastChild, type, name, value} = this,
 			tag = this.#tag;
@@ -377,7 +377,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * 获取属性值
 	 * @browser
 	 */
-	getValue() {
+	getValue(): string | true {
 		if (this.#equal) {
 			const value = this.lastChild.text();
 			if (this.#quotes[1]) {
@@ -389,7 +389,7 @@ abstract class AttributeToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override getAttribute<T extends string>(key: T) {
+	override getAttribute<T extends string>(key: T): TokenAttributeGetter<T> {
 		if (key === 'equal') {
 			return this.#equal as TokenAttributeGetter<T>;
 		}
@@ -397,12 +397,12 @@ abstract class AttributeToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override hasAttribute(key: string) {
+	override hasAttribute(key: string): boolean {
 		return key === 'equal' || key === 'quotes' || super.hasAttribute(key);
 	}
 
 	/** @override */
-	override cloneNode() {
+	override cloneNode(): this {
 		const [key, value] = this.cloneChildNodes() as [AtomToken, Token],
 			config = this.getAttribute('config');
 		return Parser.run(() => {
@@ -416,12 +416,12 @@ abstract class AttributeToken extends fixed(Token) {
 	}
 
 	/** 转义等号 */
-	escape() {
+	escape(): void {
 		this.#equal = '{{=}}';
 	}
 
 	/** 闭合引号 */
-	close() {
+	close(): void {
 		[this.#quotes[1]] = this.#quotes;
 	}
 
@@ -430,7 +430,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * @param value 参数值
 	 * @throws `SyntaxError` 非法的标签属性
 	 */
-	setValue(value: string | boolean) {
+	setValue(value: string | boolean): void {
 		if (value === false) {
 			this.remove();
 			return;
@@ -474,7 +474,7 @@ abstract class AttributeToken extends fixed(Token) {
 	 * @throws `Error` title属性不能更名
 	 * @throws `SyntaxError` 非法的模板参数名
 	 */
-	rename(key: string) {
+	rename(key: string): void {
 		if (this.name === 'title') {
 			throw new Error('title 属性不能更名！');
 		}

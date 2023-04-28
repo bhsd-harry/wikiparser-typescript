@@ -30,13 +30,11 @@ class AtomToken extends Token {
 		acceptable?: Acceptable,
 	) {
 		super(wikitext, config, true, accum, acceptable);
-		if (type) {
-			this.type = type;
-		}
+		this.type = type;
 	}
 
 	/** @override */
-	override cloneNode() {
+	override cloneNode(): this {
 		const cloned = this.cloneChildNodes(),
 			config = this.getAttribute('config'),
 			acceptable = this.getAttribute('acceptable');

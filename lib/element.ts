@@ -36,48 +36,48 @@ abstract class AstElement extends AstNode {
 	 * 子节点总数
 	 * @browser
 	 */
-	get length() {
+	get length(): number {
 		return this.childNodes.length;
 	}
 
 	/** 全部非文本子节点 */
-	get children() {
+	get children(): import('../src')[] {
 		const children = this.childNodes.filter(({type}) => type !== 'text') as import('../src')[];
 		return children;
 	}
 
 	/** 首位非文本子节点 */
-	get firstElementChild() {
+	get firstElementChild(): import('../src') | undefined {
 		return this.childNodes.find(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
 	/** 末位非文本子节点 */
-	get lastElementChild() {
+	get lastElementChild(): import('../src') | undefined {
 		return this.children.at(-1);
 	}
 
 	/** 非文本子节点总数 */
-	get childElementCount() {
+	get childElementCount(): number {
 		return this.children.length;
 	}
 
 	/** 父节点 */
-	get parentElement() {
+	get parentElement(): import('../src') | undefined {
 		return this.parentNode;
 	}
 
 	/** AstElement.prototype.text()的getter写法 */
-	get outerText() {
+	get outerText(): string {
 		return this.text();
 	}
 
 	/** 不可见 */
-	get hidden() {
+	get hidden(): boolean {
 		return this.text() === '';
 	}
 
 	/** 后一个可见的兄弟节点 */
-	get nextVisibleSibling() {
+	get nextVisibleSibling(): AstNode.AstNodeTypes | undefined {
 		let {nextSibling} = this;
 		while (nextSibling?.text() === '') {
 			({nextSibling} = nextSibling);
@@ -86,7 +86,7 @@ abstract class AstElement extends AstNode {
 	}
 
 	/** 前一个可见的兄弟节点 */
-	get previousVisibleSibling() {
+	get previousVisibleSibling(): AstNode.AstNodeTypes | undefined {
 		let {previousSibling} = this;
 		while (previousSibling?.text() === '') {
 			({previousSibling} = previousSibling);
@@ -95,13 +95,13 @@ abstract class AstElement extends AstNode {
 	}
 
 	/** 内部高度 */
-	get clientHeight() {
+	get clientHeight(): number | undefined {
 		const {innerText} = this as {innerText?: string};
 		return typeof innerText === 'string' ? innerText.split('\n').length : undefined;
 	}
 
 	/** 内部宽度 */
-	get clientWidth() {
+	get clientWidth(): number | undefined {
 		const {innerText} = this as {innerText?: string};
 		return typeof innerText === 'string' ? innerText.split('\n').at(-1)!.length : undefined;
 	}
@@ -124,7 +124,7 @@ abstract class AstElement extends AstNode {
 	 * 合并相邻的文本子节点
 	 * @browser
 	 */
-	normalize() {
+	normalize(): void {
 		const childNodes = [...this.childNodes];
 		for (let i = childNodes.length - 1; i >= 0; i--) {
 			const cur = childNodes[i]!,
@@ -146,7 +146,7 @@ abstract class AstElement extends AstNode {
 	 * @browser
 	 * @param i 移除位置
 	 */
-	removeAt(i: number) {
+	removeAt(i: number): AstNode.AstNodeTypes {
 		this.verifyChild(i);
 		const childNodes = [...this.childNodes],
 			e = new Event('remove', {bubbles: true}),
@@ -191,7 +191,7 @@ abstract class AstElement extends AstNode {
 	 * 最近的祖先节点
 	 * @browser
 	 */
-	closest(selector: string) {
+	closest(selector: string): import('../src') | undefined {
 		let {parentNode} = this;
 		const stack = parseSelector(selector);
 		while (parentNode) {
@@ -208,7 +208,7 @@ abstract class AstElement extends AstNode {
 	 * @browser
 	 * @param elements 插入节点
 	 */
-	append(...elements: AstNode.Inserted[]) {
+	append(...elements: AstNode.Inserted[]): void {
 		for (const element of elements) {
 			this.insertAt(element);
 		}
@@ -219,7 +219,7 @@ abstract class AstElement extends AstNode {
 	 * @browser
 	 * @param elements 新的子节点
 	 */
-	replaceChildren(...elements: AstNode.Inserted[]) {
+	replaceChildren(...elements: AstNode.Inserted[]): void {
 		for (let i = this.length - 1; i >= 0; i--) {
 			this.removeAt(i);
 		}
@@ -233,7 +233,7 @@ abstract class AstElement extends AstNode {
 	 * @param i 子节点位置
 	 * @throws `RangeError` 对应位置的子节点不是文本节点
 	 */
-	setText(str: string, i = 0) {
+	setText(str: string, i = 0): string {
 		this.verifyChild(i);
 		const oldText = this.childNodes.at(i)!,
 			{type, constructor: {name}} = oldText;
@@ -261,7 +261,7 @@ abstract class AstElement extends AstNode {
 	 * @browser
 	 * @param start 起始位置
 	 */
-	lint(start = this.getAbsoluteIndex()) {
+	lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const SyntaxToken: typeof import('../src/syntax') = require('../src/syntax');
 		if (this instanceof SyntaxToken || (this.constructor as {hidden?: true}).hidden
 			|| this.type === 'ext-inner' && lintIgnoredExt.has(this.name)
@@ -284,7 +284,7 @@ abstract class AstElement extends AstNode {
 	 */
 	print(opt: PrintOpt = {}): string {
 		return String(this)
-			? `<span class="wpb-${opt.class || this.type}">${print(this.childNodes, opt)}</span>`
+			? `<span class="wpb-${opt.class ?? this.type}">${print(this.childNodes, opt)}</span>`
 			: '';
 	}
 
@@ -293,7 +293,7 @@ abstract class AstElement extends AstNode {
 	 * @browser
 	 * @param file 文件名
 	 */
-	json(file?: string) {
+	json(file?: string): unknown {
 		const json: unknown = {
 			...this,
 			childNodes: this.childNodes.map(child => child.type === 'text' ? String(child) : child.json()),
@@ -308,7 +308,7 @@ abstract class AstElement extends AstNode {
 	}
 
 	/** 销毁 */
-	destroy() {
+	destroy(): void {
 		this.parentNode?.destroy();
 		for (const child of this.childNodes) {
 			child.setAttribute('parentNode', undefined);
@@ -323,12 +323,12 @@ abstract class AstElement extends AstNode {
 			return undefined;
 		}
 		const {childNodes, fixed} = parentNode,
-			protectedIndices = parentNode.getAttribute('protectedChildren')?.applyTo(childNodes);
-		return fixed || Boolean(protectedIndices?.includes(childNodes.indexOf(this as AstElement as import('../src'))));
+			protectedIndices = parentNode.getAttribute('protectedChildren').applyTo(childNodes);
+		return fixed || Boolean(protectedIndices.includes(childNodes.indexOf(this as AstElement as import('../src'))));
 	}
 
 	/** @private */
-	matchesAttr(key: string, equal?: string, val = '', i?: string) {
+	protected matchesAttr(key: string, equal?: string, val = '', i?: string): boolean {
 		if (!equal) {
 			return this.hasAttribute(key);
 		} else if (!this.hasAttribute(key)) {
@@ -506,7 +506,7 @@ abstract class AstElement extends AstNode {
 	}
 
 	/** 检查是否符合选择器 */
-	matches(selector?: string) {
+	matches(selector?: string): boolean {
 		if (selector === undefined) {
 			return true;
 		}
@@ -533,7 +533,7 @@ abstract class AstElement extends AstNode {
 	}
 
 	/** 符合选择器的第一个后代节点 */
-	querySelector(selector: string) {
+	querySelector(selector: string): import('../src') | undefined {
 		return this.#queryStack(parseSelector(selector));
 	}
 
@@ -541,7 +541,7 @@ abstract class AstElement extends AstNode {
 	 * 符合组合选择器的所有后代节点
 	 * @param stack 解析后的一组选择器
 	 */
-	#queryStackAll(stack: SelectorArray[][]) {
+	#queryStackAll(stack: SelectorArray[][]): import('../src')[] {
 		const descendants: import('../src')[] = [];
 		for (const child of this.children) {
 			if (child.#matchesStack(stack)) {
@@ -553,7 +553,7 @@ abstract class AstElement extends AstNode {
 	}
 
 	/** 符合选择器的所有后代节点 */
-	querySelectorAll(selector: string) {
+	querySelectorAll(selector: string): import('../src')[] {
 		return this.#queryStackAll(parseSelector(selector));
 	}
 
@@ -561,7 +561,7 @@ abstract class AstElement extends AstNode {
 	 * id选择器
 	 * @param id id名
 	 */
-	getElementById(id: string) {
+	getElementById(id: string): import('../src') | undefined {
 		if (typeof id === 'string') {
 			id = id.replace(/(?<!\\)"/gu, '\\"'); // eslint-disable-line no-param-reassign
 			return this.querySelector(`ext[id="${id}"], html[id="${id}"]`);
@@ -573,7 +573,7 @@ abstract class AstElement extends AstNode {
 	 * 类选择器
 	 * @param className 类名之一
 	 */
-	getElementsByClassName(className: string) {
+	getElementsByClassName(className: string): import('../src')[] {
 		return typeof className === 'string'
 			? this.querySelectorAll(`[className~="${className.replace(/(?<!\\)"/gu, '\\"')}"]`)
 			: this.typeError('getElementsByClassName', 'String');
@@ -583,7 +583,7 @@ abstract class AstElement extends AstNode {
 	 * 标签名选择器
 	 * @param name 标签名
 	 */
-	getElementsByTagName(name: string) {
+	getElementsByTagName(name: string): import('../src')[] {
 		if (typeof name === 'string') {
 			name = name.replace(/(?<!\\)"/gu, '\\"'); // eslint-disable-line no-param-reassign
 			return this.querySelectorAll(`ext[name="${name}"], html[name="${name}"]`);
@@ -595,15 +595,15 @@ abstract class AstElement extends AstNode {
 	 * 获取某一行的wikitext
 	 * @param n 行号
 	 */
-	getLine(n: number) {
-		return String(this).split('\n', n + 1).at(-1);
+	getLine(n: number): string | undefined {
+		return String(this).split('\n', n + 1)[n];
 	}
 
 	/**
 	 * 在开头批量插入子节点
 	 * @param elements 插入节点
 	 */
-	prepend(...elements: AstNode.Inserted[]) {
+	prepend(...elements: AstNode.Inserted[]): void {
 		for (let i = 0; i < elements.length; i++) {
 			this.insertAt(elements[i]!, i);
 		}
@@ -614,7 +614,7 @@ abstract class AstElement extends AstNode {
 	 * @param node 子节点
 	 * @throws `RangeError` 找不到子节点
 	 */
-	#getChildIndex(node: AstNode.AstNodeTypes) {
+	#getChildIndex(node: AstNode.AstNodeTypes): number {
 		const i = this.childNodes.indexOf(node);
 		if (i === -1) {
 			Parser.error('找不到子节点！', node);
@@ -627,7 +627,7 @@ abstract class AstElement extends AstNode {
 	 * 移除子节点
 	 * @param node 子节点
 	 */
-	removeChild<T extends AstNode.AstNodeTypes>(node: T) {
+	removeChild<T extends AstNode.AstNodeTypes>(node: T): T {
 		this.removeAt(this.#getChildIndex(node));
 		return node;
 	}
@@ -636,7 +636,7 @@ abstract class AstElement extends AstNode {
 	 * 在末尾插入子节点
 	 * @param node 插入节点
 	 */
-	appendChild<T extends AstNode.Inserted>(node: T) {
+	appendChild<T extends AstNode.Inserted>(node: T): AstNode.InsertionReturn<T> {
 		return this.insertAt(node);
 	}
 
@@ -645,7 +645,7 @@ abstract class AstElement extends AstNode {
 	 * @param child 插入节点
 	 * @param reference 指定位置处的子节点
 	 */
-	insertBefore<T extends AstNode.Inserted>(child: T, reference: AstNode.AstNodeTypes) {
+	insertBefore<T extends AstNode.Inserted>(child: T, reference?: AstNode.AstNodeTypes): AstNode.InsertionReturn<T> {
 		return reference === undefined ? this.insertAt(child) : this.insertAt(child, this.#getChildIndex(reference));
 	}
 
@@ -654,7 +654,7 @@ abstract class AstElement extends AstNode {
 	 * @param newChild 新子节点
 	 * @param oldChild 原子节点
 	 */
-	replaceChild<T extends AstNode.AstNodeTypes>(newChild: AstNode.Inserted, oldChild: T) {
+	replaceChild<T extends AstNode.AstNodeTypes>(newChild: AstNode.Inserted, oldChild: T): T {
 		const i = this.#getChildIndex(oldChild);
 		this.removeAt(i);
 		this.insertAt(newChild, i);
@@ -665,7 +665,7 @@ abstract class AstElement extends AstNode {
 	 * 输出AST
 	 * @param depth 当前深度
 	 */
-	echo(depth = 0) {
+	echo(depth = 0): void {
 		if (!Number.isInteger(depth) || depth < 0) {
 			this.typeError('print', 'Number');
 		}
@@ -711,7 +711,10 @@ abstract class AstElement extends AstNode {
  * @param node.attributes 节点属性
  * @param regex 语言正则
  */
-const matchesLang = ({attributes}: AstElement & {attributes?: Record<string, string | true>}, regex: RegExp) => {
+const matchesLang = (
+	{attributes}: AstElement & {attributes?: Record<string, string | true>},
+	regex: RegExp,
+): boolean => {
 	const lang = attributes?.['lang'];
 	return typeof lang === 'string' && regex.test(lang);
 };

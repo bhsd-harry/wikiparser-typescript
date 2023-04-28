@@ -4,7 +4,7 @@ const {undo} = debug_1;
 import string_1 = require('../util/string');
 const {text} = string_1;
 import Token = require('.');
-import {TokenAttributeGetter, Inserted} from '../lib/node';
+import type {TokenAttributeGetter, Inserted} from '../lib/node';
 
 declare type SyntaxTypes = 'plain' | 'heading-trail' | 'magic-word-name' | 'table-syntax';
 
@@ -35,7 +35,7 @@ class SyntaxToken extends Token {
 	}
 
 	/** @override */
-	override cloneNode() {
+	override cloneNode(): this {
 		const cloned = this.cloneChildNodes(),
 			config = this.getAttribute('config'),
 			acceptable = this.getAttribute('acceptable');
@@ -48,7 +48,7 @@ class SyntaxToken extends Token {
 	}
 
 	/** @private */
-	override afterBuild() {
+	override afterBuild(): void {
 		const /** @implements */ syntaxListener: AstListener = (e, data) => {
 			const pattern = this.#pattern;
 			if (!Parser.running && !pattern.test(this.text())) {
@@ -61,12 +61,12 @@ class SyntaxToken extends Token {
 	}
 
 	/** @private */
-	override getAttribute<T extends string>(key: T) {
+	override getAttribute<T extends string>(key: T): TokenAttributeGetter<T> {
 		return key === 'pattern' ? this.#pattern as TokenAttributeGetter<T> : super.getAttribute(key);
 	}
 
 	/** @private */
-	override hasAttribute(key: string) {
+	override hasAttribute(key: string): boolean {
 		return key === 'pattern' || super.hasAttribute(key);
 	}
 
@@ -74,7 +74,7 @@ class SyntaxToken extends Token {
 	 * @override
 	 * @param elements 待替换的子节点
 	 */
-	override replaceChildren(...elements: Inserted[]) {
+	override replaceChildren(...elements: Inserted[]): void {
 		if (this.#pattern.test(text(elements))) {
 			Parser.run(() => {
 				super.replaceChildren(...elements);

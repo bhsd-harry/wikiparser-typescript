@@ -64,7 +64,7 @@ class AstText extends AstNode {
 	data: string;
 
 	/** 文本长度 */
-	get length() {
+	get length(): number {
 		return this.data.length;
 	}
 
@@ -85,7 +85,7 @@ class AstText extends AstNode {
 	 * 输出字符串
 	 * @browser
 	 */
-	override toString() {
+	override toString(): string {
 		return this.data;
 	}
 
@@ -93,7 +93,7 @@ class AstText extends AstNode {
 	 * 可见部分
 	 * @browser
 	 */
-	text() {
+	text(): string {
 		return this.data;
 	}
 
@@ -102,7 +102,7 @@ class AstText extends AstNode {
 	 * @browser
 	 * @param start 起始位置
 	 */
-	lint(start = this.getAbsoluteIndex()) {
+	lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const {data, parentNode, nextSibling, previousSibling} = this,
 			type = parentNode?.type,
 			name = parentNode?.name,
@@ -171,7 +171,7 @@ class AstText extends AstNode {
 	 * @browser
 	 * @param text 新内容
 	 */
-	#setData(text: string) {
+	#setData(text: string): void {
 		const {data} = this,
 			e = new Event('text', {bubbles: true});
 		this.setAttribute('data', text);
@@ -185,12 +185,12 @@ class AstText extends AstNode {
 	 * @browser
 	 * @param text 替换的字符串
 	 */
-	replaceData(text = '') {
+	replaceData(text = ''): void {
 		this.#setData(text);
 	}
 
 	/** 复制 */
-	cloneNode() {
+	cloneNode(): AstText {
 		return new AstText(this.data);
 	}
 
@@ -198,7 +198,7 @@ class AstText extends AstNode {
 	 * 在后方添加字符串
 	 * @param text 添加的字符串
 	 */
-	appendData(text: string) {
+	appendData(text: string): void {
 		this.#setData(this.data + text);
 	}
 
@@ -207,7 +207,7 @@ class AstText extends AstNode {
 	 * @param offset 起始位置
 	 * @param count 删减字符数
 	 */
-	deleteData(offset: number, count: number) {
+	deleteData(offset: number, count: number): void {
 		this.#setData(this.data.slice(0, offset) + this.data.slice(offset + count));
 	}
 
@@ -216,7 +216,7 @@ class AstText extends AstNode {
 	 * @param offset 插入位置
 	 * @param text 待插入的字符串
 	 */
-	insertData(offset: number, text: string) {
+	insertData(offset: number, text: string): void {
 		this.#setData(this.data.slice(0, offset) + text + this.data.slice(offset));
 	}
 
@@ -225,7 +225,7 @@ class AstText extends AstNode {
 	 * @param offset 起始位置
 	 * @param count 字符数
 	 */
-	substringData(offset: number, count: number) {
+	substringData(offset: number, count: number): string {
 		return this.data.slice(offset, offset + count);
 	}
 
@@ -235,7 +235,7 @@ class AstText extends AstNode {
 	 * @throws `RangeError` 错误的断开位置
 	 * @throws `Error` 没有父节点
 	 */
-	splitText(offset: number) {
+	splitText(offset: number): AstText {
 		if (!Number.isInteger(offset)) {
 			this.typeError('splitText', 'Number');
 		} else if (offset > this.length || offset < -this.length) {

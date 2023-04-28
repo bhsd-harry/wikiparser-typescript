@@ -31,7 +31,7 @@ abstract class NowikiBaseToken extends fixed(Token) {
 	}
 
 	/** @override */
-	override cloneNode(this: this & {constructor: new (...args: unknown[]) => unknown}) {
+	override cloneNode(this: this & {constructor: new (...args: unknown[]) => unknown}): this {
 		const {constructor, firstChild: {data}, type} = this,
 			token = Parser.run(() => new constructor(data, this.getAttribute('config'))) as this;
 		token.type = type;
@@ -42,7 +42,7 @@ abstract class NowikiBaseToken extends fixed(Token) {
 	 * @override
 	 * @param str 新文本
 	 */
-	override setText(str: string) {
+	override setText(str: string): string {
 		return super.setText(str, 0);
 	}
 }

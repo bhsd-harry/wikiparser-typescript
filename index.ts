@@ -285,7 +285,7 @@ const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
 		 * 重建部分属性值
 		 * @param keys 属性键
 		 */
-		const build = (keys: ['title', 'main', 'fragment']) => {
+		const build = (keys: ['title', 'main', 'fragment']): void => {
 			for (const key of keys) {
 				if (titleObj[key]?.includes('\0')) {
 					titleObj[key] = token.buildFromStr(titleObj[key]!, 'text');
@@ -329,14 +329,14 @@ const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
 				const entities = {lt: '<', gt: '>', amp: '&'};
 				restored = token!.print().replace(
 					/<[^<]+?>|&([lg]t|amp);/gu,
-					(_, s: 'lt' | 'gt' | 'amp') => s ? entities[s] : '',
+					(_, s?: 'lt' | 'gt' | 'amp') => s ? entities[s] : '',
 				);
 				process = '渲染HTML';
 			}
 			if (restored !== wikitext) {
 				const diff: typeof import('./util/diff') = require('./util/diff');
 				const {promises: {0: cur, length}} = this;
-				this.promises.unshift((async () => {
+				this.promises.unshift((async (): Promise<void> => {
 					await cur;
 					this.error(`${process}过程中不可逆地修改了原始文本！`);
 					return diff(wikitext, restored, length);
@@ -455,7 +455,7 @@ for (const key in Parser) {
 Object.defineProperties(Parser, def);
 
 declare namespace Parser { // eslint-disable-line @typescript-eslint/no-redeclare
-	export {
+	export type {
 		Config,
 		LintError,
 	};

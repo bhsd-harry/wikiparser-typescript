@@ -4,6 +4,7 @@ import Parser = require('../index');
  * 解析后不可见的类
  * @param constructor 基类
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const hidden = <T extends abstract new (...args: any[]) => object>(constructor: T) => {
 	/** 解析后不可见的类 */
 	abstract class AnyHiddenToken extends constructor {
@@ -13,7 +14,7 @@ const hidden = <T extends abstract new (...args: any[]) => object>(constructor: 
 		abstract override toString(selector?: string, separator?: string): string;
 
 		/** 没有可见部分 */
-		text() { // eslint-disable-line class-methods-use-this
+		text(): string { // eslint-disable-line class-methods-use-this
 			return '';
 		}
 	}

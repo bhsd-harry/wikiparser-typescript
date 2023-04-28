@@ -5,7 +5,7 @@
  * @param args 可接受的参数类型
  * @throws `TypeError`
  */
-export const typeError = ({name}: Function, method: string, ...args: string[]) => {
+export const typeError = ({name}: Function, method: string, ...args: string[]): never => {
 	throw new TypeError(`${name}.${method} 方法仅接受 ${args.join('、')} 作为输入参数！`);
 };
 
@@ -15,7 +15,7 @@ export const typeError = ({name}: Function, method: string, ...args: string[]) =
  * @param data 事件数据
  * @throws `RangeError` 无法撤销的事件类型
  */
-export const undo = (e: AstEvent, data: AstEventData) => {
+export const undo = (e: AstEvent, data: AstEventData): void => {
 	const {target, type} = e;
 	switch (type) {
 		case 'remove': {

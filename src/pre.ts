@@ -17,8 +17,8 @@ abstract class PreToken extends Token {
 	abstract override get nextElementSibling(): undefined;
 	abstract override get previousSibling(): AttributesToken;
 	abstract override get previousElementSibling(): AttributesToken;
-	abstract override get parentNode(): ExtToken;
-	abstract override get parentElement(): ExtToken;
+	abstract override get parentNode(): ExtToken | undefined;
+	abstract override get parentElement(): ExtToken | undefined;
 
 	/** @browser */
 	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {
@@ -39,12 +39,12 @@ abstract class PreToken extends Token {
 	}
 
 	/** @private */
-	override isPlain() {
+	override isPlain(): boolean {
 		return true;
 	}
 
 	/** @override */
-	override cloneNode() {
+	override cloneNode(): this {
 		const cloned = this.cloneChildNodes();
 		return Parser.run(() => {
 			// @ts-expect-error abstract class

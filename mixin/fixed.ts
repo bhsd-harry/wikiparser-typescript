@@ -1,10 +1,11 @@
 import Parser = require('../index');
-import {Inserted, InsertionReturn} from '../lib/node';
+import type {Inserted, InsertionReturn} from '../lib/node';
 
 /**
  * 不可增删子节点的类
  * @param constructor 基类
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const fixed = <S extends new (...args: any[]) => {length: number}>(constructor: S) => {
 	/** 不可增删子节点的类 */
 	abstract class FixedToken extends constructor {
@@ -17,7 +18,7 @@ const fixed = <S extends new (...args: any[]) => {length: number}>(constructor: 
 		 * @override
 		 * @throws `Error`
 		 */
-		removeAt() {
+		removeAt(): never {
 			throw new Error(`${this.constructor.name} 不可删除元素！`);
 		}
 

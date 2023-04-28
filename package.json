@@ -29,7 +29,8 @@
 	"scripts": {
 		"prepublishOnly": "rm -rf dist/; tsc; rm dist/[mpu]*/*.d.ts && grep -rl --include='*.d.ts' '@private' dist/ | xargs gsed -i '/@private/,+1d'",
 		"build": "rm -rf dist/; tsc; eslint --fix dist/",
-		"diff": "./bin/diff.sh"
+		"diff": "./bin/diff.sh",
+		"lint": "eslint --cache --ignore-pattern '/dist/' ."
 	},
 	"devDependencies": {
 		"@types/node": "^17.0.23",

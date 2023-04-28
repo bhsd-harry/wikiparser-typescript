@@ -1,4 +1,4 @@
-import {AstNodeTypes} from '../lib/node';
+import type {AstNodeTypes} from '../lib/node';
 import Token = require('../src');
 import Ranges = require('../lib/ranges');
 
@@ -42,5 +42,3 @@ declare global {
 
 	type Acceptable = Record<string, number | string | Ranges | (number | string)[]>;
 }
-
-export {};

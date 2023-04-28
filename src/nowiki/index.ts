@@ -13,8 +13,8 @@ abstract class NowikiToken extends NowikiBaseToken {
 	abstract override get nextElementSibling(): undefined;
 	abstract override get previousSibling(): AttributesToken;
 	abstract override get previousElementSibling(): AttributesToken;
-	abstract override get parentNode(): ExtToken;
-	abstract override get parentElement(): ExtToken;
+	abstract override get parentNode(): ExtToken | undefined;
+	abstract override get parentElement(): ExtToken | undefined;
 
 	/**
 	 * @override

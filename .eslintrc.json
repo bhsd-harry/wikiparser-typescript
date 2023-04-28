@@ -924,23 +924,104 @@
 						}
 					}
 				],
-				"@typescript-eslint/no-namespace": [
+				"@typescript-eslint/consistent-generic-constructors": 2,
+				"@typescript-eslint/consistent-indexed-object-style": 2,
+				"@typescript-eslint/consistent-type-assertions": 2,
+				"@typescript-eslint/consistent-type-definitions": 2,
+				"@typescript-eslint/consistent-type-exports": 2,
+				"@typescript-eslint/consistent-type-imports": [
 					2,
 					{
-						"allowDeclarations": true
+						"disallowTypeAnnotations": false
 					}
 				],
+				"@typescript-eslint/explicit-function-return-type": 2,
+				"@typescript-eslint/member-delimiter-style": [
+					2,
+					{
+						"singleline": {
+							"delimiter": "comma"
+						}
+					}
+				],
+				"@typescript-eslint/method-signature-style": [
+					2,
+					"method"
+				],
+				"@typescript-eslint/no-confusing-non-null-assertion": 2,
+				"@typescript-eslint/no-confusing-void-expression": 2,
+				"@typescript-eslint/no-duplicate-type-constituents": 2,
 				"@typescript-eslint/no-explicit-any": [
 					2,
 					{
 						"ignoreRestArgs": true
 					}
 				],
+				"@typescript-eslint/no-invalid-void-type": [
+					2,
+					{
+						"allowAsThisParameter": true
+					}
+				],
+				"@typescript-eslint/no-namespace": [
+					2,
+					{
+						"allowDeclarations": true
+					}
+				],
+				"@typescript-eslint/no-non-null-asserted-nullish-coalescing": 2,
 				"@typescript-eslint/no-non-null-assertion": 0,
+				"@typescript-eslint/no-redundant-type-constituents": 2,
+				"@typescript-eslint/no-type-alias": [
+					2,
+					{
+						"allowAliases": "in-unions",
+						"allowCallbacks": "always",
+						"allowConditionalTypes": "always",
+						"allowLiterals": "in-unions",
+						"allowGenerics": "always"
+					}
+				],
+				"@typescript-eslint/no-unnecessary-boolean-literal-compare": 2,
+				"@typescript-eslint/no-unnecessary-condition": [
+					2,
+					{
+						"allowConstantLoopConditions": true
+					}
+				],
+				"@typescript-eslint/no-unnecessary-qualifier": 2,
 				"@typescript-eslint/no-unsafe-assignment": 0,
 				"@typescript-eslint/no-unsafe-call": 0,
 				"@typescript-eslint/no-unsafe-return": 0,
-				"@typescript-eslint/no-var-requires": 0
+				"@typescript-eslint/no-useless-empty-export": 2,
+				"@typescript-eslint/no-var-requires": 0,
+				"@typescript-eslint/non-nullable-type-assertion-style": 2,
+				"@typescript-eslint/prefer-for-of": 2,
+				"@typescript-eslint/prefer-nullish-coalescing": [
+					2,
+					{
+						"ignoreTernaryTests": false
+					}
+				],
+				"@typescript-eslint/prefer-optional-chain": 2,
+				"@typescript-eslint/prefer-reduce-type-parameter": 2,
+				"@typescript-eslint/prefer-return-this-type": 2,
+				"unicorn/prefer-string-starts-ends-with": 0,
+				"@typescript-eslint/prefer-string-starts-ends-with": 2,
+				"@typescript-eslint/switch-exhaustiveness-check": 2,
+				"@typescript-eslint/type-annotation-spacing": [
+					2,
+					{
+						"before": false,
+						"after": true,
+						"overrides": {
+							"arrow": {
+								"before": true
+							}
+						}
+					}
+				],
+				"@typescript-eslint/unified-signatures": 2
 			}
 		},
 		{
