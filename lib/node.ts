@@ -17,7 +17,7 @@ declare type TokenAttribute<T extends string> =
 	T extends 'bracket' | 'include' ? boolean :
 	T extends 'pattern' ? RegExp :
 	T extends 'tags' | 'flags' ? string[] :
-	T extends 'quotes' ? [string?, string?] :
+	T extends 'quotes' ? [string | undefined, string | undefined] :
 	T extends 'optional' | 'keys' ? Set<string> :
 	T extends 'args' ? Record<string, Set<import('../src/parameter')>> :
 	T extends 'protectedChildren' ? Ranges :

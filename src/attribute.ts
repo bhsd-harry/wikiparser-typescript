@@ -244,7 +244,7 @@ abstract class AttributeToken extends fixed(Token) {
 		key: string,
 		equal = '',
 		value = '',
-		quotes: [string?, string?] = [],
+		quotes: [string | undefined, string | undefined] = [undefined, undefined],
 		config = Parser.getConfig(),
 		accum: Token[] = [],
 	) {
@@ -385,7 +385,7 @@ abstract class AttributeToken extends fixed(Token) {
 			}
 			return this.#quotes[0] ? value.trimEnd() : value.trim();
 		}
-		return this.type === 'ext-attr' && !commonHtmlAttrs.has(this.name) || '';
+		return this.type === 'ext-attr' || '';
 	}
 
 	/** @private */
@@ -393,9 +393,7 @@ abstract class AttributeToken extends fixed(Token) {
 		if (key === 'equal') {
 			return this.#equal as TokenAttributeGetter<T>;
 		}
-		return key === 'quotes'
-			? this.#quotes as TokenAttributeGetter<T>
-			: super.getAttribute(key);
+		return key === 'quotes' ? this.#quotes as TokenAttributeGetter<T> : super.getAttribute(key);
 	}
 
 	/** @private */
@@ -424,10 +422,7 @@ abstract class AttributeToken extends fixed(Token) {
 
 	/** 闭合引号 */
 	close() {
-		const [quote] = this.#quotes;
-		if (quote) {
-			this.#quotes[1] = quote;
-		}
+		[this.#quotes[1]] = this.#quotes;
 	}
 
 	/**
