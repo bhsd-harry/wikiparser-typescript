@@ -21,7 +21,7 @@
 		"/i18n/",
 		"/dist/"
 	],
-	"main": "/dist/index.js",
+	"main": "./dist/index.js",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bhsd-harry/wikiparser-node.git"

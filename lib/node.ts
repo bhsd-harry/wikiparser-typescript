@@ -123,7 +123,7 @@ abstract class AstNode {
 	}
 
 	/** 后方是否还有其他节点（不含后代） */
-	get eof(): boolean {
+	get eof(): boolean | undefined {
 		if (this.type === 'root') {
 			return true;
 		}
@@ -131,17 +131,17 @@ abstract class AstNode {
 		while (nextSibling?.type === 'text' && String(nextSibling).trim() === '') {
 			({nextSibling} = nextSibling);
 		}
-		return nextSibling === undefined && Boolean(this.parentNode?.eof);
+		return nextSibling === undefined && this.parentNode?.eof;
 	}
 
 	/** 相对于父容器的行号 */
 	get offsetTop() {
-		return this.#getPosition()?.top;
+		return this.#getPosition().top;
 	}
 
 	/** 相对于父容器的列号 */
 	get offsetLeft() {
-		return this.#getPosition()?.left;
+		return this.#getPosition().left;
 	}
 
 	/** 位置、大小和padding */

@@ -1,6 +1,5 @@
 import fs = require('fs');
 import path = require('path');
-import diff = require('./util/diff');
 
 declare interface Config {
 	ext: string[];
@@ -335,6 +334,7 @@ const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
 				process = '渲染HTML';
 			}
 			if (restored !== wikitext) {
+				const diff: typeof import('./util/diff') = require('./util/diff');
 				const {promises: {0: cur, length}} = this;
 				this.promises.unshift((async () => {
 					await cur;
