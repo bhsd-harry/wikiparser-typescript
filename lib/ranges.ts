@@ -118,7 +118,7 @@ class Ranges extends Array<number | Range> {
 	 * @param str 表达式
 	 * @param i 待检查的下标
 	 */
-	static nth(str: string, i: number) {
+	static nth(this: void, str: string, i: number) {
 		return new Ranges(str.split(',')).applyTo(i + 1).includes(i);
 	}
 }

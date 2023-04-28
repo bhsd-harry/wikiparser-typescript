@@ -1,4 +1,5 @@
-import {typeError} from '../util/debug';
+import debug_1 = require('../util/debug');
+const {typeError} = debug_1;
 import assert = require('assert/strict');
 import EventEmitter = require('events');
 import Parser = require('../index');

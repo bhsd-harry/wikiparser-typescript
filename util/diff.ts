@@ -1,4 +1,6 @@
-import {ChildProcessWithoutNullStreams, spawn} from 'child_process';
+import child_process = require('child_process');
+const {spawn} = child_process;
+import {ChildProcessWithoutNullStreams} from 'child_process';
 import fs = require('fs/promises');
 
 process.on('unhandledRejection', e => {

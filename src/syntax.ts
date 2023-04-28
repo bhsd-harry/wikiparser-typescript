@@ -1,6 +1,8 @@
 import Parser = require('../index');
-import {undo} from '../util/debug';
-import {text} from '../util/string';
+import debug_1 = require('../util/debug');
+const {undo} = debug_1;
+import string_1 = require('../util/string');
+const {text} = string_1;
 import Token = require('.');
 import {TokenAttributeGetter, Inserted} from '../lib/node';
 

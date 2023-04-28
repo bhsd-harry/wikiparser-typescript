@@ -1,7 +1,9 @@
 import fs = require('fs');
 import path = require('path');
-import {toCase, noWrap, print, text} from '../util/string';
-import {nth} from './ranges';
+import string_1 = require('../util/string');
+const {toCase, noWrap, print, text} = string_1;
+import Ranges = require('./ranges');
+const {nth} = Ranges;
 import parseSelector = require('../parser/selector');
 import Title = require('./title');
 import Parser = require('../index');

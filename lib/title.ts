@@ -1,4 +1,5 @@
-import {decodeHtml} from '../util/string';
+import string_1 = require('../util/string');
+const {decodeHtml} = string_1;
 import Parser = require('../index');
 
 /** MediaWiki页面标题对象 */

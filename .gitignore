@@ -2,3 +2,4 @@
 /errors/*
 /printed/*
 /.vscode/
+/.eslintcache*

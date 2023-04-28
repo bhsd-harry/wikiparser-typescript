@@ -1,5 +1,7 @@
-import {generateForChild} from '../util/lint';
-import {noWrap, removeComment} from '../util/string';
+import lint_1 = require('../util/lint');
+const {generateForChild} = lint_1;
+import string_1 = require('../util/string');
+const {noWrap, removeComment} = string_1;
 import fixed = require('../mixin/fixed');
 import Parser = require('../index');
 import Token = require('.');
