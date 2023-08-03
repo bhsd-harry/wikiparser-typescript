@@ -208,7 +208,9 @@ class AstText extends AstNode {
 	 * @param count 删减字符数
 	 */
 	deleteData(offset: number, count: number): void {
-		this.#setData(this.data.slice(0, offset) + this.data.slice(offset + count));
+		this.#setData(
+			this.data.slice(0, offset) + (offset < 0 && offset + count >= 0 ? '' : this.data.slice(offset + count)),
+		);
 	}
 
 	/**
@@ -226,7 +228,7 @@ class AstText extends AstNode {
 	 * @param count 字符数
 	 */
 	substringData(offset: number, count: number): string {
-		return this.data.slice(offset, offset + count);
+		return this.data.substr(offset, count);
 	}
 
 	/**
