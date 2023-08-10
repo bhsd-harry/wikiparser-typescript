@@ -3,3 +3,4 @@
 /printed/*
 /.vscode/
 /.eslintcache*
+/node_modules/
