@@ -3,7 +3,7 @@
  * @param obj 对象
  */
 export function isPlainObject(obj: object) {
-  return Boolean(obj) && Object.getPrototypeOf(obj).constructor === Object;
+	return Boolean(obj) && Object.getPrototypeOf(obj).constructor === Object;
 }
 
 /**
@@ -11,7 +11,7 @@ export function isPlainObject(obj: object) {
  * @param time 秒数
  */
 export function sleep(time: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time * 1000);
-  });
+	return new Promise((resolve) => {
+		setTimeout(resolve, time * 1000);
+	});
 }
