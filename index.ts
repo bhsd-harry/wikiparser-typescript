@@ -3,7 +3,7 @@ import path = require('path');
 
 declare interface Config {
 	ext: string[];
-	html: [string[], string[], string[], string[]];
+	html: [string[], string[], string[]];
 	namespaces: Record<string, string>;
 	nsid: Record<string, number>;
 	parserFunction: [Record<string, string>, string[], string[], string[]];
