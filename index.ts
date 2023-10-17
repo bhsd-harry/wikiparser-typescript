@@ -311,7 +311,7 @@ const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
 				token.parse(maxStage, include);
 			} catch (e) {
 				if (e instanceof Error) {
-					const file = path.join(__dirname, 'errors', new Date().toISOString()),
+					const file = path.join(__dirname, '..', 'errors', new Date().toISOString()),
 						stage = token.getAttribute('stage');
 					fs.writeFileSync(file, stage === this.MAX_STAGE ? wikitext : String(token));
 					fs.writeFileSync(`${file}.err`, e.stack!);
@@ -416,12 +416,12 @@ const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
 
 	/** @implements */
 	reparse(date) {
-		const main = fs.readdirSync(path.join(__dirname, 'errors'))
+		const main = fs.readdirSync(path.join(__dirname, '..', 'errors'))
 			.find(name => name.startsWith(date) && name.endsWith('Z'));
 		if (!main) {
 			throw new RangeError(`找不到对应时间戳的错误记录：${date}`);
 		}
-		const file = path.join(__dirname, 'errors', main),
+		const file = path.join(__dirname, '..', 'errors', main),
 			wikitext = fs.readFileSync(file, 'utf8');
 		const {stage, include, config}: {stage: number, include: boolean, config: Config} = require(`${file}.json`),
 			Token: typeof import('./src') = require('./src');
