@@ -52,10 +52,11 @@ const pseudoRegex = new RegExp(`:(${complexPseudos.join('|')})$`, 'u'),
 
 /** 清理转义符号 */
 const sanitize = (selector: string): string => {
+	let s = selector;
 	for (const [c, escaped] of specialChars) {
-		selector = selector.replaceAll(`\\${c}`, escaped); // eslint-disable-line no-param-reassign
+		s = s.replaceAll(`\\${c}`, escaped);
 	}
-	return selector;
+	return s;
 };
 
 /** 还原转义符号 */
@@ -97,9 +98,9 @@ const pushSimple = (step: SelectorArray, str: string): void => {
  * @throws `SyntaxError` 非法的选择器
  */
 const parseSelector = (selector: string): SelectorArray[][] => {
-	selector = selector.trim(); // eslint-disable-line no-param-reassign
-	const stack: SelectorArray[][] = [[[]]];
-	let sanitized = sanitize(selector),
+	const s = selector.trim(),
+		stack: SelectorArray[][] = [[[]]];
+	let sanitized = sanitize(s),
 		regex = regularRegex,
 		mt = regex.exec(sanitized),
 		[condition] = stack as [SelectorArray[]],
@@ -119,7 +120,7 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 		} else if (combinator.has(syntax)) { // 情形2：关系
 			pushSimple(step, sanitized.slice(0, index));
 			if (!step.some(Boolean)) {
-				throw new SyntaxError(`非法的选择器！\n${selector}\n可能需要通用选择器'*'。`);
+				throw new SyntaxError(`非法的选择器！\n${s}\n可能需要通用选择器'*'。`);
 			}
 			step.relation = syntax;
 			step = [];
@@ -154,13 +155,13 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 	}
 	if (regex === regularRegex) {
 		pushSimple(step, sanitized);
-		const pseudos = new Set(stack.flat(2).filter(s => typeof s === 'string' && s.startsWith(':')) as string[]);
+		const pseudos = new Set(stack.flat(2).filter(e => typeof e === 'string' && e.startsWith(':')) as string[]);
 		if (pseudos.size > 0) {
 			Parser.warn('检测到伪选择器，请确认是否需要将":"转义成"\\:"。', pseudos);
 		}
 		return stack;
 	}
-	throw new SyntaxError(`非法的选择器！\n${selector}\n检测到未闭合的'${regex === attributeRegex ? '[' : '('}'`);
+	throw new SyntaxError(`非法的选择器！\n${s}\n检测到未闭合的'${regex === attributeRegex ? '[' : '('}'`);
 };
 
 Parser.parsers['parseSelector'] = __filename;

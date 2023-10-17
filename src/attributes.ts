@@ -258,8 +258,8 @@ abstract class AttributesToken extends Token {
 		} else if (this.type === 'ext-attrs' && typeof value === 'string' && value.includes('>')) {
 			throw new RangeError('扩展标签属性不能包含 ">"！');
 		}
-		key = key.toLowerCase().trim(); // eslint-disable-line no-param-reassign
-		const attr = this.getAttrToken(key);
+		const k = key.toLowerCase().trim(),
+			attr = this.getAttrToken(k);
 		if (attr) {
 			attr.setValue(value);
 			return;
@@ -269,16 +269,16 @@ abstract class AttributesToken extends Token {
 		const config = this.getAttribute('config'),
 			include = this.getAttribute('include'),
 			parsedKey = this.type === 'ext-attrs'
-				? key
-				: Parser.run(() => String(new Token(key, config).parseOnce(0, include).parseOnce()));
+				? k
+				: Parser.run(() => String(new Token(k, config).parseOnce(0, include).parseOnce()));
 		if (!/^(?:[\w:]|\0\d+[t!~{}+-]\x7F)(?:[\w:.-]|\0\d+[t!~{}+-]\x7F)*$/u.test(parsedKey)) {
-			throw new RangeError(`无效的属性名：${key}！`);
+			throw new RangeError(`无效的属性名：${k}！`);
 		}
 		// @ts-expect-error abstract class
 		const newAttr = Parser.run(() => new AttributeToken(
 			this.type.slice(0, -1) as 'ext-attr' | 'html-attr' | 'table-attr',
 			this.name,
-			key,
+			k,
 			value === true ? '' : '=',
 			value === true ? '' : value,
 			['"', '"'],
@@ -294,24 +294,24 @@ abstract class AttributesToken extends Token {
 		} else if (!this.hasAttr(key)) {
 			return equal === '!=';
 		}
-		val = toCase(val, i); // eslint-disable-line no-param-reassign
-		const attr = this.getAttr(key)!,
+		const v = toCase(val, i),
+			attr = this.getAttr(key)!,
 			thisVal = toCase(attr === true ? '' : attr, i);
 		switch (equal) {
 			case '~=':
-				return attr !== true && thisVal.split(/\s/u).includes(val);
+				return attr !== true && thisVal.split(/\s/u).includes(v);
 			case '|=': // 允许`val === ''`
-				return thisVal === val || thisVal.startsWith(`${val}-`);
+				return thisVal === v || thisVal.startsWith(`${v}-`);
 			case '^=':
-				return attr !== true && thisVal.startsWith(val);
+				return attr !== true && thisVal.startsWith(v);
 			case '$=':
-				return attr !== true && thisVal.endsWith(val);
+				return attr !== true && thisVal.endsWith(v);
 			case '*=':
-				return attr !== true && thisVal.includes(val);
+				return attr !== true && thisVal.includes(v);
 			case '!=':
-				return thisVal !== val;
+				return thisVal !== v;
 			default: // `=`
-				return thisVal === val;
+				return thisVal === v;
 		}
 	}
 
@@ -361,14 +361,14 @@ abstract class AttributesToken extends Token {
 		if (typeof key !== 'string') {
 			this.typeError('toggleAttr', 'String');
 		}
-		key = key.toLowerCase().trim(); // eslint-disable-line no-param-reassign
-		const attr = this.getAttrToken(key);
+		const k = key.toLowerCase().trim(),
+			attr = this.getAttrToken(k);
 		if (attr && attr.getValue() !== true) {
-			throw new RangeError(`${key} 属性的值不为 Boolean！`);
+			throw new RangeError(`${k} 属性的值不为 Boolean！`);
 		} else if (attr) {
 			attr.setValue(force === true);
 		} else if (force !== false) {
-			this.setAttr(key, true);
+			this.setAttr(k, true);
 		}
 	}
 

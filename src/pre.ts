@@ -22,7 +22,7 @@ abstract class PreToken extends Token {
 
 	/** @browser */
 	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {
-		wikitext = wikitext?.replace( // eslint-disable-line no-param-reassign
+		const text = wikitext?.replace(
 			/(<nowiki>)(.*?)(<\/nowiki>)/giu,
 			(_, opening: string, inner: string, closing: string) => {
 				// @ts-expect-error abstract class
@@ -32,7 +32,7 @@ abstract class PreToken extends Token {
 				return `\0${accum.length - 1}c\x7F${inner}\0${accum.length}c\x7F`;
 			},
 		);
-		super(wikitext, config, true, accum, {
+		super(text, config, true, accum, {
 			AstText: ':', NoincludeToken: ':', ConverterToken: ':',
 		});
 		this.setAttribute('stage', Parser.MAX_STAGE - 1);

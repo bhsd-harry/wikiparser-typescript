@@ -334,7 +334,7 @@ abstract class AstElement extends AstNode {
 		} else if (!this.hasAttribute(key)) {
 			return equal === '!=';
 		}
-		val = toCase(val, i); // eslint-disable-line no-param-reassign
+		const v = toCase(val, i);
 		let thisVal = this.getAttribute(key) as unknown;
 		if (thisVal instanceof RegExp) {
 			thisVal = thisVal.source;
@@ -344,24 +344,24 @@ abstract class AstElement extends AstNode {
 			// @ts-expect-error noImplicitAny
 			return Boolean(thisVals?.[Symbol.iterator])
 				// @ts-expect-error spread unknown
-				&& [...thisVals].some(v => typeof v === 'string' && toCase(v, i) === val);
+				&& [...thisVals].some(w => typeof w === 'string' && toCase(w, i) === v);
 		} else if (typeof thisVal !== 'string') {
 			throw new RangeError(`复杂属性 ${key} 不能用于选择器！`);
 		}
 		const stringVal = toCase(thisVal, i);
 		switch (equal) {
 			case '|=':
-				return stringVal === val || stringVal.startsWith(`${val}-`);
+				return stringVal === v || stringVal.startsWith(`${v}-`);
 			case '^=':
-				return stringVal.startsWith(val);
+				return stringVal.startsWith(v);
 			case '$=':
-				return stringVal.endsWith(val);
+				return stringVal.endsWith(v);
 			case '*=':
-				return stringVal.includes(val);
+				return stringVal.includes(v);
 			case '!=':
-				return stringVal !== val;
+				return stringVal !== v;
 			default: // `=`
-				return stringVal === val;
+				return stringVal === v;
 		}
 	}
 
@@ -563,8 +563,8 @@ abstract class AstElement extends AstNode {
 	 */
 	getElementById(id: string): import('../src') | undefined {
 		if (typeof id === 'string') {
-			id = id.replace(/(?<!\\)"/gu, '\\"'); // eslint-disable-line no-param-reassign
-			return this.querySelector(`ext[id="${id}"], html[id="${id}"]`);
+			const eid = id.replace(/(?<!\\)"/gu, '\\"');
+			return this.querySelector(`ext[id="${eid}"], html[id="${eid}"]`);
 		}
 		return this.typeError('getElementById', 'String');
 	}
@@ -585,8 +585,8 @@ abstract class AstElement extends AstNode {
 	 */
 	getElementsByTagName(name: string): import('../src')[] {
 		if (typeof name === 'string') {
-			name = name.replace(/(?<!\\)"/gu, '\\"'); // eslint-disable-line no-param-reassign
-			return this.querySelectorAll(`ext[name="${name}"], html[name="${name}"]`);
+			const ename = name.replace(/(?<!\\)"/gu, '\\"');
+			return this.querySelectorAll(`ext[name="${ename}"], html[name="${ename}"]`);
 		}
 		return this.typeError('getElementsByTagName', 'String');
 	}
