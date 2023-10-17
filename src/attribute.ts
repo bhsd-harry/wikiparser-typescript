@@ -369,6 +369,9 @@ abstract class AttributeToken extends fixed(Token) {
 		} else if (name === 'style' && typeof value === 'string' && insecureStyle.test(value)) {
 			rect ||= {start, ...this.getRootNode().posFromIndex(start)};
 			errors.push(generateForChild(lastChild, rect, 'insecure style'));
+		} else if (name === 'tabindex' && typeof value === 'string' && value.trim() !== '0') {
+			rect ||= {start, ...this.getRootNode().posFromIndex(start)};
+			errors.push(generateForChild(lastChild, rect, 'nonzero tabindex'));
 		}
 		return errors;
 	}
