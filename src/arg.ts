@@ -73,18 +73,12 @@ abstract class ArgToken extends Token {
 		return `{{{${text(this.childNodes.slice(0, 2), '|')}}}}`;
 	}
 
-	/**
-	 * @override
-	 * @browser
-	 */
+	/** @private */
 	override getPadding(): number {
 		return 3;
 	}
 
-	/**
-	 * @override
-	 * @browser
-	 */
+	/** @private */
 	override getGaps(): number {
 		return 1;
 	}
@@ -135,10 +129,10 @@ abstract class ArgToken extends Token {
 		});
 	}
 
-	/** @override */
+	/** @private */
 	override afterBuild(): void {
 		this.setAttribute('name', this.firstChild.text().trim());
-		const /** @type {AstListener} */ argListener: AstListener = ({prevTarget}) => {
+		const /** @implements */ argListener: AstListener = ({prevTarget}) => {
 			if (prevTarget === this.firstChild) {
 				this.setAttribute('name', prevTarget.text().trim());
 			}
@@ -195,11 +189,11 @@ abstract class ArgToken extends Token {
 	setName(name: string): void {
 		const n = String(name),
 			root = Parser.parse(`{{{${n}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
-			{length, firstChild: arg} = root as Token & {firstChild: Token};
-		if (length !== 1 || arg.type !== 'arg' || arg.length !== 1) {
+			{length, firstChild: arg} = root;
+		if (length !== 1 || !(arg instanceof ArgToken) || arg.length !== 1) {
 			throw new SyntaxError(`非法的参数名称：${noWrap(n)}`);
 		}
-		const {firstChild} = arg as ArgToken;
+		const {firstChild} = arg;
 		arg.destroy();
 		this.firstChild.safeReplaceWith(firstChild);
 	}
@@ -212,12 +206,12 @@ abstract class ArgToken extends Token {
 	setDefault(value: string): void {
 		const v = String(value),
 			root = Parser.parse(`{{{|${v}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
-			{length, firstChild: arg} = root as Token & {firstChild: Token};
-		if (length !== 1 || arg.type !== 'arg' || arg.length !== 2) {
+			{length, firstChild: arg} = root;
+		if (length !== 1 || !(arg instanceof ArgToken) || arg.length !== 2) {
 			throw new SyntaxError(`非法的参数预设值：${noWrap(v)}`);
 		}
 		const {childNodes: [, oldDefault]} = this,
-			{lastChild} = arg as ArgToken;
+			{lastChild} = arg;
 		arg.destroy();
 		if (oldDefault) {
 			oldDefault.safeReplaceWith(lastChild);

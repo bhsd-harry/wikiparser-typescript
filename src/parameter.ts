@@ -190,14 +190,15 @@ abstract class ParameterToken extends fixed(Token) {
 			wikitext = `{{${templateLike ? ':T|' : 'lc:'}${this.anon ? '' : '1='}${value}}}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: transclude} = root,
-			{lastChild: parameter, type, name, length: transcludeLength} = transclude as import('./transclude') & {
+			targetType = templateLike ? 'template' : 'magic-word';
+		if (length !== 1 || transclude!.type !== targetType) {
+			throw new SyntaxError(`非法的模板参数：${noWrap(value)}`);
+		}
+		const {lastChild: parameter, name, length: transcludeLength} = transclude as import('./transclude') & {
 				lastChild: ParameterToken;
 			},
-			targetType = templateLike ? 'template' : 'magic-word',
 			targetName = templateLike ? 'T' : 'lc';
-		if (length !== 1 || type !== targetType || name !== targetName || transcludeLength !== 2
-			|| parameter.anon !== this.anon || parameter.name !== '1'
-		) {
+		if (name !== targetName || transcludeLength !== 2 || parameter.anon !== this.anon || parameter.name !== '1') {
 			throw new SyntaxError(`非法的模板参数：${noWrap(value)}`);
 		}
 		const {lastChild} = parameter;
@@ -220,11 +221,14 @@ abstract class ParameterToken extends fixed(Token) {
 			throw new Error(`${this.constructor.name}.rename 方法仅用于模板参数！`);
 		}
 		const root = Parser.parse(`{{:T|${key}=}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
-			{length, firstChild: template} = root,
-			{type, name, lastChild: parameter, length: templateLength} = template as import('./transclude') & {
+			{length, firstChild: template} = root;
+		if (length !== 1 || template!.type !== 'template') {
+			throw new SyntaxError(`非法的模板参数名：${key}`);
+		}
+		const {name, lastChild: parameter, length: templateLength} = template as import('./transclude') & {
 				lastChild: ParameterToken;
 			};
-		if (length !== 1 || type !== 'template' || name !== 'T' || templateLength !== 2) {
+		if (name !== 'T' || templateLength !== 2) {
 			throw new SyntaxError(`非法的模板参数名：${key}`);
 		}
 		const {name: parameterName, firstChild} = parameter;

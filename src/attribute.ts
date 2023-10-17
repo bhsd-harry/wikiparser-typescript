@@ -445,9 +445,9 @@ abstract class AttributeToken extends fixed(Token) {
 			key = this.name === 'title' ? 'title' : 'data',
 			wikitext = `${pre[type]}${key}="${value}"${post[type]}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), stages[type] + 1, this.getAttribute('config')),
-			{length, firstChild: tag} = root as Token & {firstChild: Token};
+			{length, firstChild: tag} = root;
 		let attrs;
-		if (length !== 1 || tag.type !== type.slice(0, -5)) {
+		if (length !== 1 || !(tag instanceof Token) || tag.type !== type.slice(0, -5)) {
 			throw new SyntaxError(`非法的标签属性：${noWrap(value)}`);
 		} else if (type === 'table-attr') {
 			if (tag.length !== 2) {
@@ -484,9 +484,9 @@ abstract class AttributeToken extends fixed(Token) {
 		const {type} = this,
 			wikitext = `${pre[type]}${key}${post[type]}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), stages[type] + 1, this.getAttribute('config')),
-			{length, firstChild: tag} = root as Token & {firstChild: Token};
+			{length, firstChild: tag} = root;
 		let attrs;
-		if (length !== 1 || tag.type !== type.slice(0, -5)) {
+		if (length !== 1 || !(tag instanceof Token) || tag.type !== type.slice(0, -5)) {
 			throw new SyntaxError(`非法的标签属性名：${noWrap(key)}`);
 		} else if (type === 'table-attr') {
 			if (tag.length !== 2) {
