@@ -160,7 +160,7 @@ class AstText extends AstNode {
 						startCol,
 						endCol: startCol + length,
 						excerpt: rootStr.slice(Math.max(0, end - 50), end),
-					} as Parser.LintError;
+					};
 				}).filter(Boolean) as Parser.LintError[];
 		}
 		return [];

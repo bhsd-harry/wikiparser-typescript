@@ -150,11 +150,11 @@ abstract class AstElement extends AstNode {
 		this.verifyChild(i);
 		const childNodes = [...this.childNodes],
 			e = new Event('remove', {bubbles: true}),
-			[node] = childNodes.splice(i, 1) as [AstNode.AstNodeTypes];
-		node.setAttribute('parentNode', undefined);
+			[node] = childNodes.splice(i, 1);
+		node!.setAttribute('parentNode', undefined);
 		this.setAttribute('childNodes', childNodes);
-		this.dispatchEvent(e, {position: i, removed: node});
-		return node;
+		this.dispatchEvent(e, {position: i, removed: node!});
+		return node!;
 	}
 
 	/**

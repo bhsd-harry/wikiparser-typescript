@@ -45,6 +45,6 @@ export const undo = (e: AstEvent, data: AstEventData): void => {
 			}
 			break;
 		default:
-			throw new RangeError(`无法撤销未知类型的事件：${type}`);
+			throw new RangeError(`无法撤销未知类型的事件：${type as string}`);
 	}
 };

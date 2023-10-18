@@ -77,7 +77,7 @@ abstract class AstNode {
 	 */
 	get nextSibling(): AstNodeTypes | undefined {
 		const childNodes = this.#parentNode?.childNodes;
-		return childNodes && childNodes[childNodes.indexOf(this as unknown as AstNodeTypes) + 1];
+		return childNodes && childNodes[childNodes.indexOf(this as AstNode as AstNodeTypes) + 1];
 	}
 
 	/**
@@ -86,7 +86,7 @@ abstract class AstNode {
 	 */
 	get previousSibling(): AstNodeTypes | undefined {
 		const childNodes = this.#parentNode?.childNodes;
-		return childNodes && childNodes[childNodes.indexOf(this as unknown as AstNodeTypes) - 1];
+		return childNodes && childNodes[childNodes.indexOf(this as AstNode as AstNodeTypes) - 1];
 	}
 
 	/**
@@ -108,14 +108,14 @@ abstract class AstNode {
 	/** 后一个非文本兄弟节点 */
 	get nextElementSibling(): import('../src') | undefined {
 		const childNodes = this.#parentNode?.childNodes,
-			i = childNodes?.indexOf(this as unknown as AstNodeTypes);
+			i = childNodes?.indexOf(this as AstNode as AstNodeTypes);
 		return childNodes?.slice(i! + 1)?.find(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
 	/** 前一个非文本兄弟节点 */
 	get previousElementSibling(): import('../src') | undefined {
 		const childNodes = this.#parentNode?.childNodes,
-			i = childNodes?.indexOf(this as unknown as AstNodeTypes);
+			i = childNodes?.indexOf(this as AstNode as AstNodeTypes);
 		return childNodes?.slice(0, i)?.findLast(({type}) => type !== 'text') as import('../src') | undefined;
 	}
 
@@ -413,7 +413,7 @@ abstract class AstNode {
 	 * @param options 选项
 	 * @param options.once 仅执行一次
 	 */
-	addEventListener(types: string | string[], listener: AstListener, options?: {once?: boolean}): void {
+	addEventListener(types: AstEventType | AstEventType[], listener: AstListener, options?: {once?: boolean}): void {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.addEventListener(type, listener, options);
@@ -430,7 +430,7 @@ abstract class AstNode {
 	 * @param types 事件类型
 	 * @param listener 监听函数
 	 */
-	removeEventListener(types: string | string[], listener: AstListener): void {
+	removeEventListener(types: AstEventType | AstEventType[], listener: AstListener): void {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.removeEventListener(type, listener);
@@ -446,7 +446,7 @@ abstract class AstNode {
 	 * 移除事件的所有监听
 	 * @param types 事件类型
 	 */
-	removeAllEventListeners(types?: string | string[]): void {
+	removeAllEventListeners(types?: AstEventType | AstEventType[]): void {
 		if (Array.isArray(types)) {
 			for (const type of types) {
 				this.removeAllEventListeners(type);
@@ -462,7 +462,7 @@ abstract class AstNode {
 	 * 列举事件监听
 	 * @param type 事件类型
 	 */
-	listEventListeners(type: string): Function[] {
+	listEventListeners(type: AstEventType): Function[] {
 		return typeof type === 'string' ? this.#events.listeners(type) : this.typeError('listEventListeners', 'String');
 	}
 

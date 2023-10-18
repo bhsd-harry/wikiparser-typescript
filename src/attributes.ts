@@ -109,7 +109,7 @@ abstract class AttributesToken extends Token {
 				out += attr.slice(lastIndex, index);
 				if (/^(?:[\w:]|\0\d+[t!~{}+-]\x7F)(?:[\w:.-]|\0\d+[t!~{}+-]\x7F)*$/u.test(removeComment(key).trim())) {
 					const value = quoted ?? unquoted,
-						quotes = [quoteStart, quoteEnd] as [string?, string?],
+						quotes = [quoteStart, quoteEnd],
 						// @ts-expect-error abstract class
 						token: AttributeToken = new AttributeToken(
 							type.slice(0, -1) as 'ext-attr' | 'html-attr' | 'table-attr',
@@ -215,7 +215,7 @@ abstract class AttributesToken extends Token {
 	 * @param i 插入位置
 	 * @throws `RangeError` 不是AttributeToken或标签不匹配
 	 */
-	override insertAt<T extends Inserted>(token: T, i = this.length): InsertionReturn<T> {
+	override insertAt<T extends Inserted>(token: T & AttributeToken, i = this.length): InsertionReturn<T> {
 		if (!(token instanceof AttributeToken)) {
 			throw new RangeError(`${this.constructor.name}只能插入AttributeToken！`);
 		} else if (token.type !== this.type.slice(0, -1) || token.tag !== this.name) {

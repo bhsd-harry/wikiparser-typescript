@@ -121,7 +121,7 @@ abstract class TranscludeToken extends Token {
 				part.length = 1;
 			}
 			if (part.length === 1) {
-				(part as (number | string)[] as [number, string]).unshift(i);
+				(part as (number | string)[]).unshift(i);
 				i++;
 			}
 			// @ts-expect-error abstract class
@@ -441,7 +441,7 @@ abstract class TranscludeToken extends Token {
 
 	/** @override */
 	override cloneNode(): this {
-		const [first, ...cloned] = this.cloneChildNodes() as [AtomToken | SyntaxToken, ...Token[]],
+		const [first, ...cloned] = this.cloneChildNodes(),
 			config = this.getAttribute('config');
 		return Parser.run(() => {
 			// @ts-expect-error abstract class

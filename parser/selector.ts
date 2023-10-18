@@ -103,7 +103,7 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 	let sanitized = sanitize(s),
 		regex = regularRegex,
 		mt = regex.exec(sanitized),
-		[condition] = stack as [SelectorArray[]],
+		[condition] = stack,
 		[step] = condition as [SelectorArray];
 	while (mt) {
 		let {0: syntax, index} = mt as unknown as {0: string, index: number};
@@ -124,7 +124,7 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 			}
 			step.relation = syntax;
 			step = [];
-			condition.push(step);
+			condition!.push(step);
 		} else if (syntax === '[') { // 情形3：属性开启
 			pushSimple(step, sanitized.slice(0, index));
 			regex = attributeRegex;

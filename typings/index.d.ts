@@ -3,8 +3,10 @@ import Token = require('../src');
 import Ranges = require('../lib/ranges');
 
 declare global {
+	type AstEventType = 'insert' | 'remove' | 'text' | 'replace';
+
 	interface AstEvent extends Event {
-		readonly type: string;
+		readonly type: AstEventType;
 		readonly target: EventTarget & AstNodeTypes;
 		currentTarget: EventTarget & Token;
 		prevTarget?: Token;

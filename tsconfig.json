@@ -6,7 +6,7 @@
 		"src/**/*",
 		"typings/**/*",
 		"util/**/*",
-		"index.ts/**/*"
+		"index.ts"
 	],
 	"compilerOptions": {
 		"target": "esnext",
