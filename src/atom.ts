@@ -39,9 +39,9 @@ class AtomToken extends Token {
 			config = this.getAttribute('config'),
 			acceptable = this.getAttribute('acceptable');
 		return Parser.run(() => {
-			const token = new AtomToken(undefined, this.type, config, [], acceptable);
+			const token = new AtomToken(undefined, this.type, config, [], acceptable) as this;
 			token.append(...cloned);
-			return token as this;
+			return token;
 		});
 	}
 }

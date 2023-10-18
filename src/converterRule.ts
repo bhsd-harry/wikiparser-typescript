@@ -145,9 +145,9 @@ abstract class ConverterRuleToken extends Token {
 			placeholder = placeholders[cloned.length - 1];
 		return Parser.run(() => {
 			// @ts-expect-error abstract class
-			const token = new ConverterRuleToken(
+			const token: this = new ConverterRuleToken(
 				placeholder, placeholder, this.getAttribute('config'),
-			) as this;
+			);
 			for (let i = 0; i < cloned.length; i++) {
 				token.childNodes[i]!.safeReplaceWith(cloned[i]!);
 			}

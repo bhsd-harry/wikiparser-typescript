@@ -25,7 +25,7 @@ class Range {
 		} else if (str.includes(':')) {
 			const [start, end, step = '1'] = str.split(':', 3);
 			this.start = Number(start);
-			this.end = Number(end || Infinity); // eslint-disable-line @typescript-eslint/prefer-nullish-coalescing
+			this.end = Number(end || Infinity);
 			this.step = Math.max(Number(step), 1);
 			if (!Number.isInteger(this.start)) {
 				throw new RangeError(`起点 ${this.start} 应为整数！`);

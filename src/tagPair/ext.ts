@@ -64,6 +64,12 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 				}
 				innerToken = new Token(inner, newConfig, true, accum);
 				break;
+			case 'pre': {
+				const PreToken: typeof import('../pre') = require('../pre');
+				// @ts-expect-error abstract class
+				innerToken = new PreToken(inner, newConfig, accum);
+				break;
+			}
 			// 更多定制扩展的代码示例：
 			// ```
 			// case 'extensionName': {

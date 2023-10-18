@@ -40,10 +40,10 @@ class SyntaxToken extends Token {
 			config = this.getAttribute('config'),
 			acceptable = this.getAttribute('acceptable');
 		return Parser.run(() => {
-			const token = new SyntaxToken(undefined, this.#pattern, this.type, config, [], acceptable);
+			const token = new SyntaxToken(undefined, this.#pattern, this.type, config, [], acceptable) as this;
 			token.append(...cloned);
 			token.afterBuild();
-			return token as this;
+			return token;
 		});
 	}
 

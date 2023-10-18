@@ -62,7 +62,7 @@ abstract class TagPairToken extends fixed(Token) {
 	) {
 		super(undefined, config, true);
 		this.setAttribute('name', name.toLowerCase());
-		this.#tags = [name, closed || name]; // eslint-disable-line @typescript-eslint/prefer-nullish-coalescing
+		this.#tags = [name, closed || name];
 		this.#selfClosing = closed === undefined;
 		this.#closed = closed !== '';
 		this.append(attr, inner);

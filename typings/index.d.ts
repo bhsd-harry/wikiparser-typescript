@@ -1,4 +1,4 @@
-import type {AstNodeTypes} from '../lib/node';
+import type {AstNodeTypes, Inserted, InsertionReturn} from '../lib/node';
 import Token = require('../src');
 import Ranges = require('../lib/ranges');
 
@@ -43,4 +43,11 @@ declare global {
 	}
 
 	type Acceptable = Record<string, number | string | Ranges | (number | string)[]>;
+
+	type AstConstructor = abstract new (...args: any[]) => {
+		length: number;
+		toString(selector?: string, separator?: string): string;
+		text(separator?: string): string;
+		insertAt<T extends Inserted>(token: T, i?: number): InsertionReturn<T>;
+	};
 }

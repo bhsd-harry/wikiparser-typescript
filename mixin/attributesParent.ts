@@ -8,13 +8,10 @@ import type {AstNodeTypes} from '../lib/node';
  * @param i AttributesToken子节点的位置
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const attributesParent = <T extends abstract new (...args: any[]) => object>(constructor: T, i = 0) => {
+const attributesParent = <T extends AstConstructor>(constructor: T, i = 0) => {
 	/** 子节点含有AttributesToken的类 */
 	abstract class AttributesParent extends constructor {
 		declare childNodes: AstNodeTypes[];
-
-		/** @override */
-		abstract override toString(selector?: string, separator?: string): string;
 
 		/** AttributesToken子节点 */
 		get #attributesChild(): AttributesToken {

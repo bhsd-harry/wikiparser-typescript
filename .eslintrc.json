@@ -972,12 +972,21 @@
 				"@typescript-eslint/no-non-null-asserted-nullish-coalescing": 2,
 				"@typescript-eslint/no-non-null-assertion": 0,
 				"@typescript-eslint/no-redundant-type-constituents": 2,
+				"@typescript-eslint/no-this-alias": [
+					2,
+					{
+						"allowedNames": [
+							"self"
+						]
+					}
+				],
 				"@typescript-eslint/no-type-alias": [
 					2,
 					{
 						"allowAliases": "in-unions",
 						"allowCallbacks": "always",
 						"allowConditionalTypes": "always",
+						"allowConstructors": "always",
 						"allowLiterals": "in-unions",
 						"allowGenerics": "always"
 					}
@@ -997,12 +1006,6 @@
 				"@typescript-eslint/no-var-requires": 0,
 				"@typescript-eslint/non-nullable-type-assertion-style": 2,
 				"@typescript-eslint/prefer-for-of": 2,
-				"@typescript-eslint/prefer-nullish-coalescing": [
-					2,
-					{
-						"ignoreTernaryTests": false
-					}
-				],
 				"@typescript-eslint/prefer-optional-chain": 2,
 				"@typescript-eslint/prefer-reduce-type-parameter": 2,
 				"@typescript-eslint/prefer-return-this-type": 2,

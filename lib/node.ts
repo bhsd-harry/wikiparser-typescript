@@ -250,7 +250,7 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	getGaps(i = 0): number { // eslint-disable-line @typescript-eslint/no-unused-vars
+	getGaps(i?: number): number { // eslint-disable-line @typescript-eslint/no-unused-vars
 		return 0;
 	}
 

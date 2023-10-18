@@ -18,9 +18,9 @@ class HiddenToken extends hidden(Token) {
 			config = this.getAttribute('config'),
 			acceptable = this.getAttribute('acceptable');
 		return Parser.run(() => {
-			const token = new HiddenToken(undefined, config, [], acceptable);
+			const token = new HiddenToken(undefined, config, [], acceptable) as this;
 			token.append(...cloned);
-			return token as this;
+			return token;
 		});
 	}
 }

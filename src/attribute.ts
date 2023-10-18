@@ -1,5 +1,6 @@
 import lint_1 = require('../util/lint');
 const {generateForChild} = lint_1;
+import type {BoundingRect} from '../util/lint';
 import string_1 = require('../util/string');
 const {noWrap, removeComment} = string_1;
 import fixed = require('../mixin/fixed');
@@ -350,7 +351,7 @@ abstract class AttributeToken extends fixed(Token) {
 		const errors = super.lint(start),
 			{balanced, firstChild, lastChild, type, name, value} = this,
 			tag = this.#tag;
-		let rect;
+		let rect: BoundingRect | undefined;
 		if (!balanced) {
 			const root = this.getRootNode();
 			rect = {start, ...root.posFromIndex(start)};
@@ -364,13 +365,13 @@ abstract class AttributeToken extends fixed(Token) {
 			&& !htmlAttrs[tag]?.has(name) && !/^(?:xmlns:[\w:.-]+|data-[^:]*)$/u.test(name)
 			&& (tag === 'meta' || tag === 'link' || !commonHtmlAttrs.has(name))
 		) {
-			rect ||= {start, ...this.getRootNode().posFromIndex(start)};
+			rect ??= {start, ...this.getRootNode().posFromIndex(start)};
 			errors.push(generateForChild(firstChild, rect, 'illegal attribute name'));
 		} else if (name === 'style' && typeof value === 'string' && insecureStyle.test(value)) {
-			rect ||= {start, ...this.getRootNode().posFromIndex(start)};
+			rect ??= {start, ...this.getRootNode().posFromIndex(start)};
 			errors.push(generateForChild(lastChild, rect, 'insecure style'));
 		} else if (name === 'tabindex' && typeof value === 'string' && value.trim() !== '0') {
-			rect ||= {start, ...this.getRootNode().posFromIndex(start)};
+			rect ??= {start, ...this.getRootNode().posFromIndex(start)};
 			errors.push(generateForChild(lastChild, rect, 'nonzero tabindex'));
 		}
 		return errors;

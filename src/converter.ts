@@ -102,7 +102,7 @@ abstract class ConverterToken extends Token {
 		const [flags, ...rules] = this.cloneChildNodes();
 		return Parser.run(() => {
 			// @ts-expect-error abstract class
-			const token = new ConverterToken([], [], this.getAttribute('config')) as this;
+			const token: this = new ConverterToken([], [], this.getAttribute('config'));
 			token.firstChild.safeReplaceWith(flags as ConverterFlagsToken);
 			token.append(...rules);
 			return token;
