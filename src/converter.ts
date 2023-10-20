@@ -1,6 +1,6 @@
 import string_1 = require('../util/string');
 const {text, print} = string_1;
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 import ConverterFlagsToken = require('./converterFlags');
 import ConverterRuleToken = require('./converterRule');

@@ -2,7 +2,7 @@ import lint_1 = require('../util/lint');
 const {generateForSelf} = lint_1;
 import fixed = require('../mixin/fixed');
 import sol = require('../mixin/sol');
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 import SyntaxToken = require('./syntax');
 

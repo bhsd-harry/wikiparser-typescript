@@ -56,7 +56,7 @@ class Title {
 		}
 		this.ns = nsid[namespace.toLowerCase()]!;
 		const i = title.indexOf('#');
-		let fragment;
+		let fragment: string | undefined;
 		if (i !== -1) {
 			fragment = title.slice(i + 1).trimEnd();
 			if (fragment.includes('%')) {

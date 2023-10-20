@@ -13,7 +13,8 @@ process.on('unhandledRejection', e => {
  * @param args shell输入参数
  */
 const cmd = (command: string, args: string[]): Promise<string | undefined> => new Promise(resolve => {
-	let timer: NodeJS.Timeout | undefined, shell: ChildProcessWithoutNullStreams | undefined;
+	let timer: NodeJS.Timeout | undefined,
+		shell: ChildProcessWithoutNullStreams | undefined;
 
 	/**
 	 * 清除进程并返回

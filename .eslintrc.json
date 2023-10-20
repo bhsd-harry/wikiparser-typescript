@@ -1006,7 +1006,6 @@
 				"@typescript-eslint/no-var-requires": 0,
 				"@typescript-eslint/non-nullable-type-assertion-style": 2,
 				"@typescript-eslint/prefer-for-of": 2,
-				"@typescript-eslint/prefer-optional-chain": 2,
 				"@typescript-eslint/prefer-reduce-type-parameter": 2,
 				"@typescript-eslint/prefer-return-this-type": 2,
 				"unicorn/prefer-string-starts-ends-with": 0,

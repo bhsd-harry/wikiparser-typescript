@@ -1,6 +1,6 @@
 import lint_1 = require('../util/lint');
 const {generateForChild} = lint_1;
-import Parser = require('..');
+import Parser = require('../index');
 import Token = require('.');
 import AtomToken = require('./atom');
 import type {Inserted, InsertionReturn, TokenAttributeGetter} from '../lib/node';

@@ -61,7 +61,7 @@ const sanitize = (selector: string): string => {
 
 /** 还原转义符号 */
 const desanitize = (selector: string): string => {
-	let str: string = selector;
+	let str = selector;
 	for (const [c, escaped] of specialChars) {
 		str = str.replaceAll(escaped, c);
 	}
@@ -106,9 +106,9 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 		[condition] = stack,
 		[step] = condition as [SelectorArray];
 	while (mt) {
-		let {0: syntax, index} = mt as unknown as {0: string, index: number};
-		if (syntax.trim() === '') {
-			index += syntax.length;
+		let {0: syntax, index} = mt as {0?: string, index: number};
+		if (syntax!.trim() === '') {
+			index += syntax!.length;
 			const char = sanitized[index]!;
 			syntax = grouping.has(char) ? char : '';
 		}
@@ -117,18 +117,18 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 			condition = [[]];
 			[step] = condition as [SelectorArray];
 			stack.push(condition);
-		} else if (combinator.has(syntax)) { // 情形2：关系
+		} else if (combinator.has(syntax!)) { // 情形2：关系
 			pushSimple(step, sanitized.slice(0, index));
 			if (!step.some(Boolean)) {
 				throw new SyntaxError(`非法的选择器！\n${s}\n可能需要通用选择器'*'。`);
 			}
-			step.relation = syntax;
+			step.relation = syntax!;
 			step = [];
 			condition!.push(step);
 		} else if (syntax === '[') { // 情形3：属性开启
 			pushSimple(step, sanitized.slice(0, index));
 			regex = attributeRegex;
-		} else if (syntax.endsWith(']')) { // 情形4：属性闭合
+		} else if (syntax!.endsWith(']')) { // 情形4：属性闭合
 			mt[3] &&= desanitize(deQuote(mt[3]));
 			step.push(mt.slice(1) as [string, string | undefined, string | undefined, string | undefined]);
 			regex = regularRegex;
@@ -147,8 +147,8 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 			step.push(mt.slice(1) as [string, string]);
 			regex = regularRegex;
 		}
-		sanitized = sanitized.slice(index + syntax.length);
-		if (grouping.has(syntax)) {
+		sanitized = sanitized.slice(index + syntax!.length);
+		if (grouping.has(syntax!)) {
 			sanitized = sanitized.trim();
 		}
 		mt = regex.exec(sanitized);

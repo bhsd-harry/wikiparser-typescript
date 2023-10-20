@@ -252,7 +252,7 @@ abstract class AttributeToken extends fixed(Token) {
 		const keyToken = new AtomToken(key, 'attr-key', config, accum, {
 			[type === 'ext-attr' ? 'AstText' : 'Stage-1']: ':', ArgToken: ':', TranscludeToken: ':',
 		});
-		let valueToken;
+		let valueToken: Token;
 		if (key === 'title') {
 			valueToken = new Token(value, config, true, accum, {
 				[`Stage-${stages[type]}`]: ':', ConverterToken: ':',
@@ -447,7 +447,7 @@ abstract class AttributeToken extends fixed(Token) {
 			wikitext = `${pre[type]}${key}="${value}"${post[type]}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), stages[type] + 1, this.getAttribute('config')),
 			{length, firstChild: tag} = root;
-		let attrs;
+		let attrs: import('./attributes');
 		if (length !== 1 || !(tag instanceof Token) || tag.type !== type.slice(0, -5)) {
 			throw new SyntaxError(`非法的标签属性：${noWrap(value)}`);
 		} else if (type === 'table-attr') {
@@ -486,18 +486,18 @@ abstract class AttributeToken extends fixed(Token) {
 			wikitext = `${pre[type]}${key}${post[type]}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), stages[type] + 1, this.getAttribute('config')),
 			{length, firstChild: tag} = root;
-		let attrs;
+		let attrs: import('./attributes');
 		if (length !== 1 || !(tag instanceof Token) || tag.type !== type.slice(0, -5)) {
 			throw new SyntaxError(`非法的标签属性名：${noWrap(key)}`);
 		} else if (type === 'table-attr') {
 			if (tag.length !== 2) {
 				throw new SyntaxError(`非法的标签属性名：${noWrap(key)}`);
 			}
-			attrs = tag.lastChild;
+			attrs = tag.lastChild as import('./attributes');
 		} else {
-			attrs = tag.firstChild;
+			attrs = tag.firstChild as import('./attributes');
 		}
-		const {length: attrsLength, firstChild: attr} = attrs as import('./attributes');
+		const {length: attrsLength, firstChild: attr} = attrs;
 		if (attrsLength !== 1 || attr.type !== this.type || attr.value !== true) {
 			throw new SyntaxError(`非法的标签属性名：${noWrap(key)}`);
 		}

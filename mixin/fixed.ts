@@ -25,7 +25,7 @@ const fixed = <S extends AstConstructor>(constructor: S) => {
 		 * @param i 插入位置
 		 * @throws `Error`
 		 */
-		override insertAt<T extends Inserted>(token: T, i: number = this.length): InsertionReturn<T> {
+		override insertAt<T extends Inserted>(token: T, i = this.length): InsertionReturn<T> {
 			if (Parser.running) {
 				return super.insertAt(token, i);
 			}

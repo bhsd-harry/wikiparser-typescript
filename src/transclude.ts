@@ -335,7 +335,7 @@ abstract class TranscludeToken extends Token {
 			this.getArgs(token.name, false, false).add(token);
 			this.#keys.add(token.name);
 		}
-		return token as unknown as InsertionReturn<T>;
+		return token as Token as InsertionReturn<T>;
 	}
 
 	/**
@@ -405,7 +405,7 @@ abstract class TranscludeToken extends Token {
 		if (type === 'template') {
 			throw new Error(`${cName}.getPossibleValues 方法仅供特定魔术字使用！`);
 		}
-		let start;
+		let start: number;
 		switch (name) {
 			case 'if':
 			case 'ifexist':
