@@ -190,6 +190,8 @@ class Token extends AstElement {
 			case 1:
 				this.#parseBrackets();
 				break;
+			case 10:
+				this.#parseConverter();
 				// no default
 		}
 		if (this.type === 'root') {
@@ -281,6 +283,17 @@ class Token extends AstElement {
 		const str = this.type === 'root' ? String(this.firstChild!) : `\0${String(this.firstChild!)}`,
 			parsed = parseBrackets(str, this.#config, this.#accum);
 		this.setText(this.type === 'root' ? parsed : parsed.slice(1));
+	}
+
+	/**
+	 * 解析语言变体转换
+	 * @browser
+	 */
+	#parseConverter(): void {
+		if (this.#config.variants.length > 0) {
+			const parseConverter: typeof import('../parser/converter') = require('../parser/converter');
+			this.setText(parseConverter(String(this.firstChild), this.#config, this.#accum));
+		}
 	}
 
 	/** @private */
@@ -465,6 +478,19 @@ class Token extends AstElement {
 		}
 		const e = new Event('replace', {bubbles: true});
 		token.dispatchEvent(e, {position: i, oldToken: this, newToken: token});
+	}
+
+	/**
+	 * 创建HTML注释
+	 * @param data 注释内容
+	 */
+	createComment(data = ''): import('./nowiki/comment') {
+		if (typeof data === 'string') {
+			const CommentToken = require('./nowiki/comment');
+			const config = this.getAttribute('config');
+			return Parser.run(() => new CommentToken(data.replaceAll('-->', '--&gt;'), true, config));
+		}
+		return this.typeError('createComment', 'String');
 	}
 
 	/**
