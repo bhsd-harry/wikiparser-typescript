@@ -116,12 +116,12 @@ abstract class ConverterFlagsToken extends Token {
 		const rect = {start, ...this.getRootNode().posFromIndex(start)},
 			{childNodes, length} = this;
 		for (let i = 0; i < length; i++) {
-			const child = childNodes[i],
-				flag = child!.text().trim();
+			const child = childNodes[i]!,
+				flag = child.text().trim();
 			if (flag && !variantFlags.has(flag) && !unknownFlags.has(flag)
 				&& (variantFlags.size > 0 || !validFlags.has(flag))
 			) {
-				const error = generateForChild(child!, rect, 'invalid conversion flag');
+				const error = generateForChild(child, rect, 'invalid conversion flag');
 				errors.push({...error, excerpt: childNodes.slice(0, i + 1).map(String).join(';').slice(-50)});
 			}
 		}

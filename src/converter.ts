@@ -34,12 +34,12 @@ abstract class ConverterToken extends Token {
 	 * @param flags 转换类型标记
 	 * @param rules 转换规则
 	 */
-	constructor(flags: string[], rules: string[], config = Parser.getConfig(), accum: Token[] = []) {
+	constructor(flags: string[], rules: [string, ...string[]], config = Parser.getConfig(), accum: Token[] = []) {
 		super(undefined, config, true, accum);
 		// @ts-expect-error abstract class
 		this.append(new ConverterFlagsToken(flags, config, accum) as ConverterFlagsToken);
 		const [firstRule] = rules,
-			hasColon = firstRule!.includes(':'),
+			hasColon = firstRule.includes(':'),
 			// @ts-expect-error abstract class
 			firstRuleToken = new ConverterRuleToken(firstRule, hasColon, config, accum) as ConverterRuleToken;
 		if (hasColon && firstRuleToken.length === 1) {

@@ -100,9 +100,10 @@ abstract class ConverterRuleToken extends Token {
 	 * @browser
 	 */
 	override toString(selector?: string): string {
-		if (this.length === 3 && !(selector && this.matches(selector))) {
-			const {childNodes: [from, variant, to]} = this;
-			return `${from.toString(selector)}=>${variant!.toString(selector)}:${to!.toString(selector)}`;
+		const {childNodes} = this;
+		if (childNodes.length === 3 && !(selector && this.matches(selector))) {
+			const [from, variant, to] = childNodes;
+			return `${from.toString(selector)}=>${variant.toString(selector)}:${to.toString(selector)}`;
 		}
 		return super.toString(selector, ':');
 	}
@@ -112,9 +113,10 @@ abstract class ConverterRuleToken extends Token {
 	 * @browser
 	 */
 	override text(): string {
-		if (this.length === 3) {
-			const {childNodes: [from, variant, to]} = this;
-			return `${from.text()}=>${variant!.text()}:${to!.text()}`;
+		const {childNodes} = this;
+		if (childNodes.length === 3) {
+			const [from, variant, to] = childNodes;
+			return `${from.text()}=>${variant.text()}:${to.text()}`;
 		}
 		return super.text(':');
 	}
@@ -131,9 +133,10 @@ abstract class ConverterRuleToken extends Token {
 	 * @browser
 	 */
 	override print(): string {
-		if (this.length === 3) {
-			const {childNodes: [from, variant, to]} = this;
-			return `<span class="wpb-converter-rule">${from.print()}=>${variant!.print()}:${to!.print()}</span>`;
+		const {childNodes} = this;
+		if (childNodes.length === 3) {
+			const [from, variant, to] = childNodes;
+			return `<span class="wpb-converter-rule">${from.print()}=>${variant.print()}:${to.print()}</span>`;
 		}
 		return super.print({sep: ':'});
 	}
