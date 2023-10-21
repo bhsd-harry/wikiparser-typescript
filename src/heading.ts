@@ -56,7 +56,7 @@ abstract class HeadingToken extends sol(fixed(Token)) {
 		this.setAttribute('name', String(level));
 		const token = new Token(input[0], config, true, accum);
 		token.type = 'heading-title';
-		token.setAttribute('name', this.name).setAttribute('stage', 2);
+		token.setAttribute('stage', 2);
 		const trail = new SyntaxToken(input[1], /^[^\S\n]*$/u, 'heading-trail', config, accum, {
 			'Stage-1': ':', '!ExtToken': '',
 		});
@@ -149,7 +149,7 @@ abstract class HeadingToken extends sol(fixed(Token)) {
 			this.typeError('setLevel', 'Number');
 		}
 		const level = String(Math.min(Math.max(n, 1), 6));
-		this.setAttribute('name', level).firstChild.setAttribute('name', level);
+		this.setAttribute('name', level);
 	}
 
 	/** 移除标题后的不可见内容 */

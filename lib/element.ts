@@ -42,8 +42,7 @@ abstract class AstElement extends AstNode {
 
 	/** 全部非文本子节点 */
 	get children(): import('../src')[] {
-		const children = this.childNodes.filter(({type}) => type !== 'text') as import('../src')[];
-		return children;
+		return this.childNodes.filter(({type}) => type !== 'text') as import('../src')[];
 	}
 
 	/** 首位非文本子节点 */

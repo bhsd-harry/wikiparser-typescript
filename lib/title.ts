@@ -9,7 +9,7 @@ class Title {
 	/** @browser */
 	ns = 0;
 	/** @browser */
-	fragment: string | undefined;
+	fragment;
 	/** @browser */
 	encoded = false;
 	title = '';

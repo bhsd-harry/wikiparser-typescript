@@ -2,7 +2,6 @@ import type {Inserted, InsertionReturn} from '../lib/node';
 import Ranges = require('../lib/ranges');
 
 declare global {
-
 	interface PrintOpt {
 		pre?: string;
 		post?: string;
