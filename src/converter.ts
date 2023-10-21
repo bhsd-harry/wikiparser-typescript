@@ -63,7 +63,9 @@ abstract class ConverterToken extends Token {
 		const {childNodes: [flags, ...rules]} = this;
 		return selector && this.matches(selector)
 			? ''
-			: `-{${flags.toString(selector)}${flags.length > 0 ? '|' : ''}${rules.map(String).join(';')}}-`;
+			: `-{${flags.toString(selector)}${flags.length > 0 ? '|' : ''}${
+				rules.map(rule => rule.toString(selector)).join(';')
+			}}-`;
 	}
 
 	/**

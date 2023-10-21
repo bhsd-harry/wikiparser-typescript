@@ -90,8 +90,10 @@ abstract class TagPairToken extends fixed(Token) {
 			this.#closed = true;
 		}
 		return this.#selfClosing
-			? `<${opening}${String(firstChild)}/>`
-			: `<${opening}${String(firstChild)}>${String(lastChild)}${this.closed ? `</${closing}>` : ''}`;
+			? `<${opening}${firstChild.toString(selector)}/>`
+			: `<${opening}${firstChild.toString(selector)}>${lastChild.toString(selector)}${
+				this.closed ? `</${closing}>` : ''
+			}`;
 	}
 
 	/**

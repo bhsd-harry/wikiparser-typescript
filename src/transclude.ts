@@ -222,7 +222,9 @@ abstract class TranscludeToken extends Token {
 		const {childNodes, firstChild, modifier} = this;
 		return `{{${modifier}${
 			this.type === 'magic-word'
-				? `${String(firstChild)}${childNodes.length > 1 ? ':' : ''}${childNodes.slice(1).map(String).join('|')}`
+				? `${firstChild.toString(selector)}${childNodes.length > 1 ? ':' : ''}${
+					childNodes.slice(1).map(child => child.toString(selector)).join('|')
+				}`
 				: super.toString(selector, '|')
 		}}}`;
 	}
