@@ -110,7 +110,7 @@ const parseBrackets = (wikitext: string, config = Parser.getConfig(), accum: Tok
 		}
 		moreBraces &&= text.slice(lastIndex).includes('}}');
 		let curTop = stack.at(-1);
-		if (!moreBraces && curTop?.[0]?.[0] === '{') {
+		if (!moreBraces && curTop?.[0]?.startsWith('{')) {
 			stack.pop();
 			curTop = stack.at(-1);
 		}
