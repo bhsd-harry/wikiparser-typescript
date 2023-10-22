@@ -5,10 +5,7 @@ import Parser = require('../../index');
 import Token = require('..');
 import NowikiBaseToken = require('./base');
 
-/**
- * HTML注释，不可见
- * @classdesc `{childNodes: [AstText]}`
- */
+/** HTML注释，不可见 */
 abstract class CommentToken extends hidden(NowikiBaseToken) {
 	/** @browser */
 	override readonly type = 'comment';

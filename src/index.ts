@@ -187,6 +187,13 @@ class Token extends AstElement {
 			return this;
 		}
 		switch (n) {
+			case 0:
+				if (this.type === 'root') {
+					this.#accum.shift();
+				}
+				this.#include = Boolean(include);
+				this.#parseCommentAndExt(include);
+				break;
 			case 1:
 				this.#parseBrackets();
 				break;
@@ -272,6 +279,16 @@ class Token extends AstElement {
 			this.afterBuild();
 		}
 		return this;
+	}
+
+	/**
+	 * 解析HTML注释和扩展标签
+	 * @browser
+	 * @param includeOnly 是否嵌入
+	 */
+	#parseCommentAndExt(includeOnly: boolean): void {
+		const parseCommentAndExt: typeof import('../parser/commentAndExt') = require('../parser/commentAndExt');
+		this.setText(parseCommentAndExt(String(this.firstChild), this.#config, this.#accum, includeOnly));
 	}
 
 	/**
