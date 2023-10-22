@@ -60,6 +60,7 @@ const errorSyntax = /https?:\/\/|\{+|\}+|\[{2,}|\[(?![^[]*\])|(?<=^|\])([^[]*?)\
 class AstText extends AstNode {
 	/** @browser */
 	override readonly type = 'text';
+	declare name: undefined;
 	/** @browser */
 	data: string;
 

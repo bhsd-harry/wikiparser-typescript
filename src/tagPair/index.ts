@@ -51,7 +51,7 @@ abstract class TagPairToken extends fixed(Token) {
 	 * @param name 标签名
 	 * @param attr 标签属性
 	 * @param inner 内部wikitext
-	 * @param closed 是否封闭；约定`undefined`表示自闭合，`''`表示未闭合
+	 * @param closed 是否封闭；约定`undefined`表示自封闭，`''`表示未闭合
 	 */
 	constructor(
 		name: string,

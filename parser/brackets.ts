@@ -83,7 +83,7 @@ const parseBrackets = (wikitext: string, config = Parser.getConfig(), accum: Tok
 						ch = 'c';
 					}
 				} catch (e) {
-					if (e instanceof Error && e.message.startsWith('非法的模板名称：')) {
+					if (e instanceof SyntaxError && e.message.startsWith('非法的模板名称：')) {
 						lastIndex = index! + open!.length;
 						skip = true;
 					} else {

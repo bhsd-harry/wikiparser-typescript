@@ -121,6 +121,7 @@ declare interface CaretPosition {
 	offsetNode: AstNodeTypes;
 	offset: number;
 }
+declare type TagToken = import('./tagPair/include') | import('./tagPair/ext') | import('./html');
 
 /**
  * 所有节点的基类
@@ -566,6 +567,38 @@ class Token extends AstElement {
 	}
 
 	/**
+	 * 创建标签
+	 * @param tagName 标签名
+	 * @param options 选项
+	 * @param options.selfClosing 是否自封闭
+	 * @param options.closing 是否是闭合标签
+	 * @throws `RangeError` 非法的标签名
+	 */
+	createElement(tagName: string, {selfClosing, closing}: {selfClosing?: boolean, closing?: boolean} = {}): TagToken {
+		if (typeof tagName !== 'string') {
+			this.typeError('createElement', 'String');
+		}
+		const config = this.getAttribute('config'),
+			include = this.getAttribute('include');
+		if (tagName === (include ? 'noinclude' : 'includeonly')) {
+			const IncludeToken: typeof import('./tagPair/include') = require('./tagPair/include');
+			return Parser.run(
+				// @ts-expect-error abstract class
+				() => new IncludeToken(tagName, '', undefined, selfClosing ? undefined : tagName, config),
+			);
+		} else if (config.ext.includes(tagName)) {
+			const ExtToken: typeof import('./tagPair/ext') = require('./tagPair/ext');
+			// @ts-expect-error abstract class
+			return Parser.run(() => new ExtToken(tagName, '', '', selfClosing ? undefined : '', config));
+		} else if (config.html.flat().includes(tagName)) {
+			const HtmlToken: typeof import('./html') = require('./html');
+			// @ts-expect-error abstract class
+			return Parser.run(() => new HtmlToken(tagName, '', closing, selfClosing, config));
+		}
+		throw new RangeError(`非法的标签名：${tagName}`);
+	}
+
+	/**
 	 * 创建纯文本节点
 	 * @param data 文本内容
 	 */
@@ -744,6 +777,51 @@ class Token extends AstElement {
 	 */
 	section(n: number): (AstText | Token)[] | undefined {
 		return Number.isInteger(n) ? this.sections()?.[n] : this.typeError('section', 'Number');
+	}
+
+	/**
+	 * 获取指定的外层HTML标签
+	 * @param tag HTML标签名
+	 * @throws `RangeError` 非法的标签或空标签
+	 */
+	findEnclosingHtml(tag?: string): [import('./html'), import('./html')] | undefined {
+		if (tag !== undefined && typeof tag !== 'string') {
+			this.typeError('findEnclosingHtml', 'String');
+		}
+		const lcTag = tag?.toLowerCase();
+		if (lcTag !== undefined && !this.#config.html.slice(0, 2).flat().includes(lcTag)) {
+			throw new RangeError(`非法的标签或空标签：${lcTag}`);
+		}
+		const {parentNode} = this;
+		if (!parentNode) {
+			return undefined;
+		}
+		const {childNodes} = parentNode,
+			index = childNodes.indexOf(this);
+		let i;
+		for (i = index - 1; i >= 0; i--) {
+			const {
+				type, name, selfClosing, closing,
+			} = childNodes[i] as AstNodeTypes & {selfClosing?: boolean, closing?: boolean};
+			if (type === 'html' && (!lcTag || name === lcTag) && selfClosing === false && closing === false) {
+				break;
+			}
+		}
+		if (i === -1) {
+			return parentNode.findEnclosingHtml(lcTag);
+		}
+		const opening = childNodes[i] as import('./html');
+		for (i = index + 1; i < childNodes.length; i++) {
+			const {
+				type, name, selfClosing, closing,
+			} = childNodes[i] as AstNodeTypes & {selfClosing?: boolean, closing?: boolean};
+			if (type === 'html' && name === opening.name && selfClosing === false && closing === true) {
+				break;
+			}
+		}
+		return i === childNodes.length
+			? parentNode.findEnclosingHtml(lcTag)
+			: [opening, childNodes[i] as import('./html')];
 	}
 
 	/**
