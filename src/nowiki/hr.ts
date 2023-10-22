@@ -19,7 +19,7 @@ abstract class HrToken extends sol(NowikiBaseToken) {
 	/** @override */
 	override cloneNode(): this {
 		// @ts-expect-error abstract class
-		return Parser.run(() => new HrToken(String(this).length, this.getAttribute('config')));
+		return Parser.run(() => new HrToken(this.firstChild.data.length, this.getAttribute('config')));
 	}
 
 	/**

@@ -461,7 +461,7 @@ abstract class AstElement extends AstNode {
 						|| this.getAncestors().some(ancestor => matchesLang(ancestor, regex));
 				}
 				default:
-					throw new SyntaxError(`未定义的伪选择器！${pseudo}`);
+					throw new SyntaxError(`未定义的伪选择器：${pseudo}`);
 			}
 		});
 	}

@@ -31,7 +31,7 @@ abstract class ConverterRuleToken extends Token {
 		return this.childNodes.at(-2)?.text()?.trim() ?? '';
 	}
 
-	set variant(variant: string) {
+	set variant(variant) {
 		this.setVariant(variant);
 	}
 
@@ -41,7 +41,7 @@ abstract class ConverterRuleToken extends Token {
 	}
 
 	/** @throws `Error` 不能用于将双向转换或不转换更改为单向转换 */
-	set unidirectional(flag: boolean) {
+	set unidirectional(flag) {
 		const {length} = this;
 		if (length === 3 && !flag) {
 			this.makeBidirectional();
@@ -58,7 +58,7 @@ abstract class ConverterRuleToken extends Token {
 	}
 
 	/** @throws `Error` 不能用于将双向转换更改为单向转换或将不转换更改为双向转换 */
-	set bidirectional(flag: boolean) {
+	set bidirectional(flag) {
 		const {length} = this;
 		if (length === 3 && flag) {
 			this.makeBidirectional();

@@ -23,7 +23,7 @@ abstract class NowikiToken extends NowikiBaseToken {
 	 */
 	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const {name} = this;
-		return (name === 'templatestyles' || name === 'section') && String(this)
+		return (name === 'templatestyles' || name === 'section') && this.firstChild.data
 			? [generateForSelf(this, {start}, Parser.msg('nothing should be in <$1>', name))]
 			: super.lint(start);
 	}

@@ -241,7 +241,7 @@ class AstText extends AstNode {
 		if (!Number.isInteger(offset)) {
 			this.typeError('splitText', 'Number');
 		} else if (offset > this.length || offset < -this.length) {
-			throw new RangeError(`错误的断开位置！${offset}`);
+			throw new RangeError(`错误的断开位置：${offset}`);
 		}
 		const {parentNode, data} = this;
 		if (!parentNode) {
