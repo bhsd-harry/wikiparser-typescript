@@ -70,6 +70,19 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 				innerToken = new PreToken(inner, newConfig, accum);
 				break;
 			}
+			case 'dynamicpagelist': {
+				const ParamTagToken: typeof import('../paramTag') = require('../paramTag');
+				// @ts-expect-error abstract class
+				innerToken = new ParamTagToken(inner, newConfig, accum);
+				break;
+			}
+			case 'inputbox': {
+				newConfig.excludes!.push('heading');
+				const InputboxToken: typeof import('../paramTag/inputbox') = require('../paramTag/inputbox');
+				// @ts-expect-error abstract class
+				innerToken = new InputboxToken(inner, newConfig, accum);
+				break;
+			}
 			// 更多定制扩展的代码示例：
 			// ```
 			// case 'extensionName': {

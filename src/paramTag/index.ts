@@ -5,6 +5,8 @@ import singleLine = require('../../mixin/singleLine');
 import Parser = require('../../index');
 import Token = require('..');
 import AtomToken = require('../atom');
+import AttributesToken = require('../attributes');
+import ExtToken = require('../tagPair/ext');
 
 /**
  * `<dynamicpagelist>`
@@ -19,6 +21,12 @@ abstract class ParamTagToken extends Token {
 	abstract override get firstElementChild(): AtomToken | undefined;
 	abstract override get lastChild(): AtomToken | undefined;
 	abstract override get lastElementChild(): AtomToken | undefined;
+	abstract override get nextSibling(): undefined;
+	abstract override get nextElementSibling(): undefined;
+	abstract override get previousSibling(): AttributesToken;
+	abstract override get previousElementSibling(): AttributesToken;
+	abstract override get parentNode(): ExtToken | undefined;
+	abstract override get parentElement(): ExtToken | undefined;
 
 	/** @browser */
 	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = [], acceptable: Acceptable = {}) {
