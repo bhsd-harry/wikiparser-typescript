@@ -698,7 +698,10 @@ abstract class TranscludeToken extends Token {
 			throw new Error('尚未指定模块名称！');
 		}
 		const root = Parser.parse(
-				`{{#invoke:M|${func}}}`, this.getAttribute('include'), 2, this.getAttribute('config'),
+				`{{#invoke:M|${func}}}`,
+				this.getAttribute('include'),
+				2,
+				this.getAttribute('config'),
 			),
 			{length, firstChild: invoke} = root as Token & {firstChild: TranscludeToken},
 			{type, name, length: invokeLength, lastChild} = invoke;

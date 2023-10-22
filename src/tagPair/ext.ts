@@ -43,7 +43,11 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 		const lcName = name.toLowerCase(),
 			// @ts-expect-error abstract class
 			attrToken: AttributesToken = new AttributesToken(
-				!attr || attr.trimStart() !== attr ? attr : ` ${attr}`, 'ext-attrs', lcName, config, accum,
+				!attr || attr.trimStart() !== attr ? attr : ` ${attr}`,
+				'ext-attrs',
+				lcName,
+				config,
+				accum,
 			),
 			newConfig: Parser.Config = {...config, ext: del(config.ext, lcName), excludes: [...config.excludes ?? []]};
 		let innerToken: Token;
@@ -81,6 +85,42 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 				const InputboxToken: typeof import('../paramTag/inputbox') = require('../paramTag/inputbox');
 				// @ts-expect-error abstract class
 				innerToken = new InputboxToken(inner, newConfig, accum);
+				break;
+			}
+			case 'references': {
+				const NestedToken: typeof import('../nested') = require('../nested');
+				// @ts-expect-error abstract class
+				innerToken = new NestedToken(
+					inner,
+					/<!--.*?(?:-->|$)|<(ref)(\s[^>]*)?>(.*?)<\/(ref\s*)>/gisu,
+					['ref'],
+					newConfig,
+					accum,
+				);
+				break;
+			}
+			case 'choose': {
+				const NestedToken: typeof import('../nested') = require('../nested');
+				// @ts-expect-error abstract class
+				innerToken = new NestedToken(
+					inner,
+					/<(option|choicetemplate)(\s[^>]*)?>(.*?)<\/(\1)>/gsu,
+					['option', 'choicetemplate'],
+					newConfig,
+					accum,
+				);
+				break;
+			}
+			case 'combobox': {
+				const NestedToken: typeof import('../nested') = require('../nested');
+				// @ts-expect-error abstract class
+				innerToken = new NestedToken(
+					inner,
+					/<(combooption)(\s[^>]*)?>(.*?)<\/(combooption\s*)>/gisu,
+					['combooption'],
+					newConfig,
+					accum,
+				);
 				break;
 			}
 			// 更多定制扩展的代码示例：

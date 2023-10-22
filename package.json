@@ -27,8 +27,8 @@
 		"url": "git+https://github.com/bhsd-harry/wikiparser-node.git"
 	},
 	"scripts": {
-		"prepublishOnly": "rm -rf dist/; tsc; rm dist/[mpu]*/*.d.ts && grep -rl --include='*.d.ts' '@private' dist/ | xargs gsed -i '/@private/,+1d'",
-		"build": "rm -rf dist/; tsc; eslint --fix dist/",
+		"prepublishOnly": "rm -rf dist/; tsc; grep -rl --include='*.js' -e '@ts' -e '@typescript' dist/ | xargs gsed -i -E '/@ts|@typescript/d'; rm dist/[mpu]*/*.d.ts; grep -rl --include='*.d.ts' '@private' dist/ | xargs gsed -i '/@private/,+1d'",
+		"build": "rm -rf dist/; tsc; grep -rl --include='*.js' -e '@ts' -e '@typescript' dist/ | xargs gsed -i -E '/@ts|@typescript/d'; eslint --fix dist/",
 		"diff": "./bin/diff.sh",
 		"lint": "eslint --cache --ignore-pattern '/dist/' ."
 	},

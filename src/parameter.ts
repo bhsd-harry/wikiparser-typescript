@@ -5,6 +5,8 @@ const {generateForChild} = lint_1;
 import fixed = require('../mixin/fixed');
 import Parser = require('../index');
 import Token = require('.');
+import AtomToken = require('./atom');
+import SyntaxToken = require('./syntax');
 
 /**
  * 模板或魔术字参数
@@ -24,8 +26,8 @@ abstract class ParameterToken extends fixed(Token) {
 	abstract override get parentElement(): import('./transclude') | undefined;
 	abstract override get nextSibling(): ParameterToken | undefined;
 	abstract override get nextElementSibling(): ParameterToken | undefined;
-	abstract override get previousSibling(): Token;
-	abstract override get previousElementSibling(): Token;
+	abstract override get previousSibling(): AtomToken | SyntaxToken;
+	abstract override get previousElementSibling(): AtomToken | SyntaxToken;
 
 	/**
 	 * 是否是匿名参数
