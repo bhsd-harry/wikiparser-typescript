@@ -100,7 +100,6 @@ class AstText extends AstNode {
 	/**
 	 * Linter
 	 * @browser
-	 * @param start 起始位置
 	 */
 	lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const {data, parentNode, nextSibling, previousSibling} = this,

@@ -15,7 +15,8 @@ declare type AtomTypes = 'arg-name'
 	| 'invoke-function'
 	| 'invoke-module'
 	| 'template-name'
-	| 'link-target';
+	| 'link-target'
+	| 'param-line';
 
 /** 不会被继续解析的plain Token */
 class AtomToken extends Token {

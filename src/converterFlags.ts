@@ -101,7 +101,6 @@ abstract class ConverterFlagsToken extends Token {
 	/**
 	 * @override
 	 * @browser
-	 * @param start 起始位置
 	 */
 	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const variantFlags = this.getVariantFlags(),

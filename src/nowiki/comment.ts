@@ -42,7 +42,6 @@ abstract class CommentToken extends hidden(NowikiBaseToken) {
 	/**
 	 * @override
 	 * @browser
-	 * @param start 起始位置
 	 */
 	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		return this.closed ? [] : [generateForSelf(this, {start}, 'unclosed HTML comment')];

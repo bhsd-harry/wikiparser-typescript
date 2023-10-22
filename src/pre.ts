@@ -11,8 +11,6 @@ import ExtToken = require('./tagPair/ext');
 abstract class PreToken extends Token {
 	/** @browser */
 	override readonly type = 'ext-inner';
-	/** @browser */
-	override readonly name = 'pre';
 	abstract override get nextSibling(): undefined;
 	abstract override get nextElementSibling(): undefined;
 	abstract override get previousSibling(): AttributesToken;

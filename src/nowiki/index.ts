@@ -19,7 +19,6 @@ abstract class NowikiToken extends NowikiBaseToken {
 	/**
 	 * @override
 	 * @browser
-	 * @param start 起始位置
 	 */
 	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const {name} = this;

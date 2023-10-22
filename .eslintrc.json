@@ -691,6 +691,7 @@
 					"halfParsed",
 					"accum",
 					"selector",
+					"start",
 					"callback",
 					"method",
 					"wikitext",

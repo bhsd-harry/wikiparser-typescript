@@ -270,7 +270,7 @@ abstract class TranscludeToken extends Token {
 
 	/**
 	 * @override
-	 * @param start 起始位置
+	 * @browser
 	 */
 	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const errors = super.lint(start),

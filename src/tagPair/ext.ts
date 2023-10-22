@@ -91,7 +91,6 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 	/**
 	 * @override
 	 * @browser
-	 * @param start 起始位置
 	 */
 	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
 		const errors = super.lint(start);
