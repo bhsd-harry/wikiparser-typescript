@@ -200,6 +200,9 @@ class Token extends AstElement {
 			case 4:
 				this.#parseHrAndDoubleUnderscore();
 				break;
+			case 6:
+				this.#parseQuotes();
+				break;
 			case 10:
 				this.#parseConverter();
 				// no default
@@ -316,6 +319,22 @@ class Token extends AstElement {
 		const parseHrAndDoubleUnderscore: typeof import('../parser/hrAndDoubleUnderscore')
 			= require('../parser/hrAndDoubleUnderscore');
 		this.setText(parseHrAndDoubleUnderscore(this, this.#config, this.#accum));
+	}
+
+	/**
+	 * 解析单引号
+	 * @browser
+	 */
+	#parseQuotes(): void {
+		if (this.#config.excludes?.includes('quote')) {
+			return;
+		}
+		const parseQuotes: typeof import('../parser/quotes') = require('../parser/quotes');
+		const lines = String(this.firstChild).split('\n');
+		for (let i = 0; i < lines.length; i++) {
+			lines[i] = parseQuotes(lines[i]!, this.#config, this.#accum);
+		}
+		this.setText(lines.join('\n'));
 	}
 
 	/**
@@ -705,6 +724,43 @@ class Token extends AstElement {
 	 */
 	section(n: number): (AstText | Token)[] | undefined {
 		return Number.isInteger(n) ? this.sections()?.[n] : this.typeError('section', 'Number');
+	}
+
+	/**
+	 * 重新解析单引号
+	 * @throws `Error` 不接受QuoteToken作为子节点
+	 */
+	redoQuotes(): void {
+		const acceptable = this.getAttribute('acceptable');
+		if (acceptable && !acceptable['QuoteToken']?.some(
+			range => typeof range !== 'number' && range.start === 0 && range.end === Infinity && range.step === 1,
+		)) {
+			throw new Error(`${this.constructor.name} 不接受 QuoteToken 作为子节点！`);
+		}
+		for (const quote of this.childNodes) {
+			if (quote.type === 'quote') {
+				quote.replaceWith(String(quote));
+			}
+		}
+		this.normalize();
+		const textNodes = [...this.childNodes.entries()]
+			.filter(([, {type}]) => type === 'text') as [number, AstText][],
+			indices = textNodes.map(([i]) => this.getRelativeIndex(i)),
+			token = Parser.run(() => {
+				const root = new Token(text(textNodes.map(([, str]) => str)), this.getAttribute('config'));
+				return root.setAttribute('stage', 6).parse(7);
+			});
+		for (const quote of [...token.childNodes].reverse()) {
+			if (quote.type === 'quote') {
+				const index = quote.getRelativeIndex(),
+					n = indices.findLastIndex(textIndex => textIndex <= index),
+					cur = this.childNodes[n] as AstText;
+				cur.splitText(index - indices[n]!).splitText(Number(quote.name));
+				this.removeAt(n + 1);
+				this.insertAt(quote, n + 1);
+			}
+		}
+		this.normalize();
 	}
 
 	/** 解析部分魔术字 */

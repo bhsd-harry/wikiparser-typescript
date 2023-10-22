@@ -267,10 +267,9 @@ abstract class AstNode {
 		 * @param end 子节点序号
 		 * @param parent 父节点
 		 */
-		const getIndex = (end: number, parent: AstNode): number => childNodes.slice(0, end).reduce(
-			(acc, cur, i) => acc + String(cur).length + parent.getGaps(i),
-			0,
-		) + parent.getPadding();
+		const getIndex = (end: number, parent: AstNode): number =>
+			childNodes.slice(0, end).reduce((acc, cur, i) => acc + String(cur).length + parent.getGaps(i), 0)
+			+ parent.getPadding();
 		if (j === undefined) {
 			const {parentNode} = this;
 			if (parentNode) {
