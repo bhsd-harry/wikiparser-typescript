@@ -26,7 +26,7 @@ abstract class NowikiBaseToken extends fixed(Token) {
 	abstract override get lastElementChild(): undefined;
 
 	/** @browser */
-	constructor(wikitext?: string, config = Parser.getConfig(), accum: Token[] = []) {
+	constructor(wikitext: string, config = Parser.getConfig(), accum: Token[] = []) {
 		super(wikitext, config, true, accum);
 	}
 

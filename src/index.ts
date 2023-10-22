@@ -203,6 +203,9 @@ class Token extends AstElement {
 			case 6:
 				this.#parseQuotes();
 				break;
+			case 9:
+				this.#parseList();
+				break;
 			case 10:
 				this.#parseConverter();
 				// no default
@@ -333,6 +336,23 @@ class Token extends AstElement {
 		const lines = String(this.firstChild).split('\n');
 		for (let i = 0; i < lines.length; i++) {
 			lines[i] = parseQuotes(lines[i]!, this.#config, this.#accum);
+		}
+		this.setText(lines.join('\n'));
+	}
+
+	/**
+	 * 解析列表
+	 * @browser
+	 */
+	#parseList(): void {
+		if (this.#config.excludes?.includes('list')) {
+			return;
+		}
+		const parseList: typeof import('../parser/list') = require('../parser/list');
+		const lines = String(this.firstChild).split('\n');
+		let i = this.type === 'root' || this.type === 'ext-inner' && this.name === 'poem' ? 0 : 1;
+		for (; i < lines.length; i++) {
+			lines[i] = parseList(lines[i]!, this.#config, this.#accum);
 		}
 		this.setText(lines.join('\n'));
 	}
