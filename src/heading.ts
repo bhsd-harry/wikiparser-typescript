@@ -13,6 +13,7 @@ import SyntaxToken = require('./syntax');
 abstract class HeadingToken extends sol(fixed(Token)) {
 	/** @browser */
 	override readonly type = 'heading';
+	declare name: string;
 	declare childNodes: [Token, SyntaxToken];
 	abstract override get children(): [Token, SyntaxToken];
 	abstract override get firstChild(): Token;

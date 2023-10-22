@@ -7,6 +7,7 @@ import Token = require('..');
 abstract class DoubleUnderscoreToken extends hidden(NowikiBaseToken) {
 	/** @browser */
 	override readonly type = 'double-underscore';
+	declare name: string;
 
 	/** @private */
 	override getPadding(): number {

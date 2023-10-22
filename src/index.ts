@@ -197,6 +197,9 @@ class Token extends AstElement {
 			case 1:
 				this.#parseBrackets();
 				break;
+			case 4:
+				this.#parseHrAndDoubleUnderscore();
+				break;
 			case 10:
 				this.#parseConverter();
 				// no default
@@ -300,6 +303,19 @@ class Token extends AstElement {
 		const str = this.type === 'root' ? String(this.firstChild!) : `\0${String(this.firstChild!)}`,
 			parsed = parseBrackets(str, this.#config, this.#accum);
 		this.setText(this.type === 'root' ? parsed : parsed.slice(1));
+	}
+
+	/**
+	 * 解析`<hr>`和状态开关
+	 * @browser
+	 */
+	#parseHrAndDoubleUnderscore(): void {
+		if (this.#config.excludes?.includes('hr')) {
+			return;
+		}
+		const parseHrAndDoubleUnderscore: typeof import('../parser/hrAndDoubleUnderscore')
+			= require('../parser/hrAndDoubleUnderscore');
+		this.setText(parseHrAndDoubleUnderscore(this, this.#config, this.#accum));
 	}
 
 	/**

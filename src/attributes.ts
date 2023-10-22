@@ -16,6 +16,7 @@ declare type AttributesTypes = 'ext-attrs' | 'html-attrs' | 'table-attrs';
  */
 abstract class AttributesToken extends Token {
 	declare type: AttributesTypes;
+	declare name: string;
 	declare childNodes: (AtomToken | AttributeToken)[];
 	abstract override get children(): (AtomToken | AttributeToken)[];
 	abstract override get firstChild(): AtomToken | AttributeToken;
@@ -327,7 +328,7 @@ abstract class AttributesToken extends Token {
 
 	/** 获取全部的标签属性名 */
 	getAttrNames(): Set<string> {
-		return new Set(this.childNodes.filter(child => child instanceof AttributeToken).map(({name}) => name));
+		return new Set(this.childNodes.filter(child => child instanceof AttributeToken).map(({name}) => name!));
 	}
 
 	/** 标签是否具有任意属性 */

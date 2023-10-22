@@ -9,7 +9,7 @@ import Title = require('./title');
 import Parser = require('../index');
 import AstNode = require('./node');
 
-const lintIgnoredExt = new Set([
+const lintIgnoredExt = new Set<string | undefined>([
 	'nowiki',
 	'pre',
 	'charinsert',
@@ -30,7 +30,7 @@ const lintIgnoredExt = new Set([
 /** 类似HTMLElement */
 abstract class AstElement extends AstNode {
 	/** @browser */
-	name: string;
+	name?: string;
 
 	/**
 	 * 子节点总数

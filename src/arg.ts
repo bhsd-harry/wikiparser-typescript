@@ -15,6 +15,7 @@ import type {Inserted, InsertionReturn} from '../lib/node';
 abstract class ArgToken extends Token {
 	/** @browser */
 	override readonly type = 'arg';
+	declare name: string;
 	declare childNodes: [AtomToken] | [AtomToken, Token, ...HiddenToken[]];
 	abstract override get firstChild(): AtomToken;
 	abstract override get firstElementChild(): AtomToken;

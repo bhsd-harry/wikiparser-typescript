@@ -183,6 +183,7 @@ const stages = {'ext-attr': 0, 'html-attr': 2, 'table-attr': 3},
  */
 abstract class AttributeToken extends fixed(Token) {
 	declare type: AttributeTypes;
+	declare name: string;
 	declare childNodes: [AtomToken, Token];
 	abstract override get firstChild(): AtomToken;
 	abstract override get firstElementChild(): AtomToken;

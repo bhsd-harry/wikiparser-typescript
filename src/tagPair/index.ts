@@ -6,6 +6,7 @@ import type {AstNodeTypes, TokenAttributeGetter} from '../../lib/node';
 /** 成对标签 */
 abstract class TagPairToken extends fixed(Token) {
 	declare type: 'ext' | 'include';
+	declare name: string;
 	abstract override get firstChild(): AstNodeTypes;
 	abstract override get lastChild(): AstNodeTypes;
 

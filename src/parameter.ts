@@ -13,6 +13,7 @@ import Token = require('.');
 abstract class ParameterToken extends fixed(Token) {
 	/** @browser */
 	override readonly type = 'parameter';
+	declare name: string;
 	declare childNodes: [Token, Token];
 	abstract override get children(): [Token, Token];
 	abstract override get firstChild(): Token;
