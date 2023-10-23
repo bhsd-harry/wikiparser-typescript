@@ -1,5 +1,5 @@
-import parseBrackets = require('../../parser/brackets');
-import Parser = require('../../index');
+import * as parseBrackets from '../../parser/brackets';
+import * as Parser from '../../index';
 import ParamTagToken = require('.');
 import Token = require('..');
 

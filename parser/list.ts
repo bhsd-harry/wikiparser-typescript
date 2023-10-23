@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import ListToken = require('../src/nowiki/list');
 import DdToken = require('../src/nowiki/dd');
 import Token = require('../src');

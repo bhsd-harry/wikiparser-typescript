@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import AttributesToken = require('../src/attributes');
 import HtmlToken = require('../src/html');
 import Token = require('../src');

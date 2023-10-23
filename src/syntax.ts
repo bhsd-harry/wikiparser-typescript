@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import debug_1 = require('../util/debug');
 const {undo} = debug_1;
 import string_1 = require('../util/string');

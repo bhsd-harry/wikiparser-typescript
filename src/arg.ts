@@ -2,7 +2,7 @@ import string_1 = require('../util/string');
 const {text, noWrap} = string_1;
 import lint_1 = require('../util/lint');
 const {generateForSelf, generateForChild} = lint_1;
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('.');
 import AtomToken = require('./atom');
 import HiddenToken = require('./hidden');

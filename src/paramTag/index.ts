@@ -1,8 +1,8 @@
 import lint_1 = require('../../util/lint');
 const {generateForChild} = lint_1;
 import type {BoundingRect} from '../../util/lint';
-import singleLine = require('../../mixin/singleLine');
-import Parser = require('../../index');
+import * as singleLine from '../../mixin/singleLine';
+import * as Parser from '../../index';
 import Token = require('..');
 import AtomToken = require('../atom');
 import AttributesToken = require('../attributes');

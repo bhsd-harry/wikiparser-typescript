@@ -40,9 +40,9 @@
 import string_1 = require('../util/string');
 const {text} = string_1;
 import type {AstNodeTypes, Inserted, InsertionReturn, TokenAttributeGetter, TokenAttributeSetter} from '../lib/node';
-import assert = require('assert/strict');
-import Ranges = require('../lib/ranges');
-import Parser = require('../index');
+import * as assert from 'assert/strict';
+import * as Ranges from '../lib/ranges';
+import * as Parser from '../index';
 import AstElement = require('../lib/element');
 import AstText = require('../lib/text');
 const {MAX_STAGE, aliases} = Parser;

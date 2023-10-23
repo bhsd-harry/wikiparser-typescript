@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import HrToken = require('../src/nowiki/hr');
 import DoubleUnderscoreToken = require('../src/nowiki/doubleUnderscore');
 import HeadingToken = require('../src/heading');

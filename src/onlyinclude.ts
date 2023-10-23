@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('.');
 
 /**

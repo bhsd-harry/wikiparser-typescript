@@ -1,6 +1,9 @@
+import lint_1 = require('../util/lint');
+const {generateForSelf, generateForChild} = lint_1;
+import type {BoundingRect} from '../util/lint';
 import string_1 = require('../util/string');
 const {toCase, normalizeSpace, text, removeComment} = string_1;
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('.');
 import AtomToken = require('./atom');
 import AttributeToken = require('./attribute');
@@ -9,6 +12,7 @@ import type {Inserted, InsertionReturn} from '../lib/node';
 const stages = {'ext-attrs': 0, 'html-attrs': 2, 'table-attrs': 3};
 
 declare type AttributesTypes = 'ext-attrs' | 'html-attrs' | 'table-attrs';
+declare type AttributesParent = import('./tagPair/ext') | import('./html');
 
 /**
  * 扩展和HTML标签属性
@@ -23,6 +27,8 @@ abstract class AttributesToken extends Token {
 	abstract override get firstElementChild(): AtomToken | AttributeToken;
 	abstract override get lastChild(): AtomToken | AttributeToken;
 	abstract override get lastElementChild(): AtomToken | AttributeToken;
+	abstract override get parentNode(): AttributesParent | undefined;
+	abstract override get parentElement(): AttributesParent | undefined;
 
 	/** getAttrs()方法的getter写法 */
 	get attributes(): Record<string, string | true> {
@@ -165,6 +171,49 @@ abstract class AttributesToken extends Token {
 	 */
 	getAttr(key: string): string | true | undefined {
 		return this.getAttrToken(key)?.getValue();
+	}
+
+	/**
+	 * @override
+	 * @browser
+	 */
+	override lint(start = this.getAbsoluteIndex()): Parser.LintError[] {
+		const errors = super.lint(start),
+			{parentNode, length, childNodes} = this,
+			attrs: Record<string, AttributeToken[]> = {},
+			duplicated = new Set<string>();
+		let rect: BoundingRect | undefined;
+		if (parentNode?.type === 'html' && parentNode.closing && this.text().trim()) {
+			rect = {start, ...this.getRootNode().posFromIndex(start)};
+			errors.push(generateForSelf(this, rect, 'attributes of a closing tag'));
+		}
+		for (let i = 0; i < length; i++) {
+			const attr = childNodes[i]!;
+			if (attr instanceof AtomToken && attr.text().trim()) {
+				rect ??= {start, ...this.getRootNode().posFromIndex(start)};
+				errors.push({
+					...generateForChild(attr, rect, 'containing invalid attribute'),
+					excerpt: childNodes.slice(i).map(String).join('').slice(0, 50),
+				});
+			} else if (attr instanceof AttributeToken) {
+				const {name} = attr;
+				if (name in attrs) {
+					duplicated.add(name);
+					attrs[name]!.push(attr);
+				} else if (name !== 'class') {
+					attrs[name] = [attr];
+				}
+			}
+		}
+		if (duplicated.size > 0) {
+			rect ??= {start, ...this.getRootNode().posFromIndex(start)};
+			for (const key of duplicated) {
+				errors.push(...attrs[key]!.map(
+					attr => generateForChild(attr, rect!, Parser.msg('duplicated $1 attribute', key)),
+				));
+			}
+		}
+		return errors;
 	}
 
 	/**

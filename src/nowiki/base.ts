@@ -1,5 +1,5 @@
-import fixed = require('../../mixin/fixed');
-import Parser = require('../../index');
+import * as fixed from '../../mixin/fixed';
+import * as Parser from '../../index';
 import Token = require('..');
 import AstText = require('../../lib/text');
 

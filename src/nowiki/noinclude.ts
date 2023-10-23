@@ -1,5 +1,5 @@
-import hidden = require('../../mixin/hidden');
-import Parser = require('../../index');
+import * as hidden from '../../mixin/hidden';
+import * as Parser from '../../index';
 import NowikiBaseToken = require('./base');
 
 /** `<noinclude>`和`</noinclude>`，不可进行任何更改 */

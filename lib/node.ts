@@ -1,9 +1,9 @@
 import debug_1 = require('../util/debug');
 const {typeError} = debug_1;
-import assert = require('assert/strict');
-import EventEmitter = require('events');
-import Parser = require('../index');
-import Ranges = require('./ranges');
+import * as assert from 'assert/strict';
+import * as EventEmitter from 'events';
+import * as Parser from '../index';
+import type * as Ranges from './ranges';
 
 declare type AstNodeTypes = import('./text') | import('../src');
 declare type Inserted = string | AstNodeTypes;

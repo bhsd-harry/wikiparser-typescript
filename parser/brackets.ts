@@ -1,6 +1,6 @@
 import string_1 = require('../util/string');
 const {removeComment} = string_1;
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('../src');
 import HeadingToken = require('../src/heading');
 import TranscludeToken = require('../src/transclude');

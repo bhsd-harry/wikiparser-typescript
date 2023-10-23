@@ -1,6 +1,6 @@
 import lint_1 = require('../../util/lint');
 const {generateForSelf} = lint_1;
-import Parser = require('../../index');
+import * as Parser from '../../index';
 import NowikiBaseToken = require('./base');
 import Token = require('..');
 

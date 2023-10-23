@@ -1,7 +1,7 @@
 import lint_1 = require('../util/lint');
 const {generateForChild} = lint_1;
 import type {BoundingRect} from '../util/lint';
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('.');
 import ExtToken = require('./tagPair/ext');
 import NoincludeToken = require('./nowiki/noinclude');

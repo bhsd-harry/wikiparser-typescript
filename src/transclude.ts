@@ -3,7 +3,7 @@ const {removeComment, escapeRegExp, text, noWrap, print, decodeHtml} = string_1;
 import lint_1 = require('../util/lint');
 const {generateForChild} = lint_1;
 import type {BoundingRect} from '../util/lint';
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('.');
 import ParameterToken = require('./parameter');
 import AtomToken = require('./atom');

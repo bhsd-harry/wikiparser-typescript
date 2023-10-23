@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import ConverterToken = require('../src/converter');
 import Token = require('../src');
 

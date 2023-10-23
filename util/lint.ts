@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import type {AstNodeTypes} from '../lib/node';
 
 export type BoundingRect = {top: number, left: number, start: number} | {start: number};

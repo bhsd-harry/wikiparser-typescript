@@ -1,6 +1,6 @@
 import string_1 = require('../util/string');
 const {decodeHtml} = string_1;
-import Parser = require('../index');
+import * as Parser from '../index';
 
 /** MediaWiki页面标题对象 */
 class Title {

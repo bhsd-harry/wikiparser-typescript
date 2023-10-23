@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import OnlyincludeToken = require('../src/onlyinclude');
 import NoincludeToken = require('../src/nowiki/noinclude');
 import IncludeToken = require('../src/tagPair/include');

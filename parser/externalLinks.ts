@@ -1,6 +1,6 @@
 import string_1 = require('../util/string');
 const {extUrlChar, extUrlCharFirst} = string_1;
-import Parser = require('../index');
+import * as Parser from '../index';
 import ExtLinkToken = require('../src/extLink');
 import Token = require('../src');
 

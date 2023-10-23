@@ -1,4 +1,4 @@
-import Parser = require('../index');
+import * as Parser from '../index';
 import QuoteToken = require('../src/nowiki/quote');
 import Token = require('../src');
 

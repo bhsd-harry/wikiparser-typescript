@@ -1,6 +1,6 @@
 import string_1 = require('../util/string');
 const {noWrap, normalizeSpace} = string_1;
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('.');
 import MagicLinkToken = require('./magicLink');
 

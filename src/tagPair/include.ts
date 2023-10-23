@@ -1,5 +1,5 @@
-import hidden = require('../../mixin/hidden');
-import Parser = require('../../index');
+import * as hidden from '../../mixin/hidden';
+import * as Parser from '../../index';
 import TagPairToken = require('.');
 import Token = require('..');
 import AstText = require('../../lib/text');

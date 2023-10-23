@@ -1,5 +1,5 @@
-import sol = require('../../mixin/sol');
-import Parser = require('../../index');
+import * as sol from '../../mixin/sol';
+import * as Parser from '../../index';
 import DdToken = require('./dd');
 
 /** 位于行首的`;:*#` */

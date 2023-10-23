@@ -1,7 +1,7 @@
 import child_process = require('child_process');
 const {spawn} = child_process;
 import type {ChildProcessWithoutNullStreams} from 'child_process';
-import fs = require('fs/promises');
+import * as fs from 'fs/promises';
 
 process.on('unhandledRejection', e => {
 	console.error(e);

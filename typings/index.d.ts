@@ -1,5 +1,5 @@
 import type {Inserted, InsertionReturn} from '../lib/node';
-import Ranges = require('../lib/ranges');
+import type * as Ranges from '../lib/ranges';
 
 declare global {
 	interface PrintOpt {

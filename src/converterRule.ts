@@ -2,7 +2,7 @@ import debug_1 = require('../util/debug');
 const {undo} = debug_1;
 import string_1 = require('../util/string');
 const {noWrap} = string_1;
-import Parser = require('../index');
+import * as Parser from '../index';
 import Token = require('.');
 import AtomToken = require('./atom');
 

@@ -1,5 +1,5 @@
-import sol = require('../../mixin/sol');
-import Parser = require('../../index');
+import * as sol from '../../mixin/sol';
+import * as Parser from '../../index';
 import NowikiBaseToken = require('./base');
 import Token = require('..');
 

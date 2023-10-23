@@ -1,13 +1,13 @@
-import fs = require('fs');
-import path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 import string_1 = require('../util/string');
 const {toCase, noWrap, print, text} = string_1;
-import Ranges = require('./ranges');
+import * as Ranges from './ranges';
 const {nth} = Ranges;
-import parseSelector = require('../parser/selector');
+import * as parseSelector from '../parser/selector';
 import Title = require('./title');
-import Parser = require('../index');
-import AstNode = require('./node');
+import * as Parser from '../index';
+import * as AstNode from './node';
 
 const lintIgnoredExt = new Set<string | undefined>([
 	'nowiki',
