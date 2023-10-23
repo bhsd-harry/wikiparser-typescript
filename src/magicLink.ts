@@ -3,29 +3,16 @@ const {generateForChild} = lint_1;
 import type {BoundingRect} from '../util/lint';
 import * as Parser from '../index';
 import Token = require('.');
-import AstText = require('../lib/text');
-import CommentToken = require('./nowiki/comment');
-import IncludeToken = require('./tagPair/include');
-import NoincludeToken = require('./nowiki/noinclude');
 import ParameterToken = require('./parameter');
 import type {Inserted} from '../lib/node';
-
-declare type MagicLinkChild = CommentToken | IncludeToken | NoincludeToken;
 
 /**
  * 自由外链
  * @classdesc `{childNodes: ...AstText|CommentToken|IncludeToken|NoincludeToken}`
  */
-abstract class MagicLinkToken extends Token {
+class MagicLinkToken extends Token {
 	/** @browser */
 	override type: 'free-ext-link' | 'ext-link-url' = 'free-ext-link';
-	declare childNodes: (AstText | MagicLinkChild)[];
-	abstract override get children(): MagicLinkChild[];
-	abstract override get firstChild(): AstText | MagicLinkChild;
-	abstract override get firstElementChild(): MagicLinkChild | undefined;
-	abstract override get lastChild(): AstText | MagicLinkChild;
-	abstract override get lastElementChild(): MagicLinkChild | undefined;
-
 	#protocolRegex;
 
 	/** 协议 */
@@ -60,7 +47,7 @@ abstract class MagicLinkToken extends Token {
 	 * @param url 网址
 	 * @param doubleSlash 是否接受"//"作为协议
 	 */
-	constructor(url: string, doubleSlash: boolean, config = Parser.getConfig(), accum: Token[] = []) {
+	constructor(url: string | undefined, doubleSlash: boolean, config = Parser.getConfig(), accum: Token[] = []) {
 		super(url, config, true, accum, {
 			'Stage-1': ':', '!ExtToken': '',
 		});
@@ -114,12 +101,11 @@ abstract class MagicLinkToken extends Token {
 	override cloneNode(): this {
 		const cloned = this.cloneChildNodes();
 		return Parser.run(() => {
-			// @ts-expect-error abstract class
-			const token: this = new MagicLinkToken(
+			const token = new MagicLinkToken(
 				undefined,
 				this.type === 'ext-link-url',
 				this.getAttribute('config'),
-			);
+			) as this;
 			token.append(...cloned);
 			token.afterBuild();
 			return token;

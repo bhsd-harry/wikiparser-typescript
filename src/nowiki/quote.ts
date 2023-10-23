@@ -50,6 +50,12 @@ abstract class QuoteToken extends NowikiBaseToken {
 		return errors;
 	}
 
+	/** @override */
+	override cloneNode(): this {
+		// @ts-expect-error abstract class
+		return Parser.run(() => new QuoteToken(Number(this.name), this.getAttribute('config')));
+	}
+
 	/**
 	 * @override
 	 * @param str 新文本

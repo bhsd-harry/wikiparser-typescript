@@ -448,7 +448,7 @@ abstract class TranscludeToken extends Token {
 			config = this.getAttribute('config');
 		return Parser.run(() => {
 			// @ts-expect-error abstract class
-			const token: this = new TranscludeToken(this.type === 'template' ? '' : first.text(), [], config);
+			const token: this = new TranscludeToken(this.type === 'template' ? '' : first!.text(), [], config);
 			if (this.#raw) {
 				token.setModifier(this.modifier);
 			} else {

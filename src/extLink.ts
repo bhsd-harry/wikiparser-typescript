@@ -56,7 +56,6 @@ abstract class ExtLinkToken extends Token {
 		super(undefined, config, true, accum, {
 			MagicLinkToken: 0, Token: 1,
 		});
-		// @ts-expect-error abstract class
 		this.insertAt(new MagicLinkToken(url, true, config, accum));
 		this.#space = space;
 		if (text) {

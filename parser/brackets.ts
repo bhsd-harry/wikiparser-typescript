@@ -42,7 +42,7 @@ const parseBrackets = (wikitext: string, config = Parser.getConfig(), accum: Tok
 					text = `${text.slice(0, index)}\0${accum.length}h\x7F${text.slice(curIndex)}`;
 					lastIndex = index! + 4 + String(accum.length).length;
 					// @ts-expect-error abstract class
-					new HeadingToken(rmt[1].length, rmt.slice(2), config, accum);
+					new HeadingToken(rmt[1]!.length, rmt.slice(2), config, accum);
 				}
 			}
 		} else if (syntax === '|' || innerEqual) { // 情形3：模板内部，含行首单个'='
@@ -72,8 +72,8 @@ const parseBrackets = (wikitext: string, config = Parser.getConfig(), accum: Tok
 				}
 			} else {
 				try {
-					// @ts-expect-error abstract class
-					new TranscludeToken(parts[0][0], parts.slice(1), config, accum);
+					// @ts-expect-error absstract class
+					new TranscludeToken(parts![0]![0], parts!.slice(1), config, accum);
 					const name = removeComment(parts![0]![0]!).trim();
 					if (name in marks) {
 						ch = marks[name]!; // 标记{{!}}等

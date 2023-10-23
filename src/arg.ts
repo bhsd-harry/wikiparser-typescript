@@ -190,11 +190,11 @@ abstract class ArgToken extends Token {
 		const n = String(name),
 			root = Parser.parse(`{{{${n}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: arg} = root;
-		if (length !== 1 || !(arg instanceof ArgToken) || arg.length !== 1) {
+		if (length !== 1 || arg!.type !== 'arg' || arg!.length !== 1) {
 			throw new SyntaxError(`非法的参数名称：${noWrap(n)}`);
 		}
-		const {firstChild} = arg;
-		arg.destroy();
+		const {firstChild} = arg as ArgToken;
+		(arg as Token).destroy();
 		this.firstChild.safeReplaceWith(firstChild);
 	}
 
@@ -207,12 +207,12 @@ abstract class ArgToken extends Token {
 		const v = String(value),
 			root = Parser.parse(`{{{|${v}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: arg} = root;
-		if (length !== 1 || !(arg instanceof ArgToken) || arg.length !== 2) {
+		if (length !== 1 || arg!.type !== 'arg' || arg!.length !== 2) {
 			throw new SyntaxError(`非法的参数预设值：${noWrap(v)}`);
 		}
 		const {childNodes: [, oldDefault]} = this,
-			{lastChild} = arg;
-		arg.destroy();
+			{lastChild} = arg as ArgToken;
+		(arg as Token).destroy();
 		if (oldDefault) {
 			oldDefault.safeReplaceWith(lastChild);
 		} else {

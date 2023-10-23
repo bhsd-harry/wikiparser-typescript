@@ -32,6 +32,7 @@ abstract class NestedToken extends Token {
 	abstract override get parentElement(): ExtToken | undefined;
 
 	#tags: (string | undefined)[];
+	#regex;
 
 	/**
 	 * @browser
@@ -71,6 +72,7 @@ abstract class NestedToken extends Token {
 			NoincludeToken: ':', ExtToken: ':',
 		});
 		this.#tags = tags;
+		this.#regex = regex;
 	}
 
 	/**
@@ -106,11 +108,12 @@ abstract class NestedToken extends Token {
 	}
 
 	/** @override */
-	override cloneNode(this: this & {constructor: new (...args: unknown[]) => unknown}): this {
+	override cloneNode(): this {
 		const cloned = this.cloneChildNodes(),
 			config = this.getAttribute('config');
 		return Parser.run(() => {
-			const token = new this.constructor(undefined, config) as this;
+			// @ts-expect-error abstract class
+			const token = new NestedToken(undefined, this.#regex, this.#tags, config) as this;
 			token.append(...cloned);
 			return token;
 		});
