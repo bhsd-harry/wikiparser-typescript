@@ -219,8 +219,8 @@ abstract class ConverterRuleToken extends Token {
 		if (length !== 1 || converter!.type !== 'converter') {
 			throw new SyntaxError(`非法的转换目标：${noWrap(toStr)}`);
 		}
-		const {lastChild: converterRule, length: converterLength} = converter as import('./converter');
-		if (converterLength !== 2 || converterRule.length !== 2) {
+		const {lastChild: converterRule} = converter as import('./converter');
+		if (converter!.length !== 2 || converterRule.length !== 2) {
 			throw new SyntaxError(`非法的转换目标：${noWrap(toStr)}`);
 		}
 		const {lastChild} = converterRule as ConverterRuleToken;
@@ -266,8 +266,8 @@ abstract class ConverterRuleToken extends Token {
 		if (length !== 1 || converter!.type !== 'converter') {
 			throw new SyntaxError(`非法的转换原文：${noWrap(fromStr)}`);
 		}
-		const {length: converterLength, lastChild: converterRule} = converter as import('./converter');
-		if (converterLength !== 2 || converterRule.length !== 3) {
+		const {lastChild: converterRule} = converter as import('./converter');
+		if (converter!.length !== 2 || converterRule.length !== 3) {
 			throw new SyntaxError(`非法的转换原文：${noWrap(fromStr)}`);
 		} else if (unidirectional) {
 			this.firstChild.safeReplaceWith(converterRule.firstChild!);

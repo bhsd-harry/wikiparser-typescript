@@ -196,11 +196,9 @@ abstract class ParameterToken extends fixed(Token) {
 		if (length !== 1 || transclude!.type !== targetType) {
 			throw new SyntaxError(`非法的模板参数：${noWrap(value)}`);
 		}
-		const {lastChild: parameter, name, length: transcludeLength} = transclude as import('./transclude') & {
-				lastChild: ParameterToken;
-			},
+		const {lastChild: parameter, name} = transclude as Token & {lastChild: ParameterToken},
 			targetName = templateLike ? 'T' : 'lc';
-		if (name !== targetName || transcludeLength !== 2 || parameter.anon !== this.anon || parameter.name !== '1') {
+		if (name !== targetName || transclude!.length !== 2 || parameter.anon !== this.anon || parameter.name !== '1') {
 			throw new SyntaxError(`非法的模板参数：${noWrap(value)}`);
 		}
 		const {lastChild} = parameter;
@@ -224,23 +222,18 @@ abstract class ParameterToken extends fixed(Token) {
 		}
 		const root = Parser.parse(`{{:T|${key}=}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: template} = root;
-		if (length !== 1 || template!.type !== 'template') {
+		if (length !== 1 || template!.type !== 'template' || template!.name !== 'T' || template!.length !== 2) {
 			throw new SyntaxError(`非法的模板参数名：${key}`);
 		}
-		const {name, lastChild: parameter, length: templateLength} = template as import('./transclude') & {
-				lastChild: ParameterToken;
-			};
-		if (name !== 'T' || templateLength !== 2) {
-			throw new SyntaxError(`非法的模板参数名：${key}`);
-		}
-		const {name: parameterName, firstChild} = parameter;
-		if (this.name === parameterName) {
-			Parser.warn('未改变实际参数名', parameterName);
-		} else if (parentNode?.hasArg(parameterName)) {
+		const {lastChild: parameter} = template as import('./transclude') & {lastChild: ParameterToken},
+			{name, firstChild} = parameter;
+		if (this.name === name) {
+			Parser.warn('未改变实际参数名', name);
+		} else if (parentNode?.hasArg(name)) {
 			if (force) {
-				Parser.warn('参数更名造成重复参数', parameterName);
+				Parser.warn('参数更名造成重复参数', name);
 			} else {
-				throw new RangeError(`参数更名造成重复参数：${parameterName}`);
+				throw new RangeError(`参数更名造成重复参数：${name}`);
 			}
 		}
 		parameter.destroy();

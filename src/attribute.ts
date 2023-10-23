@@ -246,7 +246,7 @@ abstract class AttributeToken extends fixed(Token) {
 		key: string,
 		equal = '',
 		value = '',
-		quotes: [string | undefined, string | undefined] = [undefined, undefined],
+		quotes: [string?, string?] = [],
 		config = Parser.getConfig(),
 		accum: Token[] = [],
 	) {
@@ -426,7 +426,10 @@ abstract class AttributeToken extends fixed(Token) {
 
 	/** 闭合引号 */
 	close(): void {
-		[this.#quotes[1]] = this.#quotes;
+		const [opening] = this.#quotes;
+		if (opening) {
+			this.#quotes[1] = opening;
+		}
 	}
 
 	/**
@@ -458,8 +461,8 @@ abstract class AttributeToken extends fixed(Token) {
 		} else {
 			attrs = tag.firstChild as import('./attributes');
 		}
-		const {length: attrsLength, firstChild} = attrs;
-		if (attrsLength !== 1 || firstChild.type !== this.type || firstChild.name !== key) {
+		const {firstChild} = attrs;
+		if (attrs.length !== 1 || firstChild.type !== this.type || firstChild.name !== key) {
 			throw new SyntaxError(`非法的标签属性：${noWrap(value)}`);
 		}
 		const {lastChild} = firstChild;
@@ -497,8 +500,8 @@ abstract class AttributeToken extends fixed(Token) {
 		} else {
 			attrs = tag.firstChild as import('./attributes');
 		}
-		const {length: attrsLength, firstChild: attr} = attrs;
-		if (attrsLength !== 1 || attr.type !== this.type || attr.value !== true) {
+		const {firstChild: attr} = attrs;
+		if (attrs.length !== 1 || attr.type !== this.type || attr.value !== true) {
 			throw new SyntaxError(`非法的标签属性名：${noWrap(key)}`);
 		}
 		const {firstChild} = attr;

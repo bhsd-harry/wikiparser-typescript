@@ -671,8 +671,8 @@ abstract class TranscludeToken extends Token {
 		}
 		const root = Parser.parse(`{{#invoke:${title}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: invoke} = root as Token & {firstChild: TranscludeToken},
-			{type, name, length: invokeLength, lastChild} = invoke;
-		if (length !== 1 || type !== 'magic-word' || name !== 'invoke' || invokeLength !== 2) {
+			{type, name, lastChild} = invoke;
+		if (length !== 1 || type !== 'magic-word' || name !== 'invoke' || invoke.length !== 2) {
 			throw new SyntaxError(`非法的模块名称：${title}`);
 		} else if (this.length > 1) {
 			this.childNodes[1]!.replaceChildren(...lastChild.childNodes);
@@ -704,8 +704,8 @@ abstract class TranscludeToken extends Token {
 				this.getAttribute('config'),
 			),
 			{length, firstChild: invoke} = root as Token & {firstChild: TranscludeToken},
-			{type, name, length: invokeLength, lastChild} = invoke;
-		if (length !== 1 || type !== 'magic-word' || name !== 'invoke' || invokeLength !== 3) {
+			{type, name, lastChild} = invoke;
+		if (length !== 1 || type !== 'magic-word' || name !== 'invoke' || invoke.length !== 3) {
 			throw new SyntaxError(`非法的模块函数名：${func}`);
 		} else if (this.length > 2) {
 			this.childNodes[2]!.replaceChildren(...lastChild.childNodes);
