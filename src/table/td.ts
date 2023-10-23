@@ -30,10 +30,10 @@ abstract class TdToken extends fixed(TableBaseToken) {
 	override readonly type = 'td';
 	declare childNodes: [SyntaxToken, AttributesToken, Token];
 	abstract override get children(): [SyntaxToken, AttributesToken, Token];
-	abstract override get parentNode(): TableBaseToken | undefined;
-	abstract override get parentElement(): TableBaseToken | undefined;
-	abstract override get nextSibling(): TableBaseToken | SyntaxToken | undefined;
-	abstract override get nextElementSibling(): TableBaseToken | SyntaxToken | undefined;
+	abstract override get parentNode(): import('./trBase') | undefined;
+	abstract override get parentElement(): import('./trBase') | undefined;
+	abstract override get nextSibling(): TdToken | import('./tr') | SyntaxToken | undefined;
+	abstract override get nextElementSibling(): TdToken | import('./tr') | SyntaxToken | undefined;
 	abstract override get previousSibling(): Token | undefined;
 
 	/** @browser */
@@ -343,6 +343,12 @@ abstract class TdToken extends fixed(TableBaseToken) {
 		}
 		return token;
 	}
+}
+
+declare namespace TdToken {
+	export type {
+		TdAttrs,
+	};
 }
 
 Parser.classes['TdToken'] = __filename;
