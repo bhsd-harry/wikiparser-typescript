@@ -58,10 +58,11 @@ abstract class TableBaseToken extends attributesParent(Token, 1) {
 	}
 
 	/** @override */
-	override cloneNode(this: this & {constructor: new (...args: unknown[]) => unknown}): this {
+	override cloneNode(): this {
 		const [syntax, attr, ...cloned] = this.cloneChildNodes() as [SyntaxToken, AttributesToken, ...Token[]];
 		return Parser.run(() => {
-			const token = new this.constructor(undefined, undefined, this.getAttribute('config')) as this;
+			const {constructor} = this as this & {constructor: new (...args: unknown[]) => unknown},
+				token = new constructor(undefined, undefined, this.getAttribute('config')) as this;
 			token.firstChild.safeReplaceWith(syntax);
 			token.childNodes[1].safeReplaceWith(attr);
 			if (token.type === 'td') { // TdToken

@@ -988,7 +988,7 @@
 						"allowCallbacks": "always",
 						"allowConditionalTypes": "always",
 						"allowConstructors": "always",
-						"allowLiterals": "in-unions",
+						"allowLiterals": "in-unions-and-intersections",
 						"allowGenerics": "always"
 					}
 				],

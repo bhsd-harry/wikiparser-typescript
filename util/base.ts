@@ -1,4 +1,12 @@
 /**
+ * 是否是普通对象
+ * @param obj 对象
+ */
+export const isPlainObject = (obj: unknown): boolean =>
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+	Boolean(obj) && Object.getPrototypeOf(obj)?.constructor === Object;
+
+/**
  * 从数组中删除指定元素
  * @param arr 数组
  * @param ele 元素

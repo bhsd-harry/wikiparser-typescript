@@ -9,8 +9,6 @@ import CommentToken = require('./nowiki/comment');
 import AttributesToken = require('./attributes');
 import type {Inserted, InsertionReturn} from '../lib/node';
 
-declare type NestedInner = ExtToken | NoincludeToken | CommentToken;
-
 /**
  * 嵌套式的扩展标签
  * @classdesc `{childNodes: ...ExtToken|NoincludeToken|CommentToken}`
@@ -18,12 +16,12 @@ declare type NestedInner = ExtToken | NoincludeToken | CommentToken;
 abstract class NestedToken extends Token {
 	/** @browser */
 	override readonly type = 'ext-inner';
-	declare childNodes: NestedInner[];
-	abstract override get children(): NestedInner[];
-	abstract override get firstChild(): NestedInner | undefined;
-	abstract override get firstElementChild(): NestedInner | undefined;
-	abstract override get lastChild(): NestedInner | undefined;
-	abstract override get lastElementChild(): NestedInner | undefined;
+	declare childNodes: (ExtToken | NoincludeToken | CommentToken)[];
+	abstract override get children(): (ExtToken | NoincludeToken | CommentToken)[];
+	abstract override get firstChild(): ExtToken | NoincludeToken | CommentToken | undefined;
+	abstract override get firstElementChild(): ExtToken | NoincludeToken | CommentToken | undefined;
+	abstract override get lastChild(): ExtToken | NoincludeToken | CommentToken | undefined;
+	abstract override get lastElementChild(): ExtToken | NoincludeToken | CommentToken | undefined;
 	abstract override get nextSibling(): undefined;
 	abstract override get nextElementSibling(): undefined;
 	abstract override get previousSibling(): AttributesToken;

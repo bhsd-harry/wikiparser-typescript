@@ -12,7 +12,6 @@ import type {Inserted, InsertionReturn} from '../lib/node';
 const stages = {'ext-attrs': 0, 'html-attrs': 2, 'table-attrs': 3};
 
 declare type AttributesTypes = 'ext-attrs' | 'html-attrs' | 'table-attrs';
-declare type AttributesParent = import('./tagPair/ext') | import('./html');
 
 /**
  * 扩展和HTML标签属性
@@ -27,8 +26,8 @@ abstract class AttributesToken extends Token {
 	abstract override get firstElementChild(): AtomToken | AttributeToken;
 	abstract override get lastChild(): AtomToken | AttributeToken;
 	abstract override get lastElementChild(): AtomToken | AttributeToken;
-	abstract override get parentNode(): AttributesParent | undefined;
-	abstract override get parentElement(): AttributesParent | undefined;
+	abstract override get parentNode(): import('./tagPair/ext') | import('./html') | import('./table/base') | undefined;
+	abstract override get parentElement(): import('./tagPair/ext') | import('./html') | import('./table/base') | undefined;
 
 	/** getAttrs()方法的getter写法 */
 	get attributes(): Record<string, string | true> {

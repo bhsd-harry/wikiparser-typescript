@@ -39,7 +39,9 @@
 
 import string_1 = require('../util/string');
 const {text} = string_1;
-import type {AstNodeTypes, Inserted, InsertionReturn, TokenAttributeGetter, TokenAttributeSetter} from '../lib/node';
+import type {
+	AstNodeTypes, Inserted, InsertionReturn, TokenAttributeGetter, TokenAttributeSetter, CaretPosition,
+} from '../lib/node';
 import * as assert from 'assert/strict';
 import * as Ranges from '../lib/ranges';
 import * as Parser from '../index';
@@ -117,10 +119,6 @@ declare type TokenTypes = 'root'
 	| 'param-line'
 	| 'charinsert-line'
 	| 'imagemap-link';
-declare interface CaretPosition {
-	offsetNode: AstNodeTypes;
-	offset: number;
-}
 declare type TagToken = import('./tagPair/include') | import('./tagPair/ext') | import('./html');
 
 /**

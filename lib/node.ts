@@ -35,6 +35,10 @@ declare interface Position {
 	top: number;
 	left: number;
 }
+declare interface CaretPosition {
+	offsetNode: AstNodeTypes;
+	offset: number;
+}
 
 /** 类似Node */
 abstract class AstNode {
@@ -566,6 +570,9 @@ declare namespace AstNode {
 		InsertionReturn,
 		TokenAttributeGetter,
 		TokenAttributeSetter,
+		Dimension,
+		Position,
+		CaretPosition,
 	};
 }
 
