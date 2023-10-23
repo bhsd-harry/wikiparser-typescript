@@ -199,6 +199,9 @@ class Token extends AstElement {
 			case 2:
 				this.#parseHtml();
 				break;
+			case 3:
+				this.#parseTable();
+				break;
 			case 4:
 				this.#parseHrAndDoubleUnderscore();
 				break;
@@ -329,6 +332,18 @@ class Token extends AstElement {
 		}
 		const parseHtml: typeof import('../parser/html') = require('../parser/html');
 		this.setText(parseHtml(String(this.firstChild), this.#config, this.#accum));
+	}
+
+	/**
+	 * 解析表格
+	 * @browser
+	 */
+	#parseTable(): void {
+		if (this.#config.excludes?.includes('table')) {
+			return;
+		}
+		const parseTable: typeof import('../parser/table') = require('../parser/table');
+		this.setText(parseTable(this as Token & {firstChild: AstText}, this.#config, this.#accum));
 	}
 
 	/**
