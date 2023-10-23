@@ -127,7 +127,8 @@ declare interface Parser {
  */
 const rootRequire = (file: string, dir = ''): unknown => require(`${file.includes('/') ? '' : `../${dir}`}${file}`);
 
-const Parser: Parser = { // eslint-disable-line @typescript-eslint/no-redeclare
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+const Parser: Parser = {
 	config: 'default',
 	i18n: undefined,
 
