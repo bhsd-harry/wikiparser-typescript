@@ -10,8 +10,17 @@ import TranscludeToken = require('../transclude');
 import type {AstNodeTypes, Inserted, InsertionReturn} from '../../lib/node';
 
 declare interface TableCoords {
-	row?: number;
+	row: number;
 	column: number;
+	x?: undefined;
+	y?: undefined;
+	start?: boolean;
+}
+declare interface TableRenderedCoords {
+	row?: undefined;
+	column?: undefined;
+	x: number;
+	y: number;
 }
 
 /** 表格行或表格 */
@@ -140,6 +149,16 @@ abstract class TrBaseToken extends TableBaseToken {
 	 * @param insert 是否用于判断插入新列的位置
 	 * @throws `RangeError` 不存在对应单元格
 	 */
+	getNthCol(n: number, insert?: false): TdToken | undefined;
+	/** @ignore */
+	getNthCol(n: number, insert: true): TdToken | import('./tr') | SyntaxToken | undefined;
+
+	/**
+	 * 获取第n列
+	 * @param n 列号
+	 * @param insert 是否用于判断插入新列的位置
+	 * @throws `RangeError` 不存在对应单元格
+	 */
 	getNthCol(n: number, insert = false): TdToken | import('./tr') | SyntaxToken | undefined {
 		if (!Number.isInteger(n)) {
 			this.typeError('getNthCol', 'Number');
@@ -169,8 +188,7 @@ abstract class TrBaseToken extends TableBaseToken {
 	/**
 	 * 插入新的单元格
 	 * @param inner 单元格内部wikitext
-	 * @param coord 单元格坐标
-	 * @param coord.column 单元格列号
+	 * @param {TableCoords} coord 单元格坐标
 	 * @param subtype 单元格类型
 	 * @param attr 单元格属性
 	 */
@@ -188,6 +206,7 @@ abstract class TrBaseToken extends TableBaseToken {
 declare namespace TrBaseToken {
 	export type {
 		TableCoords,
+		TableRenderedCoords,
 	};
 }
 

@@ -815,6 +815,37 @@ abstract class TranscludeToken extends Token {
 		}
 		return duplicatedKeys;
 	}
+
+	/**
+	 * 转义模板内的表格
+	 * @throws `Error` 转义失败
+	 */
+	escapeTables(): TranscludeToken {
+		const count = this.hasDuplicatedArgs();
+		if (!/\n[^\S\n]*(?::+\s*)?\{\|[^\n]*\n\s*(?:\S[^\n]*\n\s*)*\|\}/u.test(this.text()) || !count) {
+			return this;
+		}
+		const stripped = String(this).slice(2, -2),
+			include = this.getAttribute('include'),
+			config = this.getAttribute('config'),
+			parsed = Parser.parse(stripped, include, 4, config);
+		for (const table of parsed.childNodes) {
+			if (table.type === 'table') {
+				(table as import('./table')).escape();
+			}
+		}
+		const {firstChild, childNodes} = Parser.parse(`{{${String(parsed)}}}`, include, 2, config);
+		if (childNodes.length !== 1 || !(firstChild instanceof TranscludeToken)) {
+			throw new Error('转义表格失败！');
+		}
+		const newCount = firstChild.hasDuplicatedArgs();
+		if (newCount === count) {
+			return this;
+		}
+		Parser.info(`共修复了 ${count - newCount} 个重复参数。`);
+		this.safeReplaceWith(firstChild as this);
+		return firstChild;
+	}
 }
 
 Parser.classes['TranscludeToken'] = __filename;

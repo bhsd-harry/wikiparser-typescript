@@ -7,10 +7,7 @@ import AstText = require('../lib/text');
 
 /**
  * 解析`<hr>`和状态开关
- * @param root 根节点
- * @param root.firstChild 文本子节点
- * @param root.type 根节点类型
- * @param root.name 根节点名
+ * @param {Token} root 根节点
  */
 const parseHrAndDoubleUnderscore = (
 	{firstChild, type, name}: Token,
