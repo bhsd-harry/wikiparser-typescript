@@ -207,6 +207,9 @@ class Token extends AstElement {
 			case 6:
 				this.#parseQuotes();
 				break;
+			case 7:
+				this.#parseExternalLinks();
+				break;
 			case 8:
 				this.#parseMagicLinks();
 				break;
@@ -357,6 +360,18 @@ class Token extends AstElement {
 			lines[i] = parseQuotes(lines[i]!, this.#config, this.#accum);
 		}
 		this.setText(lines.join('\n'));
+	}
+
+	/**
+	 * 解析外部链接
+	 * @browser
+	 */
+	#parseExternalLinks(): void {
+		if (this.#config.excludes?.includes('extLink')) {
+			return;
+		}
+		const parseExternalLinks: typeof import('../parser/externalLinks') = require('../parser/externalLinks');
+		this.setText(parseExternalLinks(String(this.firstChild), this.#config, this.#accum));
 	}
 
 	/**
