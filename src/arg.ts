@@ -75,12 +75,12 @@ abstract class ArgToken extends Token {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return 3;
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		return 1;
 	}
 
@@ -130,7 +130,7 @@ abstract class ArgToken extends Token {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		this.setAttribute('name', this.firstChild.text().trim());
 		const /** @implements */ argListener: AstListener = ({prevTarget}) => {
 			if (prevTarget === this.firstChild) {
@@ -174,7 +174,7 @@ abstract class ArgToken extends Token {
 		} else if (typeof token === 'string') {
 			throw new TypeError(`${this.constructor.name}不可插入文本节点！`);
 		}
-		super.insertAt(token, i);
+		super.insertAt(token as Inserted, i);
 		if (j === 1) {
 			token.type = 'arg-default';
 		}

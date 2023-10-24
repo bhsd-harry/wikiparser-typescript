@@ -27,7 +27,7 @@ abstract class CommentToken extends hidden(NowikiBaseToken) {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return 4;
 	}
 

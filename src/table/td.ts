@@ -108,7 +108,7 @@ abstract class TdToken extends fixed(TableBaseToken) {
 	}
 
 	/** @private */
-	getSyntax(): TdSyntax {
+	protected getSyntax(): TdSyntax {
 		const syntax = this.firstChild.text(),
 			esc = syntax.includes('{{'),
 			char = syntax.at(-1)!;
@@ -138,7 +138,7 @@ abstract class TdToken extends fixed(TableBaseToken) {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		if (this.#innerSyntax.includes('\0')) {
 			this.#innerSyntax = this.buildFromStr(this.#innerSyntax, 'string');
 		}
@@ -167,7 +167,7 @@ abstract class TdToken extends fixed(TableBaseToken) {
 	}
 
 	/** @private */
-	override getGaps(i = 0): number {
+	protected override getGaps(i = 0): number {
 		const j = i < 0 ? i + this.length : i;
 		if (j === 1) {
 			this.#correct();

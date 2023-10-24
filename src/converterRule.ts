@@ -122,7 +122,7 @@ abstract class ConverterRuleToken extends Token {
 	}
 
 	/** @private */
-	override getGaps(i = 0): number {
+	protected override getGaps(i = 0): number {
 		const {length} = this,
 			j = i < 0 ? i + length : i;
 		return j === 0 && length === 3 ? 2 : 1;
@@ -158,7 +158,7 @@ abstract class ConverterRuleToken extends Token {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		const /** @implements */ converterRuleListener: AstListener = (e, data) => {
 			const {prevTarget} = e;
 			if (this.length > 1 && this.childNodes.at(-2) === prevTarget) {

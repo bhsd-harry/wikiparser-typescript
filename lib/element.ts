@@ -371,7 +371,7 @@ abstract class AstElement extends AstNode {
 	#matches(step: SelectorArray): boolean {
 		const {
 				parentNode, type, name, childNodes, link, fixed, constructor: {name: tokenName},
-			} = this as this & {link?: string | Title},
+			} = this as AstElement & {link?: string | Title},
 			children = parentNode?.children,
 			childrenOfType = children?.filter(({type: t}) => t === type),
 			siblingsCount = children?.length ?? 1,

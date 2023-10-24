@@ -60,7 +60,7 @@ abstract class ParamTagToken extends Token {
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		return 1;
 	}
 

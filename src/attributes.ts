@@ -141,7 +141,7 @@ abstract class AttributesToken extends Token {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		if (this.type === 'table-attrs') {
 			const {parentNode} = this as this & {parentNode?: import('./table/trBase') | import('./table/td')};
 			this.setAttribute(
@@ -291,7 +291,7 @@ abstract class AttributesToken extends Token {
 		if (this.closest('parameter')) {
 			token.escape();
 		}
-		super.insertAt(token, i);
+		super.insertAt(token as Inserted, i);
 		const {previousVisibleSibling, nextVisibleSibling} = token,
 			type = `${this.type.slice(0, -1)}-dirty` as 'ext-attr-dirty' | 'html-attr-dirty' | 'table-attr-dirty',
 			config = this.getAttribute('config'),
@@ -302,7 +302,7 @@ abstract class AttributesToken extends Token {
 		if (previousVisibleSibling && !/\s$/u.test(String(previousVisibleSibling))) {
 			super.insertAt(Parser.run(() => new AtomToken(' ', type, config, [], acceptable)), i);
 		}
-		return token as Token as InsertionReturn<T>;
+		return token as T as InsertionReturn<T>;
 	}
 
 	/**
@@ -452,7 +452,7 @@ abstract class AttributesToken extends Token {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return this.#leadingSpace(super.toString()).length;
 	}
 

@@ -48,7 +48,7 @@ class SyntaxToken extends Token {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		const /** @implements */ syntaxListener: AstListener = (e, data) => {
 			const pattern = this.#pattern;
 			if (!Parser.running && !pattern.test(this.text())) {
@@ -66,7 +66,7 @@ class SyntaxToken extends Token {
 	}
 
 	/** @private */
-	override hasAttribute(key: string): boolean {
+	protected override hasAttribute(key: string): boolean {
 		return key === 'pattern' || super.hasAttribute(key);
 	}
 

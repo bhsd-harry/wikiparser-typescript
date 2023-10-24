@@ -109,12 +109,12 @@ abstract class TagPairToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return this.#tags[0].length + 1;
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		return 1;
 	}
 

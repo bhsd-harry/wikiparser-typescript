@@ -72,7 +72,7 @@ abstract class ParameterToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		if (!this.anon) {
 			const name = this.firstChild.toString('comment, noinclude, include')
 					.replace(/^[ \t\n\0\v]+|(?<=[^ \t\n\0\v])[ \t\n\0\v]+$/gu, ''),
@@ -117,7 +117,7 @@ abstract class ParameterToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		return this.anon ? 0 : 1;
 	}
 

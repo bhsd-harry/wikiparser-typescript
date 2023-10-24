@@ -42,7 +42,7 @@ abstract class ConverterFlagsToken extends Token {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		this.#flags = this.childNodes.map(child => child.text().trim());
 		const /** @implements */ converterFlagsListener: AstListener = ({prevTarget}) => {
 			if (prevTarget) {
@@ -69,7 +69,7 @@ abstract class ConverterFlagsToken extends Token {
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		return 1;
 	}
 
@@ -145,7 +145,7 @@ abstract class ConverterFlagsToken extends Token {
 	}
 
 	/** @private */
-	override hasAttribute(key: string): boolean {
+	protected override hasAttribute(key: string): boolean {
 		return key === 'flags' || super.hasAttribute(key);
 	}
 
@@ -165,7 +165,7 @@ abstract class ConverterFlagsToken extends Token {
 	 * @param i 插入位置
 	 */
 	override insertAt<T extends Inserted>(token: T & AtomToken, i = this.length): InsertionReturn<T> {
-		super.insertAt(token, i);
+		super.insertAt(token as Inserted, i);
 		this.#flags?.splice(i, 0, token.text().trim());
 		return token as InsertionReturn<T>;
 	}

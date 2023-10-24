@@ -78,12 +78,12 @@ abstract class ConverterToken extends Token {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return 2;
 	}
 
 	/** @private */
-	override getGaps(i = 0): number {
+	protected override getGaps(i = 0): number {
 		const j = i < 0 ? i + this.length : i;
 		return j || this.firstChild.length > 0 ? 1 : 0;
 	}

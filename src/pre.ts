@@ -37,7 +37,7 @@ abstract class PreToken extends Token {
 	}
 
 	/** @private */
-	override isPlain(): boolean {
+	protected override isPlain(): boolean {
 		return true;
 	}
 

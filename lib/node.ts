@@ -162,7 +162,7 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	get fixed(): boolean {
+	protected get fixed(): boolean {
 		return 'fixed' in this.constructor;
 	}
 
@@ -172,7 +172,7 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	hasAttribute(key: string): boolean {
+	protected hasAttribute(key: string): boolean {
 		return typeof key === 'string' ? key in this : this.typeError('hasAttribute', 'String');
 	}
 
@@ -249,13 +249,13 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	getPadding(): number {
+	protected getPadding(): number {
 		return 0;
 	}
 
 	/** @private */
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	getGaps(i?: number): number {
+	protected getGaps(i?: number): number {
 		return 0;
 	}
 
@@ -298,12 +298,12 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	typeError(method: string, ...types: string[]): never {
+	protected typeError(method: string, ...types: string[]): never {
 		return typeError(this.constructor, method, ...types);
 	}
 
 	/** @private */
-	seal(props: string | string[], permanent = false): void {
+	protected seal(props: string | string[], permanent = false): void {
 		const keys = Array.isArray(props) ? props : [props];
 		if (!permanent) {
 			for (const key of keys) {
@@ -400,7 +400,7 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	verifyChild(i: number, addition = 0): void {
+	protected verifyChild(i: number, addition = 0): void {
 		if (!Number.isInteger(i)) {
 			this.typeError('verifyChild', 'Number');
 		}
@@ -512,10 +512,10 @@ abstract class AstNode {
 	 * @param other 待比较的节点
 	 * @throws `Error` 不在同一个语法树
 	 */
-	compareDocumentPosition(this: AstNodeTypes, other: AstNodeTypes): number {
+	compareDocumentPosition(other: AstNodeTypes): number {
 		if (!(other instanceof AstNode)) {
 			this.typeError('compareDocumentPosition', 'AstNode');
-		} else if (this === other) {
+		} else if ((this as AstNode as AstNodeTypes) === other) {
 			return 0;
 		} else if (this.contains(other)) {
 			return -1;
@@ -524,7 +524,7 @@ abstract class AstNode {
 		} else if (this.getRootNode() !== other.getRootNode()) {
 			throw new Error('不在同一个语法树！');
 		}
-		const aAncestors = [...this.getAncestors().reverse(), this],
+		const aAncestors = [...this.getAncestors().reverse(), this as AstNode as AstNodeTypes],
 			bAncestors = [...other.getAncestors().reverse(), other],
 			depth = aAncestors.findIndex((ancestor, i) => bAncestors[i] !== ancestor),
 			commonAncestor = aAncestors[depth - 1]!,

@@ -10,7 +10,7 @@ abstract class DoubleUnderscoreToken extends hidden(NowikiBaseToken) {
 	declare name: string;
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return 2;
 	}
 

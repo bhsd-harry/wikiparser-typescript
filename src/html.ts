@@ -120,7 +120,7 @@ abstract class HtmlToken extends attributesParent(fixed(Token)) {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return this.#tag.length + (this.#closing ? 2 : 1);
 	}
 

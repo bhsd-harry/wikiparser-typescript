@@ -273,7 +273,7 @@ class Token extends AstElement {
 	}
 
 	/** @private */
-	afterBuild(): void {
+	protected afterBuild(): void {
 		if (this.type === 'root') {
 			for (const token of this.#accum) {
 				token.afterBuild();
@@ -497,7 +497,7 @@ class Token extends AstElement {
 	}
 
 	/** @private */
-	isPlain(): boolean {
+	protected isPlain(): boolean {
 		return this.constructor === Token;
 	}
 
@@ -549,7 +549,7 @@ class Token extends AstElement {
 	}
 
 	/** @private */
-	protectChildren(...args: (string | number | Ranges.Range)[]): void {
+	protected protectChildren(...args: (string | number | Ranges.Range)[]): void {
 		this.#protectedChildren.push(...new Ranges(args));
 	}
 
@@ -777,7 +777,7 @@ class Token extends AstElement {
 	}
 
 	/** @private */
-	cloneChildNodes(): AstNodeTypes[] {
+	protected cloneChildNodes(): AstNodeTypes[] {
 		return this.childNodes.map(child => child.cloneNode());
 	}
 

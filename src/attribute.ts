@@ -297,7 +297,7 @@ abstract class AttributeToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		if (this.#equal.includes('\0')) {
 			this.#equal = this.buildFromStr(this.#equal, 'string');
 		}
@@ -330,7 +330,7 @@ abstract class AttributeToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		return this.#equal ? this.#equal.length + (this.#quotes[0]?.length ?? 0) : 0;
 	}
 
@@ -401,7 +401,7 @@ abstract class AttributeToken extends fixed(Token) {
 	}
 
 	/** @private */
-	override hasAttribute(key: string): boolean {
+	protected override hasAttribute(key: string): boolean {
 		return key === 'equal' || key === 'quotes' || super.hasAttribute(key);
 	}
 

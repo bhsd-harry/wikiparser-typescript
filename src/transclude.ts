@@ -167,7 +167,7 @@ abstract class TranscludeToken extends Token {
 	}
 
 	/** @private */
-	override afterBuild(): void {
+	protected override afterBuild(): void {
 		if (this.modifier.includes('\0')) {
 			this.setAttribute('modifier', this.buildFromStr(this.modifier, 'string'));
 		}
@@ -246,12 +246,12 @@ abstract class TranscludeToken extends Token {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return this.modifier.length + 2;
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		return 1;
 	}
 
@@ -331,14 +331,14 @@ abstract class TranscludeToken extends Token {
 	 * @param i 插入位置
 	 */
 	override insertAt<T extends Inserted>(token: T & ParameterToken, i = this.length): InsertionReturn<T> {
-		super.insertAt(token, i);
+		super.insertAt(token as Inserted, i);
 		if (token.anon) {
-			this.#handleAnonArgChange(token);
+			this.#handleAnonArgChange(token as unknown as ParameterToken);
 		} else if (token.name) {
-			this.getArgs(token.name, false, false).add(token);
+			this.getArgs(token.name, false, false).add(token as unknown as ParameterToken);
 			this.#keys.add(token.name);
 		}
-		return token as Token as InsertionReturn<T>;
+		return token as unknown as InsertionReturn<T>;
 	}
 
 	/**
@@ -472,7 +472,7 @@ abstract class TranscludeToken extends Token {
 	}
 
 	/** @private */
-	override hasAttribute(key: string): boolean {
+	protected override hasAttribute(key: string): boolean {
 		return key === 'keys' || super.hasAttribute(key);
 	}
 

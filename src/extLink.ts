@@ -93,12 +93,12 @@ abstract class ExtLinkToken extends Token {
 	}
 
 	/** @private */
-	override getPadding(): number {
+	protected override getPadding(): number {
 		return 1;
 	}
 
 	/** @private */
-	override getGaps(): number {
+	protected override getGaps(): number {
 		this.#correct();
 		return this.#space.length;
 	}
