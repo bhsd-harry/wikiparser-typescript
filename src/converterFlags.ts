@@ -3,7 +3,7 @@ const {generateForChild} = lint_1;
 import * as Parser from '../index';
 import Token = require('.');
 import AtomToken = require('./atom');
-import type {Inserted, InsertionReturn, TokenAttributeGetter} from '../lib/node';
+import type {TokenAttributeGetter} from '../lib/node';
 
 const definedFlags = new Set(['A', 'T', 'R', 'D', '-', 'H', 'N']);
 
@@ -164,10 +164,10 @@ abstract class ConverterFlagsToken extends Token {
 	 * @param token 待插入的子节点
 	 * @param i 插入位置
 	 */
-	override insertAt<T extends Inserted>(token: T & AtomToken, i = this.length): InsertionReturn<T> {
-		super.insertAt(token as Inserted, i);
+	override insertAt<T extends AtomToken>(token: T, i = this.length): T {
+		super.insertAt(token, i);
 		this.#flags?.splice(i, 0, token.text().trim());
-		return token as InsertionReturn<T>;
+		return token;
 	}
 
 	/** 获取所有转换类型标记 */

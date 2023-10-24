@@ -5,6 +5,7 @@ import TrToken = require('../src/table/tr');
 import TdToken = require('../src/table/td');
 import DdToken = require('../src/nowiki/dd');
 import AstText = require('../lib/text');
+import TrBaseToken = require('../src/table/trBase');
 
 /**
  * 解析表格，注意`tr`和`td`包含开头的换行
@@ -37,7 +38,7 @@ const parseTable = (
 		} else {
 			const token = new Token(str, config, true, accum);
 			token.type = 'table-inter';
-			top.insertAt(token.setAttribute('stage', 3));
+			(top as TrBaseToken).insertAt(token.setAttribute('stage', 3));
 		}
 	};
 	for (const outLine of lines) {
@@ -89,7 +90,7 @@ const parseTable = (
 			// @ts-expect-error abstract class
 			const tr: TrToken = new TrToken(`\n${spaces}${row}`, attr, config, accum);
 			stack.push(top!, tr);
-			top!.insertAt(tr);
+			(top as TableToken).insertAt(tr);
 		} else {
 			if (top.type === 'td') {
 				top = stack.pop();
@@ -103,7 +104,7 @@ const parseTable = (
 			while (mt) {
 				// @ts-expect-error abstract class
 				const td: TdToken = new TdToken(lastSyntax, attr!.slice(lastIndex, mt.index), config, accum);
-				top!.insertAt(td);
+				(top as TrBaseToken).insertAt(td);
 				({lastIndex} = regex);
 				[lastSyntax] = mt as string[] as [string];
 				mt = regex.exec(attr!);
@@ -111,7 +112,7 @@ const parseTable = (
 			// @ts-expect-error abstract class
 			const td: TdToken = new TdToken(lastSyntax, attr!.slice(lastIndex), config, accum);
 			stack.push(top!, td);
-			top!.insertAt(td);
+			(top as TrBaseToken).insertAt(td);
 		}
 	}
 	return out.slice(1);

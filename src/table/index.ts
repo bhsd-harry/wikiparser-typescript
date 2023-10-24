@@ -14,7 +14,6 @@ import TdToken = require('./td');
 import type {TdAttrs} from './td';
 import SyntaxToken = require('../syntax');
 import AttributesToken = require('../attributes');
-import type {Inserted, InsertionReturn} from '../../lib/node';
 
 const closingPattern = /^\n[^\S\n]*(?:\|\}|\{\{\s*!\s*\}\}\}|\{\{\s*!\)\s*\}\})$/u;
 
@@ -202,7 +201,7 @@ abstract class TableToken extends TrBaseToken {
 	 * @param i 插入位置
 	 * @throws `SyntaxError` 表格的闭合部分非法
 	 */
-	override insertAt<T extends Inserted>(token: T, i = this.length): InsertionReturn<T> {
+	override insertAt<T extends Token>(token: T, i = this.length): T {
 		const previous = this.childNodes.at(i - 1);
 		if (typeof token !== 'string' && token.type === 'td' && previous?.type === 'tr') {
 			Parser.warn('改为将单元格插入当前行。');

@@ -8,7 +8,7 @@ import Token = require('.');
 import ParameterToken = require('./parameter');
 import AtomToken = require('./atom');
 import SyntaxToken = require('./syntax');
-import type {Inserted, InsertionReturn, TokenAttributeGetter} from '../lib/node';
+import type {TokenAttributeGetter} from '../lib/node';
 
 /**
  * 模板或魔术字
@@ -330,15 +330,15 @@ abstract class TranscludeToken extends Token {
 	 * @param token 待插入的子节点
 	 * @param i 插入位置
 	 */
-	override insertAt<T extends Inserted>(token: T & ParameterToken, i = this.length): InsertionReturn<T> {
-		super.insertAt(token as Inserted, i);
+	override insertAt<T extends ParameterToken>(token: T, i = this.length): T {
+		super.insertAt(token, i);
 		if (token.anon) {
 			this.#handleAnonArgChange(token as unknown as ParameterToken);
 		} else if (token.name) {
 			this.getArgs(token.name, false, false).add(token as unknown as ParameterToken);
 			this.#keys.add(token.name);
 		}
-		return token as unknown as InsertionReturn<T>;
+		return token;
 	}
 
 	/**

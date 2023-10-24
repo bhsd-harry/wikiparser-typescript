@@ -7,7 +7,6 @@ import * as Parser from '../index';
 import Token = require('.');
 import AtomToken = require('./atom');
 import AttributeToken = require('./attribute');
-import type {Inserted, InsertionReturn} from '../lib/node';
 
 const stages = {'ext-attrs': 0, 'html-attrs': 2, 'table-attrs': 3};
 
@@ -275,7 +274,7 @@ abstract class AttributesToken extends Token {
 	 * @param i 插入位置
 	 * @throws `RangeError` 不是AttributeToken或标签不匹配
 	 */
-	override insertAt<T extends Inserted>(token: T & AttributeToken, i = this.length): InsertionReturn<T> {
+	override insertAt<T extends AttributeToken>(token: T, i = this.length): T {
 		if (!(token instanceof AttributeToken)) {
 			throw new RangeError(`${this.constructor.name}只能插入AttributeToken！`);
 		} else if (token.type !== this.type.slice(0, -1) || token.tag !== this.name) {
@@ -291,7 +290,7 @@ abstract class AttributesToken extends Token {
 		if (this.closest('parameter')) {
 			token.escape();
 		}
-		super.insertAt(token as Inserted, i);
+		super.insertAt(token, i);
 		const {previousVisibleSibling, nextVisibleSibling} = token,
 			type = `${this.type.slice(0, -1)}-dirty` as 'ext-attr-dirty' | 'html-attr-dirty' | 'table-attr-dirty',
 			config = this.getAttribute('config'),
@@ -302,7 +301,7 @@ abstract class AttributesToken extends Token {
 		if (previousVisibleSibling && !/\s$/u.test(String(previousVisibleSibling))) {
 			super.insertAt(Parser.run(() => new AtomToken(' ', type, config, [], acceptable)), i);
 		}
-		return token as T as InsertionReturn<T>;
+		return token;
 	}
 
 	/**

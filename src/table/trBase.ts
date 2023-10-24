@@ -7,7 +7,7 @@ import TdToken = require('./td');
 import SyntaxToken = require('../syntax');
 import ArgToken = require('../arg');
 import TranscludeToken = require('../transclude');
-import type {AstNodeTypes, Inserted, InsertionReturn} from '../../lib/node';
+import type {AstNodeTypes} from '../../lib/node';
 
 declare interface TableCoords {
 	row: number;
@@ -37,7 +37,7 @@ abstract class TrBaseToken extends TableBaseToken {
 		if (!inter) {
 			return errors;
 		}
-		const first = inter.childNodes.find(child => child.text().trim()),
+		const first = (inter.childNodes as AstNodeTypes[]).find(child => child.text().trim()),
 			tdPattern = /^\s*(?:!|\{\{\s*![!-]?\s*\}\})/u;
 		if (!first || tdPattern.test(String(first))
 			|| first.type === 'arg' && tdPattern.test((first as ArgToken).default || '')
@@ -112,7 +112,7 @@ abstract class TrBaseToken extends TableBaseToken {
 	 * @param token 待插入的子节点
 	 * @param i 插入位置
 	 */
-	override insertAt<T extends Inserted>(token: T, i = this.length): InsertionReturn<T> {
+	override insertAt<T extends Token>(token: T, i = this.length): T {
 		if (!Parser.running && !(token instanceof TrBaseToken)) {
 			this.typeError('insertAt', 'TrToken');
 		}
@@ -120,7 +120,7 @@ abstract class TrBaseToken extends TableBaseToken {
 		if (token instanceof TdToken && token.isIndependent() && child instanceof TdToken) {
 			child.independence();
 		}
-		return super.insertAt(token, i);
+		return super.insertAt(token, i) as T;
 	}
 
 	/** 获取行数 */

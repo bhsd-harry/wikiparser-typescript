@@ -1,4 +1,3 @@
-import type {Inserted, InsertionReturn} from '../lib/node';
 import type * as Ranges from '../lib/ranges';
 
 declare global {
@@ -15,6 +14,6 @@ declare global {
 		length: number;
 		toString(selector?: string, separator?: string): string;
 		text(separator?: string): string;
-		insertAt<T extends Inserted>(token: T, i?: number): InsertionReturn<T>;
+		insertAt(token: unknown, i?: number): unknown;
 	};
 }

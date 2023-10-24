@@ -39,9 +39,7 @@
 
 import string_1 = require('../util/string');
 const {text} = string_1;
-import type {
-	AstNodeTypes, Inserted, InsertionReturn, TokenAttributeGetter, TokenAttributeSetter, CaretPosition,
-} from '../lib/node';
+import type {AstNodeTypes, TokenAttributeGetter, TokenAttributeSetter, CaretPosition} from '../lib/node';
 import * as assert from 'assert/strict';
 import * as Ranges from '../lib/ranges';
 import * as Parser from '../index';
@@ -508,8 +506,19 @@ class Token extends AstElement {
 	 * @param i 插入位置
 	 * @throws `RangeError` 不可插入的子节点
 	 */
-	override insertAt<T extends Inserted>(child: T, i = this.length): InsertionReturn<T> {
-		const token = (typeof child === 'string' ? new AstText(child) : child) as InsertionReturn<T>;
+	override insertAt(child: string, i?: number): AstText;
+	/** @ignore */
+	override insertAt<T extends AstNodeTypes>(child: T, i?: number): T;
+
+	/**
+	 * @override
+	 * @browser
+	 * @param child 待插入的子节点
+	 * @param i 插入位置
+	 * @throws `RangeError` 不可插入的子节点
+	 */
+	override insertAt<T extends AstNodeTypes>(child: T | string, i = this.length): T | AstText {
+		const token = typeof child === 'string' ? new AstText(child) : child;
 		if (!Parser.running && this.#acceptable) {
 			const acceptableIndices = Object.fromEntries(
 					Object.entries(this.#acceptable).map(([str, ranges]) => [str, ranges.applyTo(this.length + 1)]),

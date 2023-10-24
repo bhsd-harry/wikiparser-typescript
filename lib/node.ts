@@ -6,8 +6,6 @@ import * as Parser from '../index';
 import type * as Ranges from './ranges';
 
 declare type AstNodeTypes = import('./text') | import('../src');
-declare type Inserted = string | AstNodeTypes;
-declare type InsertionReturn<T extends Inserted> = T extends string ? import('./text') : T;
 declare type TokenAttribute<T extends string> =
 	T extends 'stage' ? number :
 	T extends 'config' ? Parser.Config :
@@ -341,14 +339,14 @@ abstract class AstNode {
 	 * @param offset 插入的相对位置
 	 * @throws `Error` 不存在父节点
 	 */
-	#insertAdjacent(nodes: Inserted[], offset: number): void {
+	#insertAdjacent(nodes: (AstNodeTypes | string)[], offset: number): void {
 		const {parentNode} = this;
 		if (!parentNode) {
 			throw new Error('不存在父节点！');
 		}
 		const i = parentNode.childNodes.indexOf(this as AstNode as AstNodeTypes) + offset;
 		for (let j = 0; j < nodes.length; j++) {
-			parentNode.insertAt(nodes[j]!, i + j);
+			parentNode.insertAt(nodes[j] as AstNodeTypes, i + j);
 		}
 	}
 
@@ -356,7 +354,7 @@ abstract class AstNode {
 	 * 在后方批量插入兄弟节点
 	 * @param nodes 插入节点
 	 */
-	after(...nodes: Inserted[]): void {
+	after(...nodes: (AstNodeTypes | string)[]): void {
 		this.#insertAdjacent(nodes, 1);
 	}
 
@@ -364,7 +362,7 @@ abstract class AstNode {
 	 * 在前方批量插入兄弟节点
 	 * @param nodes 插入节点
 	 */
-	before(...nodes: Inserted[]): void {
+	before(...nodes: (AstNodeTypes | string)[]): void {
 		this.#insertAdjacent(nodes, 0);
 	}
 
@@ -384,7 +382,7 @@ abstract class AstNode {
 	 * 将当前节点批量替换为新的节点
 	 * @param nodes 插入节点
 	 */
-	replaceWith(...nodes: Inserted[]): void {
+	replaceWith(...nodes: (AstNodeTypes | string)[]): void {
 		this.after(...nodes);
 		this.remove();
 	}
@@ -567,8 +565,6 @@ abstract class AstNode {
 declare namespace AstNode {
 	export type {
 		AstNodeTypes,
-		Inserted,
-		InsertionReturn,
 		TokenAttributeGetter,
 		TokenAttributeSetter,
 		Dimension,

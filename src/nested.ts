@@ -7,7 +7,6 @@ import ExtToken = require('./tagPair/ext');
 import NoincludeToken = require('./nowiki/noinclude');
 import CommentToken = require('./nowiki/comment');
 import AttributesToken = require('./attributes');
-import type {Inserted, InsertionReturn} from '../lib/node';
 
 /**
  * 嵌套式的扩展标签
@@ -99,7 +98,7 @@ abstract class NestedToken extends Token {
 	 * @param token 待插入的子节点
 	 * @param i 插入位置
 	 */
-	override insertAt<T extends Inserted>(token: T, i = this.length): InsertionReturn<T> {
+	override insertAt<T extends Token>(token: T, i = this.length): T {
 		return typeof token !== 'string' && token.type === 'ext' && !this.#tags.includes(token.name)
 			? this.typeError(`${this.constructor.name}只能以${this.#tags.join('或')}标签作为子节点！`)
 			: super.insertAt(token, i);

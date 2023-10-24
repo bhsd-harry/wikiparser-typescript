@@ -6,7 +6,6 @@ import * as Parser from '../index';
 import Token = require('.');
 import AtomToken = require('./atom');
 import HiddenToken = require('./hidden');
-import type {Inserted, InsertionReturn} from '../lib/node';
 
 /**
  * `{{{}}}`包裹的参数
@@ -167,18 +166,18 @@ abstract class ArgToken extends Token {
 	 * @throws `RangeError` 不可插入多余子节点
 	 * @throws `TypeError` 不可插入文本节点
 	 */
-	override insertAt<T extends Inserted>(token: T & Token, i = this.length): InsertionReturn<T> {
+	override insertAt<T extends Token>(token: T, i = this.length): T {
 		const j = i < 0 ? i + this.length : i;
 		if (j > 1) {
 			throw new RangeError(`${this.constructor.name}不可插入多余的子节点！`);
 		} else if (typeof token === 'string') {
 			throw new TypeError(`${this.constructor.name}不可插入文本节点！`);
 		}
-		super.insertAt(token as Inserted, i);
+		super.insertAt(token, i);
 		if (j === 1) {
 			token.type = 'arg-default';
 		}
-		return token as InsertionReturn<T>;
+		return token;
 	}
 
 	/**

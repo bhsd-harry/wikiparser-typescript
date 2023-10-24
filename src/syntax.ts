@@ -4,7 +4,7 @@ const {undo} = debug_1;
 import string_1 = require('../util/string');
 const {text} = string_1;
 import Token = require('.');
-import type {TokenAttributeGetter, Inserted} from '../lib/node';
+import type {TokenAttributeGetter, AstNodeTypes} from '../lib/node';
 
 declare type SyntaxTypes = 'plain' | 'heading-trail' | 'magic-word-name' | 'table-syntax';
 
@@ -74,7 +74,7 @@ class SyntaxToken extends Token {
 	 * @override
 	 * @param elements 待替换的子节点
 	 */
-	override replaceChildren(...elements: Inserted[]): void {
+	override replaceChildren(...elements: (AstNodeTypes | string)[]): void {
 		if (this.#pattern.test(text(elements))) {
 			Parser.run(() => {
 				super.replaceChildren(...elements);

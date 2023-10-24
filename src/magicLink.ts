@@ -4,7 +4,6 @@ import type {BoundingRect} from '../util/lint';
 import * as Parser from '../index';
 import Token = require('.');
 import ParameterToken = require('./parameter');
-import type {Inserted} from '../lib/node';
 
 /**
  * 自由外链
@@ -143,7 +142,7 @@ class MagicLinkToken extends Token {
 		if (length !== 1 || freeExtLink!.type !== 'free-ext-link') {
 			throw new SyntaxError(`非法的自由外链目标：${strUrl}`);
 		}
-		this.replaceChildren(...freeExtLink!.childNodes as unknown[] as Inserted[]);
+		this.replaceChildren(...freeExtLink!.childNodes);
 	}
 
 	/** 是否是模板或魔术字参数 */
