@@ -469,12 +469,12 @@ class Token extends AstElement {
 				if (this.#stage === 0 && this.type === 'root') {
 					this.#accum.shift();
 				}
-				this.#stage = value as TokenAttributeSetter<'stage'>;
+				this.#stage = (value as TokenAttributeSetter<'stage'>)!;
 				return this;
 			case 'acceptable': {
 				const acceptable: Record<string, Ranges> = {};
 				if (value) {
-					for (const [k, v] of Object.entries(value)) {
+					for (const [k, v] of Object.entries(value as unknown as Acceptable)) {
 						if (k.startsWith('Stage-')) {
 							for (let i = 0; i <= Number(k.slice(6)); i++) {
 								for (const type of aliases[i]!) {

@@ -140,6 +140,17 @@ abstract class AttributesToken extends Token {
 		}
 	}
 
+	/** @private */
+	override afterBuild(): void {
+		if (this.type === 'table-attrs') {
+			const {parentNode} = this as this & {parentNode?: import('./table/trBase') | import('./table/td')};
+			this.setAttribute(
+				'name',
+				parentNode?.type === 'td' && parentNode.subtype === 'caption' ? 'caption' : parentNode?.type,
+			);
+		}
+	}
+
 	/**
 	 * 所有指定属性名的AttributeToken
 	 * @browser

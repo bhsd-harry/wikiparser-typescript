@@ -26,7 +26,7 @@ declare type TokenAttributeGetter<T extends string> =
 	T extends 'acceptable' ? Record<string, Ranges> | undefined : TokenAttribute<T>;
 
 declare type TokenAttributeSetter<T extends string> =
-	T extends 'acceptable' ? Acceptable | undefined : TokenAttribute<T>;
+	T extends 'acceptable' ? Acceptable | undefined : TokenAttribute<T> | undefined;
 declare interface Dimension {
 	height: number;
 	width: number;
