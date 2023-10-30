@@ -186,7 +186,7 @@ abstract class HtmlToken extends attributesParent(fixed(Token)) {
 	 * @throws `SyntaxError` 无效自封闭标签
 	 * @throws `SyntaxError` 未闭合的标签
 	 */
-	findMatchingTag(): HtmlToken | undefined {
+	findMatchingTag(): this | undefined {
 		const {html} = this.getAttribute('config'),
 			{name: tagName, parentNode} = this,
 			string = noWrap(String(this));
@@ -205,7 +205,7 @@ abstract class HtmlToken extends attributesParent(fixed(Token)) {
 				? childNodes.slice(0, i).reverse().filter(({type, name}) => type === 'html' && name === tagName)
 				: childNodes.slice(i + 1).filter(({type, name}) => type === 'html' && name === tagName);
 		let imbalance = this.#closing ? -1 : 1;
-		for (const token of siblings as HtmlToken[]) {
+		for (const token of siblings as this[]) {
 			if (token.closing) {
 				imbalance--;
 			} else {
@@ -267,7 +267,7 @@ abstract class HtmlToken extends attributesParent(fixed(Token)) {
 		const {childNodes} = parentNode,
 			i = childNodes.indexOf(this),
 			prevSiblings = childNodes.slice(0, i)
-				.filter(({type, name}) => type === 'html' && name === tagName) as HtmlToken[],
+				.filter(({type, name}) => type === 'html' && name === tagName) as this[],
 			imbalance = prevSiblings.reduce((acc, {closing}) => acc + (closing ? 1 : -1), 0);
 		if (imbalance < 0) {
 			this.#selfClosing = false;

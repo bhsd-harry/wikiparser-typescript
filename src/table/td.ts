@@ -125,9 +125,9 @@ abstract class TdToken extends fixed(TableBaseToken) {
 		if (previousSibling?.type !== 'td') {
 			return {subtype, escape: esc, correction: true};
 		}
-		const result = (previousSibling as TdToken).getSyntax();
+		const result = (previousSibling as this).getSyntax();
 		result.escape ||= esc;
-		result.correction = (previousSibling as TdToken).lastChild
+		result.correction = (previousSibling as this).lastChild
 			.toString('comment, ext, include, noinclude, arg, template, magic-word')
 			.includes('\n');
 		if (subtype === 'th' && result.subtype !== 'th') {

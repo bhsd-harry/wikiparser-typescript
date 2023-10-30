@@ -591,12 +591,7 @@
 		"unicorn/prefer-negative-index": 2,
 		"unicorn/prefer-optional-catch-binding": 2,
 		"unicorn/prefer-prototype-methods": 2,
-		"unicorn/prefer-spread": [
-			2,
-			{
-				"concat": "certain"
-			}
-		],
+		"unicorn/prefer-spread": 2,
 		"unicorn/prefer-string-replace-all": 2,
 		"unicorn/prefer-string-starts-ends-with": 2,
 		"unicorn/prefer-switch": 2,
@@ -1050,9 +1045,6 @@
 			"tagNamePreference": {
 				"augments": "extends"
 			},
-			"overrideReplacesDocs": [
-				"require-description"
-			],
 			"structuredTags": {
 				"browser": {
 					"name": false,

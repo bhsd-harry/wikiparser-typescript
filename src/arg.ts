@@ -192,7 +192,7 @@ abstract class ArgToken extends Token {
 		if (length !== 1 || arg!.type !== 'arg' || arg!.length !== 1) {
 			throw new SyntaxError(`非法的参数名称：${noWrap(n)}`);
 		}
-		const {firstChild} = arg as ArgToken;
+		const {firstChild} = arg as this;
 		(arg as Token).destroy();
 		this.firstChild.safeReplaceWith(firstChild);
 	}
@@ -210,7 +210,7 @@ abstract class ArgToken extends Token {
 			throw new SyntaxError(`非法的参数预设值：${noWrap(v)}`);
 		}
 		const {childNodes: [, oldDefault]} = this,
-			{lastChild} = arg as ArgToken;
+			{lastChild} = arg as this;
 		(arg as Token).destroy();
 		if (oldDefault) {
 			oldDefault.safeReplaceWith(lastChild);

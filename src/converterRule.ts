@@ -223,7 +223,7 @@ abstract class ConverterRuleToken extends Token {
 		if (converter!.length !== 2 || converterRule.length !== 2) {
 			throw new SyntaxError(`非法的转换目标：${noWrap(toStr)}`);
 		}
-		const {lastChild} = converterRule as ConverterRuleToken;
+		const {lastChild} = converterRule as this;
 		converterRule.destroy();
 		this.lastChild.safeReplaceWith(lastChild);
 	}

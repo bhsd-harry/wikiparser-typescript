@@ -301,19 +301,10 @@ abstract class AstNode {
 	}
 
 	/** @private */
-	protected seal(props: string | string[], permanent = false): void {
-		const keys = Array.isArray(props) ? props : [props];
-		if (!permanent) {
-			for (const key of keys) {
-				this.#optional.add(key);
-			}
-		}
-		for (const key of keys) {
-			Object.defineProperty(this, key, {
-				// @ts-expect-error noImplicitAny
-				writable: false, enumerable: !permanent && Boolean(this[key]), configurable: !permanent,
-			});
-		}
+	protected seal(key: string): void {
+		this.#optional.add(key);
+		// @ts-expect-error noImplicitAny
+		Object.defineProperty(this, key, {writable: false, enumerable: Boolean(this[key]), configurable: true});
 	}
 
 	/**

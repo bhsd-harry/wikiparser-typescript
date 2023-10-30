@@ -431,7 +431,7 @@ abstract class TranscludeToken extends Token {
 				i++;
 			} else {
 				try {
-					const possibleValues = (first as TranscludeToken).getPossibleValues();
+					const possibleValues = (first as this).getPossibleValues();
 					queue.splice(i, 1, ...possibleValues);
 					i += possibleValues.length;
 				} catch {
@@ -583,7 +583,7 @@ abstract class TranscludeToken extends Token {
 			wikitext = `{{${templateLike ? ':T|' : 'lc:'}${val}}}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: transclude} = root,
-			{type, name, length: transcludeLength, lastChild} = transclude as TranscludeToken & {
+			{type, name, length: transcludeLength, lastChild} = transclude as this & {
 				lastChild: ParameterToken;
 			},
 			targetType = templateLike ? 'template' : 'magic-word',
@@ -615,7 +615,7 @@ abstract class TranscludeToken extends Token {
 		const wikitext = `{{:T|${key}=${value}}}`,
 			root = Parser.parse(wikitext, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: template} = root,
-			{type, name, length: templateLength, lastChild: parameter} = template as TranscludeToken & {
+			{type, name, length: templateLength, lastChild: parameter} = template as this & {
 				lastChild: ParameterToken;
 			};
 		if (length !== 1 || type !== 'template' || name !== 'T' || templateLength !== 2 || parameter.name !== key) {

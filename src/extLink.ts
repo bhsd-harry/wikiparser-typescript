@@ -154,7 +154,7 @@ abstract class ExtLinkToken extends Token {
 		if (length !== 1 || extLink!.type !== 'ext-link' || extLink!.length !== 1) {
 			throw new SyntaxError(`非法的外链目标：${strUrl}`);
 		}
-		const {firstChild} = extLink as ExtLinkToken;
+		const {firstChild} = extLink as this;
 		(extLink as Token)!.destroy();
 		this.firstChild.safeReplaceWith(firstChild);
 	}
@@ -171,7 +171,7 @@ abstract class ExtLinkToken extends Token {
 		if (length !== 1 || extLink!.type !== 'ext-link' || (extLink as Token).length !== 2) {
 			throw new SyntaxError(`非法的外链文字：${noWrap(str)}`);
 		}
-		const {lastChild} = extLink as ExtLinkToken;
+		const {lastChild} = extLink as this;
 		if (this.length === 1) {
 			this.insertAt(lastChild);
 		} else {
