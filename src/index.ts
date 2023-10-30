@@ -509,14 +509,7 @@ class Token extends AstElement {
 	override insertAt(child: string, i?: number): AstText;
 	/** @ignore */
 	override insertAt<T extends AstNodeTypes>(child: T, i?: number): T;
-
-	/**
-	 * @override
-	 * @browser
-	 * @param child 待插入的子节点
-	 * @param i 插入位置
-	 * @throws `RangeError` 不可插入的子节点
-	 */
+	/** @ignore */
 	override insertAt<T extends AstNodeTypes>(child: T | string, i = this.length): T | AstText {
 		const token = typeof child === 'string' ? new AstText(child) : child;
 		if (!Parser.running && this.#acceptable) {
@@ -889,6 +882,12 @@ class Token extends AstElement {
 		return i === childNodes.length
 			? parentNode.findEnclosingHtml(lcTag)
 			: [opening, childNodes[i] as import('./html')];
+	}
+
+	/** 获取全部分类 */
+	getCategories(): [string, string | undefined][] {
+		const categories = this.querySelectorAll('category') as import('./link/category')[];
+		return categories.map(({name, sortkey}) => [name, sortkey]);
 	}
 
 	/**

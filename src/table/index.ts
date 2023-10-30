@@ -234,14 +234,7 @@ abstract class TableToken extends TrBaseToken {
 	getNthRow(n: number, force?: boolean, insert?: false): TrBaseToken | undefined;
 	/** @ignore */
 	getNthRow(n: number, force: boolean, insert: true): TrBaseToken | SyntaxToken | undefined;
-
-	/**
-	 * 获取第n行
-	 * @param n 行号
-	 * @param force 是否将表格自身视为第一行
-	 * @param insert 是否用于判断插入新行的位置
-	 * @throws `RangeError` 不存在该行
-	 */
+	/** @ignore */
 	getNthRow(n: number, force = false, insert = false): TrBaseToken | SyntaxToken | undefined {
 		if (!Number.isInteger(n)) {
 			this.typeError('getNthRow', 'Number');

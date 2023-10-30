@@ -639,11 +639,7 @@ abstract class AstElement extends AstNode {
 	appendChild(node: string): AstText;
 	/** @ignore */
 	appendChild<T extends AstNodeTypes>(node: T): T;
-
-	/**
-	 * 在末尾插入子节点
-	 * @param node 插入节点
-	 */
+	/** @ignore */
 	appendChild<T extends AstNodeTypes>(node: T | string): T | AstText {
 		return this.insertAt(node as T);
 	}
@@ -656,12 +652,7 @@ abstract class AstElement extends AstNode {
 	insertBefore(child: string, reference?: AstNodeTypes): AstText;
 	/** @ignore */
 	insertBefore<T extends AstNodeTypes>(child: T, reference?: AstNodeTypes): T;
-
-	/**
-	 * 在指定位置前插入子节点
-	 * @param child 插入节点
-	 * @param reference 指定位置处的子节点
-	 */
+	/** @ignore */
 	insertBefore<T extends AstNodeTypes>(child: T | string, reference?: AstNodeTypes): T | AstText {
 		return reference === undefined
 			? this.insertAt(child as T)

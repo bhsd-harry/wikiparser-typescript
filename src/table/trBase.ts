@@ -152,13 +152,7 @@ abstract class TrBaseToken extends TableBaseToken {
 	getNthCol(n: number, insert?: false): TdToken | undefined;
 	/** @ignore */
 	getNthCol(n: number, insert: true): TdToken | import('./tr') | SyntaxToken | undefined;
-
-	/**
-	 * 获取第n列
-	 * @param n 列号
-	 * @param insert 是否用于判断插入新列的位置
-	 * @throws `RangeError` 不存在对应单元格
-	 */
+	/** @ignore */
 	getNthCol(n: number, insert = false): TdToken | import('./tr') | SyntaxToken | undefined {
 		if (!Number.isInteger(n)) {
 			this.typeError('getNthCol', 'Number');

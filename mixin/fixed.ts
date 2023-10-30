@@ -29,13 +29,7 @@ const fixed = <S extends AstConstructor>(constructor: S) => {
 		override insertAt(token: string, i?: number): AstText;
 		/** @ignore */
 		override insertAt<T extends AstNodeTypes>(token: T, i?: number): T;
-
-		/**
-		 * @override
-		 * @param token 待插入的子节点
-		 * @param i 插入位置
-		 * @throws `Error`
-		 */
+		/** @ignore */
 		override insertAt<T extends AstNodeTypes>(token: T | string, i = this.length): T | AstText {
 			if (Parser.running) {
 				return super.insertAt(token, i) as T | AstText;
