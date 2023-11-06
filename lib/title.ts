@@ -1,5 +1,5 @@
 import string_1 = require('../util/string');
-const {decodeHtml} = string_1;
+const {decodeHtml, escapeRegExp} = string_1;
 import * as Parser from '../index';
 
 /** MediaWiki页面标题对象 */
@@ -12,10 +12,14 @@ class Title {
 	fragment;
 	/** @browser */
 	encoded = false;
-	title = '';
 	main = '';
 	prefix = '';
 	interwiki = '';
+
+	/** 完整标题 */
+	get title(): string {
+		return `${this.interwiki && `${this.interwiki}:`}${this.prefix}${this.main.replaceAll(' ', '_')}`;
+	}
 
 	/**
 	 * @browser
@@ -75,12 +79,22 @@ class Title {
 		this.fragment = fragment;
 		this.main = title && `${title[0]!.toUpperCase()}${title.slice(1)}`;
 		this.prefix = `${namespace}${namespace && ':'}`;
-		this.title = `${iw ? `${this.interwiki}:` : ''}${this.prefix}${this.main.replaceAll(' ', '_')}`;
 	}
 
 	/** 完整链接 */
 	toString(): string {
 		return `${this.title}${this.fragment === undefined ? '' : `#${this.fragment}`}`;
+	}
+
+	/**
+	 * 转换
+	 * @param conversionTable 单向转换表
+	 */
+	autoConvert(conversionTable: Map<string, string>): void {
+		if (conversionTable.size > 0) {
+			const regex = new RegExp([...conversionTable.keys()].map(escapeRegExp).join('|'), 'gu');
+			this.main = this.main.replace(regex, p => conversionTable.get(p)!);
+		}
 	}
 }
 

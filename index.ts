@@ -32,6 +32,7 @@ declare interface Parser {
 	config: string | Config;
 	/** @browser */
 	i18n: string | Record<string, string> | undefined;
+	conversionTable: Map<string, string>;
 
 	/** @private */
 	readonly MAX_STAGE: number;
@@ -131,6 +132,7 @@ const rootRequire = (file: string, dir = ''): unknown => require(`${file.include
 const Parser: Parser = {
 	config: 'default',
 	i18n: undefined,
+	conversionTable: new Map(),
 
 	MAX_STAGE: 11,
 
@@ -286,7 +288,7 @@ const Parser: Parser = {
 		 * 重建部分属性值
 		 * @param keys 属性键
 		 */
-		const build = (keys: ['title', 'main', 'fragment']): void => {
+		const build = (keys: ['main', 'fragment']): void => {
 			for (const key of keys) {
 				if (titleObj[key]?.includes('\0')) {
 					titleObj[key] = token.buildFromStr(titleObj[key]!, 'text');
@@ -294,8 +296,9 @@ const Parser: Parser = {
 			}
 		};
 		this.run(() => {
-			build(['title', 'main', 'fragment']);
+			build(['main', 'fragment']);
 		});
+		titleObj.autoConvert(this.conversionTable);
 		return titleObj;
 	},
 
@@ -445,7 +448,7 @@ const Parser: Parser = {
 
 const def: PropertyDescriptorMap = {},
 	immutable = new Set(['MAX_STAGE', 'aliases', 'typeAliases', 'promises']),
-	enumerable = new Set(['config', 'normalizeTitle', 'parse', 'isInterwiki']);
+	enumerable = new Set(['config', 'conversionTable', 'normalizeTitle', 'parse', 'isInterwiki']);
 for (const key in Parser) {
 	if (immutable.has(key)) {
 		def[key] = {enumerable: false, writable: false};
