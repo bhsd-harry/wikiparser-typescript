@@ -33,6 +33,7 @@ declare interface Parser {
 	/** @browser */
 	i18n: string | Record<string, string> | undefined;
 	conversionTable: Map<string, string>;
+	redirects: Map<string, string>;
 
 	/** @private */
 	readonly MAX_STAGE: number;
@@ -133,6 +134,7 @@ const Parser: Parser = {
 	config: 'default',
 	i18n: undefined,
 	conversionTable: new Map(),
+	redirects: new Map(),
 
 	MAX_STAGE: 11,
 
@@ -299,6 +301,7 @@ const Parser: Parser = {
 			build(['main', 'fragment']);
 		});
 		titleObj.autoConvert(this.conversionTable);
+		titleObj.redirects = this.redirects;
 		return titleObj;
 	},
 
@@ -448,7 +451,7 @@ const Parser: Parser = {
 
 const def: PropertyDescriptorMap = {},
 	immutable = new Set(['MAX_STAGE', 'aliases', 'typeAliases', 'promises']),
-	enumerable = new Set(['config', 'conversionTable', 'normalizeTitle', 'parse', 'isInterwiki']);
+	enumerable = new Set(['config', 'conversionTable', 'redirects', 'normalizeTitle', 'parse', 'isInterwiki']);
 for (const key in Parser) {
 	if (immutable.has(key)) {
 		def[key] = {enumerable: false, writable: false};

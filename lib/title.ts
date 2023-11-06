@@ -15,10 +15,12 @@ class Title {
 	main = '';
 	prefix = '';
 	interwiki = '';
+	redirects = new Map<string, string>();
 
 	/** 完整标题 */
 	get title(): string {
-		return `${this.interwiki && `${this.interwiki}:`}${this.prefix}${this.main.replaceAll(' ', '_')}`;
+		const title = `${this.interwiki && `${this.interwiki}:`}${this.prefix}${this.main.replaceAll(' ', '_')}`;
+		return this.redirects.get(title) ?? title;
 	}
 
 	/**
@@ -92,7 +94,7 @@ class Title {
 	 */
 	autoConvert(conversionTable: Map<string, string>): void {
 		if (conversionTable.size > 0) {
-			const regex = new RegExp([...conversionTable.keys()].map(escapeRegExp).join('|'), 'gu');
+			const regex = new RegExp([...conversionTable.keys()].sort().reverse().map(escapeRegExp).join('|'), 'gu');
 			this.main = this.main.replace(regex, p => conversionTable.get(p)!);
 		}
 	}
