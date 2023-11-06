@@ -73,14 +73,14 @@ abstract class LinkToken extends LinkBaseToken {
 			include = this.getAttribute('include'),
 			root = Parser.parse(`[[${lang}:${strLink}]]`, include, 6, config),
 			{length, firstChild: wikiLink} = root;
-		if (length !== 1 || wikiLink?.type !== 'link' || wikiLink.length !== 1) {
+		if (length !== 1 || wikiLink!.type !== 'link' || wikiLink!.length !== 1) {
 			throw new SyntaxError(`非法的跨语言链接目标：${lang}:${strLink}`);
 		}
 		const {interwiki, firstChild} = wikiLink as this;
 		if (interwiki !== lang.toLowerCase()) {
 			throw new SyntaxError(`非法的跨语言链接目标：${lang}:${strLink}`);
 		}
-		wikiLink.destroy();
+		(wikiLink as this).destroy();
 		this.firstChild.safeReplaceWith(firstChild);
 	}
 
@@ -98,13 +98,13 @@ abstract class LinkToken extends LinkBaseToken {
 				frag === undefined ? '' : `#${frag}`
 			}]]`, include, 6, config),
 			{length, firstChild: wikiLink} = root;
-		if (length !== 1 || wikiLink?.type !== 'link' || wikiLink.length !== 1) {
+		if (length !== 1 || wikiLink!.type !== 'link' || wikiLink!.length !== 1) {
 			throw new SyntaxError(`非法的 fragment：${frag ?? ''}`);
 		} else if (page) {
 			Parser.warn(`${this.constructor.name}.setFragment 方法会同时规范化页面名！`);
 		}
 		const {firstChild} = wikiLink as this;
-		wikiLink.destroy();
+		(wikiLink as this).destroy();
 		this.firstChild.safeReplaceWith(firstChild);
 	}
 
