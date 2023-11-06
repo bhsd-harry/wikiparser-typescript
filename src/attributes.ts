@@ -206,7 +206,7 @@ abstract class AttributesToken extends Token {
 				});
 			} else if (attr instanceof AttributeToken) {
 				const {name} = attr;
-				if (name in attrs) {
+				if (Object.hasOwn(attrs, name)) {
 					duplicated.add(name);
 					attrs[name]!.push(attr);
 				} else if (name !== 'class') {

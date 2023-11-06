@@ -75,7 +75,7 @@ const parseBrackets = (wikitext: string, config = Parser.getConfig(), accum: Tok
 					// @ts-expect-error absstract class
 					new TranscludeToken(parts![0]![0], parts!.slice(1), config, accum);
 					const name = removeComment(parts![0]![0]!).trim();
-					if (name in marks) {
+					if (Object.hasOwn(marks, name)) {
 						ch = marks[name]!; // 标记{{!}}等
 					} else if (/^(?:filepath|(?:full|canonical)urle?):.|^server$/iu.test(name)) {
 						ch = 'm';
