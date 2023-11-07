@@ -299,7 +299,7 @@ abstract class TableToken extends TrBaseToken {
 			const rowLayout = layout[i]!;
 			let j = 0,
 				k = 0,
-				last;
+				last: boolean | undefined;
 			for (const cell of rows[i]!.childNodes.slice(2)) {
 				if (cell instanceof TdToken) {
 					if (cell.isIndependent()) {

@@ -203,6 +203,9 @@ class Token extends AstElement {
 			case 4:
 				this.#parseHrAndDoubleUnderscore();
 				break;
+			case 5:
+				this.#parseLinks();
+				break;
 			case 6:
 				this.#parseQuotes();
 				break;
@@ -355,6 +358,15 @@ class Token extends AstElement {
 		const parseHrAndDoubleUnderscore: typeof import('../parser/hrAndDoubleUnderscore')
 			= require('../parser/hrAndDoubleUnderscore');
 		this.setText(parseHrAndDoubleUnderscore(this, this.#config, this.#accum));
+	}
+
+	/**
+	 * 解析内部链接
+	 * @browser
+	 */
+	#parseLinks(): void {
+		const parseLinks: typeof import('../parser/links') = require('../parser/links');
+		this.setText(parseLinks(String(this.firstChild), this.#config, this.#accum));
 	}
 
 	/**
@@ -858,7 +870,7 @@ class Token extends AstElement {
 		}
 		const {childNodes} = parentNode,
 			index = childNodes.indexOf(this);
-		let i;
+		let i: number;
 		for (i = index - 1; i >= 0; i--) {
 			const {
 				type, name, selfClosing, closing,
