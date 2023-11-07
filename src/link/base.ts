@@ -225,7 +225,7 @@ abstract class LinkBaseToken extends Token {
 			const msgs: Record<string, string> = {link: '内链', file: '文件链接', category: '分类'};
 			throw new SyntaxError(`非法的${msgs[this.type]!}目标：${strLink}`);
 		}
-		const {firstChild} = wikiLink as LinkBaseToken;
+		const {firstChild} = wikiLink as this;
 		wikiLink.destroy();
 		this.firstChild.safeReplaceWith(firstChild);
 	}

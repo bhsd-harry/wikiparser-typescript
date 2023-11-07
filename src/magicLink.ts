@@ -10,8 +10,7 @@ import ParameterToken = require('./parameter');
  * @classdesc `{childNodes: ...AstText|CommentToken|IncludeToken|NoincludeToken}`
  */
 class MagicLinkToken extends Token {
-	/** @browser */
-	override type: 'free-ext-link' | 'ext-link-url' = 'free-ext-link';
+	declare type: 'free-ext-link' | 'ext-link-url';
 	#protocolRegex;
 
 	/** 协议 */
@@ -50,9 +49,7 @@ class MagicLinkToken extends Token {
 		super(url, config, true, accum, {
 			'Stage-1': ':', '!ExtToken': '',
 		});
-		if (doubleSlash) {
-			this.type = 'ext-link-url';
-		}
+		this.type = doubleSlash ? 'ext-link-url' : 'free-ext-link';
 		this.#protocolRegex = new RegExp(`^(?:${config.protocol}${doubleSlash ? '|//' : ''})`, 'iu');
 	}
 

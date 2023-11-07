@@ -19,7 +19,7 @@ const frame = new Set(['manualthumb', 'frameless', 'framed', 'thumbnail']),
  */
 abstract class FileToken extends LinkBaseToken {
 	/** @browser */
-	override type: 'file' | 'gallery-image' | 'imagemap-image' = 'file';
+	override readonly type: 'file' | 'gallery-image' | 'imagemap-image' = 'file';
 	declare childNodes: [AtomToken, ...ImageParameterToken[]];
 	abstract override get children(): [AtomToken, ...ImageParameterToken[]];
 	abstract override get lastChild(): ImageParameterToken;
@@ -73,7 +73,7 @@ abstract class FileToken extends LinkBaseToken {
 	 * @param text 图片参数
 	 * @param delimiter `|`
 	 */
-	constructor(link: string, text: string, config = Parser.getConfig(), accum: Token[] = [], delimiter = '|') {
+	constructor(link: string, text?: string, config = Parser.getConfig(), accum: Token[] = [], delimiter = '|') {
 		super(link, undefined, config, accum, delimiter);
 		this.setAttribute('acceptable', {AtomToken: 0, ImageParameterToken: '1:'});
 		this.append(...explode('-{', '}-', '|', text).map(
