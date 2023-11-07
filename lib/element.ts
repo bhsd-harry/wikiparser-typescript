@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import string_1 = require('../util/string');
-const {toCase, noWrap, print, text} = string_1;
+const {toCase, noWrap, print, text, escapeRegExp} = string_1;
 import * as Ranges from './ranges';
 const {nth} = Ranges;
 import * as parseSelector from '../parser/selector';
@@ -460,6 +460,18 @@ abstract class AstElement extends AstNode {
 					const regex = new RegExp(`^${s}(?:-|$)`, 'u');
 					return matchesLang(this, regex)
 						|| this.getAncestors().some(ancestor => matchesLang(ancestor, regex));
+				}
+				case 'regex': {
+					const mt = /^([^,]+),\s*\/(.+)\/([a-z]*)$/u.exec(s);
+					if (!mt) {
+						throw new SyntaxError('错误的伪选择器用法。请使用形如 ":regex(attr, /re/i)" 的格式。');
+					}
+					try {
+						const regex = new RegExp(escapeRegExp(mt[2]!), mt[3]);
+						return regex.test(String(this.getAttribute(mt[1]!.trim())));
+					} catch {
+						throw new SyntaxError(`错误的正则表达式：/${mt[2]!}/${mt[3]!}`);
+					}
 				}
 				default:
 					throw new SyntaxError(`未定义的伪选择器：${pseudo}`);

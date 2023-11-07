@@ -31,6 +31,7 @@ const complexPseudos: string[] = [
 	'contains',
 	'has',
 	'lang',
+	'regex',
 ];
 const specialChars: [string, string][] = [
 	['[', '&lbrack;'],
@@ -74,7 +75,7 @@ const desanitize = (selector: string): string => {
  */
 const deQuote = (val: string): string => {
 	const quotes = /^(["']).*\1$/u.exec(val)?.[1];
-	return quotes ? val.slice(1, -1) : val;
+	return quotes ? val.slice(1, -1) : val.trim();
 };
 
 /**
