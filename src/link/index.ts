@@ -13,6 +13,8 @@ abstract class LinkToken extends LinkBaseToken {
 	override readonly type: 'link' | 'category' = 'link';
 	declare childNodes: [AtomToken] | [AtomToken, Token];
 	abstract override get children(): [AtomToken] | [AtomToken, Token];
+	abstract override get link(): Title;
+	abstract override set link(link);
 
 	/** 是否链接到自身 */
 	get selfLink(): boolean {
@@ -91,7 +93,7 @@ abstract class LinkToken extends LinkBaseToken {
 	 * @throws `SyntaxError` 非法的fragment
 	 */
 	#setFragment(fragment?: string, page = true): void {
-		const frag = fragment && String(fragment).replace(/[<>[\]#|=]/gu, p => encodeURIComponent(p)),
+		const frag = fragment && fragment.replace(/[<>[\]#|=]/gu, p => encodeURIComponent(p)),
 			include = this.getAttribute('include'),
 			config = this.getAttribute('config'),
 			root = Parser.parse(`[[${page ? `:${this.name}` : ''}${
@@ -122,11 +124,10 @@ abstract class LinkToken extends LinkBaseToken {
 	 * @throws `RangeError` 空fragment
 	 */
 	asSelfLink(fragment = this.fragment): void {
-		const frag = fragment && String(fragment);
-		if (!frag?.trim()) {
+		if (!fragment?.trim()) {
 			throw new RangeError(`${this.constructor.name}.asSelfLink 方法必须指定非空的 fragment！`);
 		}
-		this.#setFragment(frag, false);
+		this.#setFragment(fragment, false);
 	}
 
 	/**

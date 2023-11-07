@@ -186,11 +186,10 @@ abstract class ArgToken extends Token {
 	 * @throws `SyntaxError` 非法的参数名
 	 */
 	setName(name: string): void {
-		const n = String(name),
-			root = Parser.parse(`{{{${n}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
+		const root = Parser.parse(`{{{${name}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: arg} = root;
 		if (length !== 1 || arg!.type !== 'arg' || arg!.length !== 1) {
-			throw new SyntaxError(`非法的参数名称：${noWrap(n)}`);
+			throw new SyntaxError(`非法的参数名称：${noWrap(name)}`);
 		}
 		const {firstChild} = arg as this;
 		(arg as Token).destroy();
@@ -203,11 +202,10 @@ abstract class ArgToken extends Token {
 	 * @throws `SyntaxError` 非法的参数预设值
 	 */
 	setDefault(value: string): void {
-		const v = String(value),
-			root = Parser.parse(`{{{|${v}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
+		const root = Parser.parse(`{{{|${value}}}}`, this.getAttribute('include'), 2, this.getAttribute('config')),
 			{length, firstChild: arg} = root;
 		if (length !== 1 || arg!.type !== 'arg' || arg!.length !== 2) {
-			throw new SyntaxError(`非法的参数预设值：${noWrap(v)}`);
+			throw new SyntaxError(`非法的参数预设值：${noWrap(value)}`);
 		}
 		const {childNodes: [, oldDefault]} = this,
 			{lastChild} = arg as this;

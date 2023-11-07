@@ -188,7 +188,7 @@ class Token extends AstElement {
 				if (this.type === 'root') {
 					this.#accum.shift();
 				}
-				this.#include = Boolean(include);
+				this.#include = include;
 				this.#parseCommentAndExt(include);
 				break;
 			case 1:

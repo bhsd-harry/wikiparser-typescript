@@ -13,7 +13,7 @@ import type {TokenAttributeSetter} from '../../lib/node';
 
 /**
  * 内链
- * @classdesc `{childNodes: [AtomToken, ...Token[]]}`
+ * @classdesc `{childNodes: [AtomToken, ...Token]}`
  */
 abstract class LinkBaseToken extends Token {
 	declare type: 'link' | 'category' | 'file' | 'gallery-image' | 'imagemap-image';
@@ -31,7 +31,7 @@ abstract class LinkBaseToken extends Token {
 	#encoded = false;
 
 	/** 完整链接 */
-	get link(): Title {
+	get link(): string | Title {
 		return this.#getTitle();
 	}
 
@@ -232,13 +232,12 @@ abstract class LinkBaseToken extends Token {
 
 	/**
 	 * 设置链接显示文字
-	 * @param linkText 链接显示文字
+	 * @param linkStr 链接显示文字
 	 * @throws `SyntaxError` 非法的链接显示文字
 	 */
-	setLinkText(linkText = ''): void {
+	setLinkText(linkStr = ''): void {
 		let lastChild: Token;
-		const linkStr = String(linkText),
-			config = this.getAttribute('config');
+		const config = this.getAttribute('config');
 		if (linkStr) {
 			const root = Parser.parse(`[[${
 					this.type === 'category' ? 'Category:' : ''

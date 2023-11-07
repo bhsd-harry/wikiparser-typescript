@@ -161,12 +161,11 @@ abstract class ExtLinkToken extends Token {
 
 	/**
 	 * 设置链接显示文字
-	 * @param text 链接显示文字
+	 * @param str 链接显示文字
 	 * @throws `SyntaxError` 非法的链接显示文字
 	 */
-	setLinkText(text: string): void {
-		const str = String(text),
-			root = Parser.parse(`[//url ${str}]`, this.getAttribute('include'), 8, this.getAttribute('config')),
+	setLinkText(str: string): void {
+		const root = Parser.parse(`[//url ${str}]`, this.getAttribute('include'), 8, this.getAttribute('config')),
 			{length, firstChild: extLink} = root;
 		if (length !== 1 || extLink!.type !== 'ext-link' || (extLink as Token).length !== 2) {
 			throw new SyntaxError(`非法的外链文字：${noWrap(str)}`);

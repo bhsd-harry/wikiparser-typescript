@@ -123,7 +123,7 @@ abstract class ImageParameterToken extends Token {
 	set width(width) {
 		if (this.name === 'width') {
 			const {height} = this;
-			this.setValue(`${String(width || '')}${height! && 'x'}${height!}`);
+			this.setValue(`${width || ''}${height! && 'x'}${height!}`);
 		}
 	}
 
@@ -133,9 +133,8 @@ abstract class ImageParameterToken extends Token {
 	}
 
 	set height(height) {
-		const h = String(height || '');
 		if (this.name === 'width') {
-			this.setValue(`${this.width!}${h && 'x'}${h}`);
+			this.setValue(`${this.width!}${height ? `x${height}` : ''}`);
 		}
 	}
 

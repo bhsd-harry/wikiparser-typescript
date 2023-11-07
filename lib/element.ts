@@ -324,7 +324,7 @@ abstract class AstElement extends AstNode {
 		}
 		const {childNodes, fixed} = parentNode,
 			protectedIndices = parentNode.getAttribute('protectedChildren').applyTo(childNodes);
-		return fixed || Boolean(protectedIndices.includes(childNodes.indexOf(this as AstElement as import('../src'))));
+		return fixed || protectedIndices.includes(childNodes.indexOf(this as AstElement as import('../src')));
 	}
 
 	/** @private */

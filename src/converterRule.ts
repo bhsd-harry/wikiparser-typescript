@@ -211,17 +211,16 @@ abstract class ConverterRuleToken extends Token {
 	 * @throws `SyntaxError` 非法的转换目标
 	 */
 	setTo(to: string): void {
-		const toStr = String(to),
-			config = this.getAttribute('config'),
+		const config = this.getAttribute('config'),
 			include = this.getAttribute('include'),
-			root = Parser.parse(`-{|${config.variants[0] ?? 'zh'}:${toStr}}-`, include, undefined, config),
+			root = Parser.parse(`-{|${config.variants[0] ?? 'zh'}:${to}}-`, include, undefined, config),
 			{length, firstChild: converter} = root;
 		if (length !== 1 || converter!.type !== 'converter') {
-			throw new SyntaxError(`非法的转换目标：${noWrap(toStr)}`);
+			throw new SyntaxError(`非法的转换目标：${noWrap(to)}`);
 		}
 		const {lastChild: converterRule} = converter as import('./converter');
 		if (converter!.length !== 2 || converterRule.length !== 2) {
-			throw new SyntaxError(`非法的转换目标：${noWrap(toStr)}`);
+			throw new SyntaxError(`非法的转换目标：${noWrap(to)}`);
 		}
 		const {lastChild} = converterRule as this;
 		converterRule.destroy();
@@ -259,16 +258,15 @@ abstract class ConverterRuleToken extends Token {
 		if (!variant) {
 			throw new Error('请先指定语言变体！');
 		}
-		const fromStr = String(from),
-			config = this.getAttribute('config'),
-			root = Parser.parse(`-{|${fromStr}=>${variant}:}-`, this.getAttribute('include'), undefined, config),
+		const config = this.getAttribute('config'),
+			root = Parser.parse(`-{|${from}=>${variant}:}-`, this.getAttribute('include'), undefined, config),
 			{length, firstChild: converter} = root;
 		if (length !== 1 || converter!.type !== 'converter') {
-			throw new SyntaxError(`非法的转换原文：${noWrap(fromStr)}`);
+			throw new SyntaxError(`非法的转换原文：${noWrap(from)}`);
 		}
 		const {lastChild: converterRule} = converter as import('./converter');
 		if (converter!.length !== 2 || converterRule.length !== 3) {
-			throw new SyntaxError(`非法的转换原文：${noWrap(fromStr)}`);
+			throw new SyntaxError(`非法的转换原文：${noWrap(from)}`);
 		} else if (unidirectional) {
 			this.firstChild.safeReplaceWith(converterRule.firstChild!);
 		} else {

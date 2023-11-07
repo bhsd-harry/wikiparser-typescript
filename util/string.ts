@@ -34,6 +34,37 @@ export const print = (childNodes: AstNodeTypes[], opt: PrintOpt = {}): string =>
 export const escapeRegExp = (str: string): string => str.replace(/[\\{}()|.?*+^$[\]]/gu, '\\$&');
 
 /**
+ * a more sophisticated string-explode function
+ * @browser
+ * @param start start syntax of a nested AST node
+ * @param end end syntax of a nested AST node
+ * @param separator syntax for explosion
+ * @param str string to be exploded
+ */
+export const explode = (start: string, end: string, separator: string, str?: string): string[] => {
+	if (str === undefined) {
+		return [];
+	}
+	const regex = new RegExp(`${[start, end, separator].map(escapeRegExp).join('|')}`, 'gu'),
+		exploded: string[] = [];
+	let mt = regex.exec(str),
+		depth = 0,
+		lastIndex = 0;
+	while (mt) {
+		const {0: match, index} = mt;
+		if (match !== separator) {
+			depth += match === start ? 1 : -1;
+		} else if (depth === 0) {
+			exploded.push(str.slice(lastIndex, index));
+			({lastIndex} = regex);
+		}
+		mt = regex.exec(str);
+	}
+	exploded.push(str.slice(lastIndex));
+	return exploded;
+};
+
+/**
  * extract effective wikitext
  * @browser
  * @param childNodes a Token's contents
