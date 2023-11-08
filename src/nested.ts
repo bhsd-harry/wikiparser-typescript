@@ -110,7 +110,7 @@ abstract class NestedToken extends Token {
 			config = this.getAttribute('config');
 		return Parser.run(() => {
 			// @ts-expect-error abstract class
-			const token = new NestedToken(undefined, this.#regex, this.#tags, config) as this;
+			const token: this = new NestedToken(undefined, this.#regex, this.#tags, config);
 			token.append(...cloned);
 			return token;
 		});

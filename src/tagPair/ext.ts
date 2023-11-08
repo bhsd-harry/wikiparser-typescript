@@ -123,6 +123,12 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 				);
 				break;
 			}
+			case 'gallery': {
+				const GalleryToken: typeof import('../gallery') = require('../gallery');
+				// @ts-expect-error abstract class
+				innerToken = new GalleryToken(inner, newConfig, accum);
+				break;
+			}
 			// 更多定制扩展的代码示例：
 			// ```
 			// case 'extensionName': {

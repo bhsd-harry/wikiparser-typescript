@@ -1,8 +1,10 @@
 import * as Parser from '../index';
+import AstText = require('../lib/text');
 import Token = require('.');
 import NoincludeToken = require('./nowiki/noinclude');
 import AttributesToken = require('./attributes');
 import ExtToken = require('./tagPair/ext');
+import ConverterToken = require('./converter');
 
 /**
  * `<pre>`
@@ -11,6 +13,12 @@ import ExtToken = require('./tagPair/ext');
 abstract class PreToken extends Token {
 	/** @browser */
 	override readonly type = 'ext-inner';
+	declare childNodes: (AstText | NoincludeToken | ConverterToken)[];
+	abstract override get children(): (NoincludeToken | ConverterToken)[];
+	abstract override get firstChild(): AstText | NoincludeToken | ConverterToken | undefined;
+	abstract override get firstElementChild(): NoincludeToken | ConverterToken | undefined;
+	abstract override get lastChild(): AstText | NoincludeToken | ConverterToken | undefined;
+	abstract override get lastElementChild(): NoincludeToken | ConverterToken | undefined;
 	abstract override get nextSibling(): undefined;
 	abstract override get nextElementSibling(): undefined;
 	abstract override get previousSibling(): AttributesToken;

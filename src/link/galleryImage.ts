@@ -2,7 +2,7 @@ import lint_1 = require('../../util/lint');
 const {generateForSelf} = lint_1;
 import debug_1 = require('../../util/debug');
 const {undo} = debug_1;
-import singleLine = require('../../mixin/singleLine');
+import * as singleLine from '../../mixin/singleLine';
 import Title = require('../../lib/title');
 import * as Parser from '../../index';
 import Token = require('..');
@@ -108,7 +108,7 @@ abstract class GalleryImageToken extends singleLine(FileToken) {
 			throw new SyntaxError(`非法的图库文件名：${link}`);
 		}
 		const {lastChild: gallery} = ext as import('../tagPair/ext'),
-			{firstChild: image} = gallery;
+			{firstChild: image} = gallery as import('../gallery');
 		if (gallery.length !== 1 || image!.type !== 'gallery-image') {
 			throw new SyntaxError(`非法的图库文件名：${link}`);
 		}
