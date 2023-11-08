@@ -32,8 +32,8 @@ abstract class TdToken extends fixed(TableBaseToken) {
 	abstract override get children(): [SyntaxToken, AttributesToken, Token];
 	abstract override get parentNode(): import('./trBase') | undefined;
 	abstract override get parentElement(): import('./trBase') | undefined;
-	abstract override get nextSibling(): TdToken | import('./tr') | SyntaxToken | undefined;
-	abstract override get nextElementSibling(): TdToken | import('./tr') | SyntaxToken | undefined;
+	abstract override get nextSibling(): this | import('./tr') | SyntaxToken | undefined;
+	abstract override get nextElementSibling(): this | import('./tr') | SyntaxToken | undefined;
 	abstract override get previousSibling(): Token | undefined;
 
 	/** @browser */

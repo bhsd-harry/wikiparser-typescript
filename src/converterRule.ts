@@ -21,10 +21,10 @@ abstract class ConverterRuleToken extends Token {
 	abstract override get lastElementChild(): AtomToken;
 	abstract override get parentNode(): import('./converter') | undefined;
 	abstract override get parentElement(): import('./converter') | undefined;
-	abstract override get previousSibling(): import('./converterFlags') | ConverterRuleToken;
-	abstract override get previousElementSibling(): import('./converterFlags') | ConverterRuleToken;
-	abstract override get nextSibling(): ConverterRuleToken | undefined;
-	abstract override get nextElementSibling(): ConverterRuleToken | undefined;
+	abstract override get previousSibling(): import('./converterFlags') | this;
+	abstract override get previousElementSibling(): import('./converterFlags') | this;
+	abstract override get nextSibling(): this | undefined;
+	abstract override get nextElementSibling(): this | undefined;
 
 	/** 语言变体 */
 	get variant(): string {

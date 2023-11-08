@@ -191,10 +191,10 @@ abstract class AttributeToken extends fixed(Token) {
 	abstract override get lastElementChild(): Token;
 	abstract override get parentNode(): import('./attributes') | undefined;
 	abstract override get parentElement(): import('./attributes') | undefined;
-	abstract override get nextSibling(): AtomToken | AttributeToken | undefined;
-	abstract override get nextElementSibling(): AtomToken | AttributeToken | undefined;
-	abstract override get previousSibling(): AtomToken | AttributeToken | undefined;
-	abstract override get previousElementSibling(): AtomToken | AttributeToken | undefined;
+	abstract override get nextSibling(): AtomToken | this | undefined;
+	abstract override get nextElementSibling(): AtomToken | this | undefined;
+	abstract override get previousSibling(): AtomToken | this | undefined;
+	abstract override get previousElementSibling(): AtomToken | this | undefined;
 
 	/** @browser */
 	#equal;

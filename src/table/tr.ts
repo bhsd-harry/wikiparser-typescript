@@ -18,8 +18,8 @@ abstract class TrToken extends TrBaseToken {
 	abstract override get lastElementChild(): AttributesToken | TdToken;
 	abstract override get parentNode(): TrBaseToken | undefined;
 	abstract override get parentElement(): TrBaseToken | undefined;
-	abstract override get nextSibling(): TrToken | SyntaxToken | undefined;
-	abstract override get nextElementSibling(): TrToken | SyntaxToken | undefined;
+	abstract override get nextSibling(): this | SyntaxToken | undefined;
+	abstract override get nextElementSibling(): this | SyntaxToken | undefined;
 	abstract override get previousSibling(): Token;
 	abstract override get previousElementSibling(): Token;
 

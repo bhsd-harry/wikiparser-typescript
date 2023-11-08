@@ -24,10 +24,10 @@ abstract class ParameterToken extends fixed(Token) {
 	abstract override get lastElementChild(): Token;
 	abstract override get parentNode(): import('./transclude') | undefined;
 	abstract override get parentElement(): import('./transclude') | undefined;
-	abstract override get nextSibling(): ParameterToken | undefined;
-	abstract override get nextElementSibling(): ParameterToken | undefined;
-	abstract override get previousSibling(): AtomToken | SyntaxToken;
-	abstract override get previousElementSibling(): AtomToken | SyntaxToken;
+	abstract override get nextSibling(): this | undefined;
+	abstract override get nextElementSibling(): this | undefined;
+	abstract override get previousSibling(): AtomToken | SyntaxToken | this;
+	abstract override get previousElementSibling(): AtomToken | SyntaxToken | this;
 
 	/**
 	 * 是否是匿名参数
