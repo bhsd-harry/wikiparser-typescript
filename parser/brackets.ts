@@ -37,12 +37,13 @@ const parseBrackets = (wikitext: string, config = Parser.getConfig(), accum: Tok
 			lastIndex = curIndex + 1;
 			const {pos, findEqual} = stack.at(-1) ?? {};
 			if (pos === undefined || findEqual || removeComment(text.slice(pos, index)) !== '') {
-				const rmt = /^(={1,6})(.+)\1((?:\s|\0\d+c\x7F)*)$/u.exec(text.slice(index, curIndex));
+				const rmt = /^(={1,6})(.+)\1((?:\s|\0\d+c\x7F)*)$/u
+					.exec(text.slice(index, curIndex)) as [string, string, string, string] | null;
 				if (rmt) {
 					text = `${text.slice(0, index)}\0${accum.length}h\x7F${text.slice(curIndex)}`;
 					lastIndex = index! + 4 + String(accum.length).length;
 					// @ts-expect-error abstract class
-					new HeadingToken(rmt[1]!.length, rmt.slice(2), config, accum);
+					new HeadingToken(rmt[1].length, rmt.slice(2), config, accum);
 				}
 			}
 		} else if (syntax === '|' || innerEqual) { // 情形3：模板内部，含行首单个'='

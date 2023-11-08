@@ -45,7 +45,8 @@ const parseTable = (
 		let top = stack.pop();
 		const [spaces] = /^(?:\s|\0\d+c\x7F)*/u.exec(outLine) as string[] as [string],
 			line = outLine.slice(spaces.length),
-			matchesStart = /^(:*)((?:\s|\0\d+c\x7F)*)(\{\||\{(?:\0\d+c\x7F)*\0\d+!\x7F|\0\d+\{\x7F)(.*)$/u.exec(line);
+			matchesStart = /^(:*)((?:\s|\0\d+c\x7F)*)(\{\||\{(?:\0\d+c\x7F)*\0\d+!\x7F|\0\d+\{\x7F)(.*)$/u
+				.exec(line) as [string, string, string, string, string] | null;
 		if (matchesStart) {
 			while (top && top.type !== 'td') {
 				top = stack.pop();
@@ -55,7 +56,7 @@ const parseTable = (
 				// @ts-expect-error abstract class
 				new DdToken(indent, config, accum);
 			}
-			push(`\n${spaces}${indent! && `\0${accum.length - 1}d\x7F`}${moreSpaces!}\0${accum.length}b\x7F`, top);
+			push(`\n${spaces}${indent && `\0${accum.length - 1}d\x7F`}${moreSpaces}\0${accum.length}b\x7F`, top);
 			// @ts-expect-error abstract class
 			const table: TableToken = new TableToken(tableSyntax, attr, config, accum);
 			stack.push(...top ? [top] : [], table);
@@ -67,7 +68,7 @@ const parseTable = (
 		// eslint-disable-next-line operator-linebreak
 		const matches =
 			/^(?:(\|\}|\0\d+!\x7F\}|\0\d+\}\x7F)|(\|-+|\0\d+!\x7F-+|\0\d+-\x7F-*)(?!-)|(!|(?:\||\0\d+!\x7F)\+?))(.*)$/u
-				.exec(line);
+				.exec(line) as [string, string | undefined, string | undefined, string | undefined, string] | null;
 		if (!matches) {
 			push(`\n${outLine}`, top);
 			stack.push(top);
@@ -79,7 +80,7 @@ const parseTable = (
 				top = stack.pop();
 			}
 			(top as TableToken).close(`\n${spaces}${closing}`, true);
-			push(attr!, stack.at(-1));
+			push(attr, stack.at(-1));
 		} else if (row) {
 			if (top.type === 'td') {
 				top = stack.pop();
@@ -98,19 +99,19 @@ const parseTable = (
 			const regex = cell === '!'
 				? /!!|(?:\||\0\d+!\x7F){2}|\0\d+\+\x7F/gu
 				: /(?:\||\0\d+!\x7F){2}|\0\d+\+\x7F/gu;
-			let mt = regex.exec(attr!),
+			let mt = regex.exec(attr),
 				lastIndex = 0,
 				lastSyntax = `\n${spaces}${cell!}`;
 			while (mt) {
 				// @ts-expect-error abstract class
-				const td: TdToken = new TdToken(lastSyntax, attr!.slice(lastIndex, mt.index), config, accum);
+				const td: TdToken = new TdToken(lastSyntax, attr.slice(lastIndex, mt.index), config, accum);
 				(top as TrBaseToken).insertAt(td);
 				({lastIndex} = regex);
 				[lastSyntax] = mt as string[] as [string];
-				mt = regex.exec(attr!);
+				mt = regex.exec(attr);
 			}
 			// @ts-expect-error abstract class
-			const td: TdToken = new TdToken(lastSyntax, attr!.slice(lastIndex), config, accum);
+			const td: TdToken = new TdToken(lastSyntax, attr.slice(lastIndex), config, accum);
 			stack.push(top!, td);
 			(top as TrBaseToken).insertAt(td);
 		}

@@ -93,7 +93,7 @@ abstract class AttributesToken extends Token {
 				'gsu',
 			);
 			let out = '',
-				mt = regex.exec(attr),
+				mt = regex.exec(attr) as RegExpExecArray & {1: string} | null,
 				lastIndex = 0;
 			const insertDirty = /** 插入无效属性 */ (): void => {
 				if (out) {
@@ -110,7 +110,7 @@ abstract class AttributesToken extends Token {
 			while (mt) {
 				const {
 					index, 0: full, 1: key, 2: equal, 3: quoteStart, 4: quoted, 5: quoteEnd, 6: unquoted,
-				} = mt as RegExpExecArray & {1: string};
+				} = mt;
 				out += attr.slice(lastIndex, index);
 				if (/^(?:[\w:]|\0\d+[t!~{}+-]\x7F)(?:[\w:.-]|\0\d+[t!~{}+-]\x7F)*$/u.test(removeComment(key).trim())) {
 					const value = quoted ?? unquoted,
@@ -132,7 +132,7 @@ abstract class AttributesToken extends Token {
 					out += full;
 				}
 				({lastIndex} = regex);
-				mt = regex.exec(attr);
+				mt = regex.exec(attr) as RegExpExecArray & {1: string} | null;
 			}
 			out += attr.slice(lastIndex);
 			insertDirty();

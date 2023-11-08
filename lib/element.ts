@@ -462,15 +462,15 @@ abstract class AstElement extends AstNode {
 						|| this.getAncestors().some(ancestor => matchesLang(ancestor, regex));
 				}
 				case 'regex': {
-					const mt = /^([^,]+),\s*\/(.+)\/([a-z]*)$/u.exec(s);
+					const mt = /^([^,]+),\s*\/(.+)\/([a-z]*)$/u.exec(s) as [string, string, string, string] | null;
 					if (!mt) {
 						throw new SyntaxError('错误的伪选择器用法。请使用形如 ":regex(attr, /re/i)" 的格式。');
 					}
 					try {
-						const regex = new RegExp(escapeRegExp(mt[2]!), mt[3]);
-						return regex.test(String(this.getAttribute(mt[1]!.trim())));
+						const regex = new RegExp(escapeRegExp(mt[2]), mt[3]);
+						return regex.test(String(this.getAttribute(mt[1].trim())));
 					} catch {
-						throw new SyntaxError(`错误的正则表达式：/${mt[2]!}/${mt[3]!}`);
+						throw new SyntaxError(`错误的正则表达式：/${mt[2]}/${mt[3]}`);
 					}
 				}
 				default:

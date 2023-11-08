@@ -143,7 +143,7 @@ abstract class ImageParameterToken extends Token {
 	 * @param str 图片参数
 	 */
 	constructor(str: string, config = Parser.getConfig(), accum: Token[] = []) {
-		let mt: RegExpExecArray | null;
+		let mt: [string, string, string, string] | [string, string, string] | null;
 		const regexes = Object.entries(config.img).map(
 				([syntax, param]): [string, string, RegExp] => [
 					syntax,
@@ -152,19 +152,20 @@ abstract class ImageParameterToken extends Token {
 				],
 			),
 			param = regexes.find(([, key, regex]) => {
-				mt = regex.exec(str);
+				mt = regex.exec(str) as [string, string, string, string] | [string, string, string] | null;
 				return mt
-					&& (mt.length !== 4 || validate(key, mt[2]!, config, true) as string | Title | boolean !== false);
+					&& (mt.length !== 4 || validate(key, mt[2], config, true) as string | Title | boolean !== false);
 			});
-		if (param) {
-			if (mt!.length === 3) {
+		// @ts-expect-error mt already assigned
+		if (param && mt) {
+			if (mt.length === 3) {
 				super(undefined, config, true, accum);
 				this.#syntax = str;
 			} else {
-				super(mt![2], config, true, accum, {
+				super(mt[2], config, true, accum, {
 					'Stage-2': ':', '!HeadingToken': ':',
 				});
-				this.#syntax = `${mt![1]!}${param[0]}${mt![3]!}`;
+				this.#syntax = `${mt[1]}${param[0]}${mt[3]}`;
 			}
 			this.setAttribute('name', param[1]);
 			return;

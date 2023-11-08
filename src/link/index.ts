@@ -139,19 +139,20 @@ abstract class LinkToken extends LinkBaseToken {
 		if (linkText.includes('#') || linkText.includes('%')) {
 			throw new Error('Pipe trick 不能用于带有"#"或"%"的场合！');
 		}
-		const m1 = /^:?(?:[ \w\x80-\xFF-]+:)?([^(]+)\(.+\)$/u.exec(linkText);
+		const m1 = /^:?(?:[ \w\x80-\xFF-]+:)?([^(]+)\(.+\)$/u.exec(linkText) as [string, string] | null;
 		if (m1) {
-			this.setLinkText(m1[1]!.trim());
+			this.setLinkText(m1[1].trim());
 			return;
 		}
-		const m2 = /^:?(?:[ \w\x80-\xFF-]+:)?([^（]+)（.+）$/u.exec(linkText);
+		const m2 = /^:?(?:[ \w\x80-\xFF-]+:)?([^（]+)（.+）$/u.exec(linkText) as [string, string] | null;
 		if (m2) {
-			this.setLinkText(m2[1]!.trim());
+			this.setLinkText(m2[1].trim());
 			return;
 		}
-		const m3 = /^:?(?:[ \w\x80-\xFF-]+:)?(.+?)(?:(?<!\()\(.+\))?(?:, |，|، )./u.exec(linkText);
+		const m3 = /^:?(?:[ \w\x80-\xFF-]+:)?(.+?)(?:(?<!\()\(.+\))?(?:, |，|، )./u
+			.exec(linkText) as [string, string] | null;
 		if (m3) {
-			this.setLinkText(m3[1]!.trim());
+			this.setLinkText(m3[1].trim());
 			return;
 		}
 		this.setLinkText(linkText);

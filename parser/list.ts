@@ -5,11 +5,11 @@ import Token = require('../src');
 
 /** 解析列表 */
 const parseList = (wikitext: string, config = Parser.getConfig(), accum: Token[] = []): string => {
-	const mt = /^((?:\0\d+c\x7F)*)([;:*#]+)/u.exec(wikitext);
+	const mt = /^((?:\0\d+c\x7F)*)([;:*#]+)/u.exec(wikitext) as [string, string, string] | null;
 	if (!mt) {
 		return wikitext;
 	}
-	const [total, comment, prefix] = mt as string[] as [string, string, string];
+	const [total, comment, prefix] = mt;
 	let text = `${comment}\0${accum.length}d\x7F${wikitext.slice(total.length)}`,
 		dt = prefix.split(';').length - 1;
 	// @ts-expect-error abstract class

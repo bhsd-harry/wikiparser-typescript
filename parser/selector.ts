@@ -103,11 +103,11 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 		stack: [[SelectorArray, ...SelectorArray[]], ...SelectorArray[][]] = [[[]]];
 	let sanitized = sanitize(s),
 		regex = regularRegex,
-		mt = regex.exec(sanitized),
+		mt = regex.exec(sanitized) as RegExpExecArray & {0: string} | null,
 		[condition] = stack,
 		[step] = condition;
 	while (mt) {
-		let {0: syntax, index} = mt as RegExpExecArray & {0: string};
+		let {0: syntax, index} = mt;
 		if (syntax.trim() === '') {
 			index += syntax.length;
 			const char = sanitized[index]!;
@@ -134,12 +134,12 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 			step.push(mt.slice(1) as [string, string | undefined, string | undefined, string | undefined]);
 			regex = regularRegex;
 		} else if (syntax === '(') { // 情形5：伪选择器开启
-			const pseudoExec = pseudoRegex.exec(sanitized.slice(0, index));
+			const pseudoExec = pseudoRegex.exec(sanitized.slice(0, index)) as RegExpExecArray & [string, string] | null;
 			if (!pseudoExec) {
 				throw new SyntaxError(`非法的选择器！\n${desanitize(sanitized)}\n请检查伪选择器是否存在。`);
 			}
 			pushSimple(step, sanitized.slice(0, pseudoExec.index));
-			step.push(pseudoExec[1]!); // 临时存放复杂伪选择器
+			step.push(pseudoExec[1]); // 临时存放复杂伪选择器
 			regex = functionRegex;
 		} else { // 情形6：伪选择器闭合
 			const pseudo = step.pop() as string;
@@ -152,7 +152,7 @@ const parseSelector = (selector: string): SelectorArray[][] => {
 		if (grouping.has(syntax)) {
 			sanitized = sanitized.trim();
 		}
-		mt = regex.exec(sanitized);
+		mt = regex.exec(sanitized) as RegExpExecArray & {0: string} | null;
 	}
 	if (regex === regularRegex) {
 		pushSimple(step, sanitized);

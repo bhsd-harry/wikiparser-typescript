@@ -35,7 +35,8 @@ class Range {
 				throw new RangeError(`步长 ${this.step} 应为整数！`);
 			}
 		} else {
-			const mt = /^([+-])?(\d+)?n(?:([+-])(\d+))?$/u.exec(str);
+			const mt = /^([+-])?(\d+)?n(?:([+-])(\d+))?$/u
+				.exec(str) as [string, string | undefined, string | undefined, string | undefined, string | undefined] | null;
 			if (mt) {
 				const [, sgnA = '+', a = 1, sgnB = '+'] = mt,
 					b = Number(mt[4] ?? 0);

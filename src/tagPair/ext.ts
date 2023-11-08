@@ -129,6 +129,12 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 				innerToken = new GalleryToken(inner, newConfig, accum);
 				break;
 			}
+			case 'imagemap': {
+				const ImagemapToken: typeof import('../imagemap') = require('../imagemap');
+				// @ts-expect-error abstract class
+				innerToken = new ImagemapToken(inner, newConfig, accum);
+				break;
+			}
 			// 更多定制扩展的代码示例：
 			// ```
 			// case 'extensionName': {
@@ -140,7 +146,7 @@ abstract class ExtToken extends attributesParent(TagPairToken) {
 			default: {
 				const NowikiToken: typeof import('../nowiki') = require('../nowiki');
 				// @ts-expect-error abstract class
-				innerToken = new NowikiToken(inner, config);
+				innerToken = new NowikiToken(inner, newConfig);
 			}
 		}
 		innerToken.setAttribute('name', lcName).type = 'ext-inner';
